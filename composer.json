@@ -1,0 +1,7 @@
+{
+    "require": {
+        "slim/slim": "*",
+        "illuminate/database": "*",
+        "zircote/swagger-php": "*"
+    }
+}

@@ -1,0 +1,10 @@
+<?php
+// CONFIG
+DEFINE('TFS_CONFIG', '../../duots/config.lua');
+
+require '../app/app.php'; // DO NOT MODIFY THIS LINE
+
+// PUT YOUR SLIM FRAMEWORK STUFF HERE
+// GOOD PLACE FOR PLUGINS, CUSTOMIZATIONS, ETC
+
+$app->run(); // DO NOT MODIFY THIS LINE
