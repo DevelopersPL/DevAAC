@@ -14,7 +14,7 @@ class Account extends \Illuminate\Database\Eloquent\Model {
 
     public function players()
     {
-        return $this->hasMany('Player');
+        return $this->hasMany('App\models\Player');
     }
 
     public function comparePassword($pass) {

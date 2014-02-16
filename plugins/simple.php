@@ -19,7 +19,7 @@ $app->map('/', function() use($app) {
 
         // VALIDATE ACCOUNT NAME
         if( !filter_var($req->post('account-name'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/[a-zA-Z]{2,12}/"))) ) {
+            array("options" => array("regexp" => "/^[a-zA-Z]{2,12}$/"))) ) {
             $app->flashNow('account-name_class', 'has-error');
             $app->flashNow('danger', 'Account name must have 2-12 characters, only letters.');
             $error = true;
@@ -27,7 +27,7 @@ $app->map('/', function() use($app) {
 
         // VALIDATE CHARACTER NAME
         if( !filter_var($req->post('character-name'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/[a-zA-Z ]{2,12}/"))) ) {
+            array("options" => array("regexp" => "/^[a-zA-Z ]{2,12}$/"))) ) {
             $app->flashNow('character-name_class', 'has-error');
             $app->flashNow('danger', 'Character name must have 6-20 characters, only letters and space.');
             $error = true;
@@ -35,14 +35,14 @@ $app->map('/', function() use($app) {
 
         // VALIDATE VOCATION
         if( !filter_var($req->post('vocation'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/[1-4]{1}/"))) ) {
+            array("options" => array("regexp" => "/^[1-4]{1}$/"))) ) {
             $app->flashNow('vocation_class', 'has-error');
             $error = true;
         }
 
         // VALIDATE SEX
         if( !filter_var($req->post('sex'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/[0-1]{1}/"))) ) {
+            array("options" => array("regexp" => "/^[0-1]{1}$/"))) ) {
             $app->flashNow('sex_class', 'has-error');
             $error = true;
         }
@@ -61,13 +61,22 @@ $app->map('/', function() use($app) {
             goto render;
         }
 
+        $name = ucwords(strtolower($req->post('character-name')));
+        // check if character name is available
+        $player = Player::where('name', $name)->first();
+        if($player) {
+            $app->flashNow('danger', 'This character already exists.');
+            $app->flashNow('character-name_class', 'has-error');
+            goto render;
+        }
+
         // IF THE ACCOUNT EXISTS, JUMP TO CREATING PLAYER
         if($account)
             goto createcharacter;
 
         // VALIDATE PASSWORD ONLY IF THE ACCOUNT DOES NOT EXIST
         if( !filter_var($req->post('password'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/.{6,20}/"))) ) {
+            array("options" => array("regexp" => "/^.{6,20}$/"))) ) {
             $app->flashNow('password_class', 'has-error');
             $app->flashNow('danger', 'Password must have 6-20 characters.');
             $error = true;
@@ -93,9 +102,11 @@ $app->map('/', function() use($app) {
         createcharacter:
         $player = new App\models\Player();
         $player->account()->associate($account);
-        $player->name = ucwords(strtolower($req->post('character-name')));
+        $player->name = $name;
         $player->vocation = $req->post('vocation');
         $player->sex = $req->post('sex');
+        $player->town_id = 1;
+        $player->level = 8;
         $player->push(); // SAVE PLAYER AND ASSOCIATED OBJECTS (ACCOUNT IN THIS CASE)
 
         $app->flashNow('success', 'Player '.ucwords(strtolower($req->post('character-name'))).' has been created!');

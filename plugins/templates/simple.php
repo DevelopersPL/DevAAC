@@ -93,13 +93,13 @@
                     <div class="col-sm-4">
                         <div class="radio">
                             <label>
-                                <input type="radio" name="sex" id="sex" value="0" <?php echo isset($val['sex'])? ($val['sex']==0 ? 'checked' : '') : 'checked' ?>>
+                                <input type="radio" name="sex" id="sex" value="1" <?php echo isset($val['sex'])? ($val['sex']==1 ? 'checked' : '') : 'checked' ?>>
                                 Male
                             </label>
                         </div>
                         <div class="radio">
                             <label>
-                                <input type="radio" name="sex" id="sex" value="1" <?php echo @$val['sex'] == 1 ? 'checked' : '' ?>>
+                                <input type="radio" name="sex" id="sex" value="0" <?php echo @$val['sex'] == 0 ? 'checked' : '' ?>>
                                 Female
                             </label>
                         </div>
