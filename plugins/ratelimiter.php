@@ -20,7 +20,12 @@ if(!extension_loaded('apc') or !ini_get('apc.enabled'))
 defined('RATELIMITER_RULES') or define('RATELIMITER_RULES', serialize(array(
     // DEFINE RULES WITHOUT ROUTES_PREFIX
     // PATH -> NUMBER OF SECONDS TO WAIT BETWEEN REQUESTS
-    '/plugins' => 5
+    'GET' => array(
+        '/plugins' => 5
+    ),
+    'POST' => array(
+        '/' => 5 // for Simple AAC (plugin)
+    )
 )));
 // SHOULD WE RESET THE TIMER ON EVERY ATTEMPT?
 defined('RATELIMITER_PENALIZE') or define('RATELIMITER_PENALIZE', false);
@@ -36,24 +41,25 @@ $app->hook('slim.before.dispatch', function () use ($app) {
 
     $req = $app->request;
     $path = $req->getPath();
+    $method = $req->getMethod();
 
     // REMOVE ROUTES_PREFIX FROM PATH
     if (substr($path, 0, strlen(ROUTES_PREFIX)) == ROUTES_PREFIX)
         $path = substr($path, strlen(ROUTES_PREFIX));
 
     // DO WE HAVE A RULE?
-    if( array_key_exists($path, $rules) ) {
+    if( array_key_exists($method, $rules) && array_key_exists($path, $rules[$method]) ) {
         // every path for every IP is a separate object to be thread safe
         $objname = $req->getIp() . '_' . $path;
 
-        if(apc_fetch($objname) + $rules[$path] > time()) {
+        if(apc_fetch($objname) + $rules[$method][$path] > time()) {
             $app->halt(429, 'Too many requests.');
 
             if(!RATELIMITER_PENALIZE)
                 return;
         }
         apc_store($objname, time());
-        $app->expires('+'.$rules[$path].' seconds');
+        $app->expires('+'.$rules[$method][$path].' seconds');
     }
 });
 
