@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog Home Template for Bootstrap 3</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Add custom CSS here -->
+    <link href="css/blog-home.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#/home">DU AAC</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#/home">About</a>
+                    </li>
+                    <li><a href="#/home">Services</a>
+                    </li>
+                    <li><a href="#/home">Contact</a>
+                    </li>
+                </ul>
+                <form ng-submit="Login()" ng-controller="WidgetController" class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input ng-model="login.username" required class="form-control" placeholder="Login" type="text">
+                    </div>
+                    <div class="form-group">
+                        <input ng-model="login.password" required class="form-control" placeholder="Password" type="password" >
+                    </div>
+                    <button type="submit" class="btn btn-success">Sign in</button>
+                    <a class="btn btn-info" href="#/account/register">Sign up</a>
+                </form>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-8" id="view" ng-view></div>
+
+            <div class="col-lg-4" ng-controller="WidgetController">
+                <div class="well">
+                    <h4>Character Search</h4>
+                    <form ng-submit="PlayerSearch()">
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="search" required>
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-default" type="button">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                    <!-- /input-group -->
+                </div>
+                <!-- /well -->
+                <div class="well">
+                    <h4>Top 5 players</h4>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <ul class="list-unstyled">
+                                <li ng-repeat="player in playersWidget">
+                                    <a href="#/players/{{player.id}}">{{player.name}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- /well -->
+                <div class="well">
+                    <h4>Empty widget</h4>
+                    <p>This is a sample widget. :)</p>
+                </div>
+                <!-- /well -->
+            </div>
+        </div>
+
+        <hr>
+
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Company 2014</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- JavaScript -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+    <script src="routes.js"></script>
+    <script src="factories.js"></script>
+    <script src="controllers.js"></script>
+</body>
+
+</html>
