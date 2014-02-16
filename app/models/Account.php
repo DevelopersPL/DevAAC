@@ -6,15 +6,23 @@
  */
 namespace App\models;
 
+// https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 class Account extends \Illuminate\Database\Eloquent\Model {
 
     public $timestamps = false;
 
     protected $guarded = array('id');
 
+    protected $dates = array('creation');
+
     public function players()
     {
         return $this->hasMany('App\models\Player');
+    }
+
+    public function setPasswordAttribute($pass)
+    {
+        $this->attributes['password'] = sha1($pass);
     }
 
     public function comparePassword($pass) {

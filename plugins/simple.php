@@ -34,15 +34,13 @@ $app->map('/', function() use($app) {
         }
 
         // VALIDATE VOCATION
-        if( !filter_var($req->post('vocation'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/^[1-4]{1}$/"))) ) {
+        if( ! in_array($req->post('vocation'), array(1, 2, 3, 4)) ) {
             $app->flashNow('vocation_class', 'has-error');
             $error = true;
         }
 
         // VALIDATE SEX
-        if( !filter_var($req->post('sex'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/^[0-1]{1}$/"))) ) {
+        if( ! in_array($req->post('sex'), array(0, 1)) ) {
             $app->flashNow('sex_class', 'has-error');
             $error = true;
         }
@@ -95,7 +93,7 @@ $app->map('/', function() use($app) {
 
         // IF ACCOUNT DOES NOT EXIST, CREATE IT NOW
         $account = App\models\Account::create( array('name' => $req->post('account-name'),
-                                          'password' => sha1($req->post('account-name')),
+                                          'password' => $req->post('password'),
                                           'email' => $req->post('email'),
                                           'creation' => time()) );
 
