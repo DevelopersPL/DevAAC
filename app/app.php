@@ -6,7 +6,7 @@
  */
 // Autoload our dependencies with Composer
 $loader = require '../vendor/autoload.php';
-$loader->setPsr4('App\\', __DIR__.'/../app');
+$loader->setPsr4('App\\', APP_ROOT);
 
 // define authentication Middleware (application-level)
 // http://docs.slimframework.com/#Middleware-Overview
@@ -34,15 +34,20 @@ $app = new \Slim\Slim(array(
 ));
 $app->add(new \AuthMiddleware());
 //$app->response->headers->set('Content-Type', 'application/json'); // by default we return json
-DEBUG_MODE or $app->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
+ENABLE_DEBUG or $app->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
 
+// HANDLE ERRORS
 $app->error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) use ($app) {
     $app->response->setStatus(404);
     $app->response->setBody(json_encode(null));
 });
 
+$app->error(function (\Exception $e) use ($app) {
+    $app->halt(500, 'Fatal error occured.');
+});
+
 // you need to define TFS_CONFIG to be an array with config.lua options or a path to config.lua
-$tfs_config = is_array(TFS_CONFIG) ? TFS_CONFIG : parse_ini_file(TFS_CONFIG);
+$tfs_config = is_file(TFS_CONFIG) ? parse_ini_file(TFS_CONFIG) : unserialize(TFS_CONFIG) or die('TFS_CONFIG is not defined properly.');
 
 // Bootstrap Eloquent ORM // https://github.com/illuminate/database
 use Illuminate\Database\Capsule\Manager as Capsule;
@@ -136,7 +141,8 @@ $app->get(ROUTES_PREFIX.'/players/:id', function($id) use($app) {
  */
 $app->get(ROUTES_PREFIX.'/players', function() use($app) {
     $players = Player::all();
-    $app->response->setBody('{"players":'. $players->toJson() .'}');
+    //$app->response->setBody('{"players":'. $players->toJson() .'}');
+    $app->response->setBody($players->toJson());
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
@@ -158,7 +164,7 @@ $app->get(ROUTES_PREFIX.'/accounts', function() use($app) {
 if(is_dir('../plugins') && !DISABLE_PLUGINS) {
     $loaded_plugins = array();
     foreach (glob("../plugins/*.php") as $filename) {
-        $p = include $filename;
+        $p = require $filename;
         if($p)
             if(is_array($p)) {
                 array_merge($p, array('id' => basename($filename)));

@@ -13,6 +13,8 @@ class Player extends \Illuminate\Database\Eloquent\Model {
 
     public $timestamps = false;
 
+    protected $guarded = array('id');
+
     public function account()
     {
         return $this->belongsTo('Account');

@@ -1,4 +1,9 @@
 <?php
+/**
+ * This is the primary "kickstarter" file for the AAC
+ * Your webserver should direct all requests here
+ * You can put this file anywhere but make sure you adapt APP_ROOT
+ */
 // LOAD CONFIG IF IT EXISTS
 if(is_file('./config.php'))
     include './config.php';
@@ -9,8 +14,13 @@ defined('TFS_CONFIG') or die('Please follow instructions in public_html/config.s
 defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '/duaac');
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);
 defined('ENABLE_DEBUG') or define('ENABLE_DEBUG', false);
+defined('APP_ROOT') or define('APP_ROOT', '../app');
 
-require '../app/app.php';
+// IF YOU INSTALL PUBLIC_HTML IN A SUBDIRECTORY, FOR EXAMPLE: http://example.com/ots/aac/duaac.php
+// THEN YOU NEED TO SET APP_ROOT ACCORDINGLY. IN THIS CASE TO '../../../app'
+
+chdir(APP_ROOT);
+require './app.php';
 // NOTHING IN THIS FILE MATTERS AFTER THIS LINE
 
 // GOOD PLACE FOR PLUGINS, CUSTOMIZATIONS, ETC

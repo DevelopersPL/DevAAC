@@ -8,6 +8,7 @@ This software is designed to:
 * provide an example of good programming practices in PHP
 * require zero configuration for simple and secure use
 * emphasize simplicity and security
+* follow [good practices of REST API](http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api)
 
 Requirements
 =====
@@ -16,9 +17,11 @@ Requirements
 
 Nice to have
 =====
-* APC or xCache or Memcache
+* APC(u) if you want plugins/ratelimiter.php to work
 
 Installation
 =====
-
 * Get composer: https://getcomposer.org/download/
+* Clone this repo
+* composer.phar install
+

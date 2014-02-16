@@ -41,6 +41,7 @@ $app->hook('slim.before.dispatch', function () use ($app) {
     if (substr($path, 0, strlen(ROUTES_PREFIX)) == ROUTES_PREFIX)
         $path = substr($path, strlen(ROUTES_PREFIX));
 
+    // DO WE HAVE A RULE?
     if( array_key_exists($path, $rules) ) {
         // every path for every IP is a separate object to be thread safe
         $objname = $req->getIp() . '_' . $path;
@@ -48,14 +49,17 @@ $app->hook('slim.before.dispatch', function () use ($app) {
         if(apc_fetch($objname) + $rules[$path] > time()) {
             $app->halt(429, 'Too many requests.');
 
-            if(RATELIMITER_PENALIZE)
-                apc_store($objname, time());
-        } else
-            apc_store($objname, time());
+            if(!RATELIMITER_PENALIZE)
+                return;
+        }
+        apc_store($objname, time());
+        $app->expires('+'.$rules[$path].' seconds');
     }
 });
 
 return array('name' => 'Rate limiter',
+             'description' => 'Rate limiter requires APC user cache (APC or APCu)',
              'version' => '0.1',
              'author' => 'Don Daniello',
-             'link' => 'http://blablabal');
+             'link' => 'http://blablabal',
+             'time' => date(DATE_ATOM));
