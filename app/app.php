@@ -8,33 +8,40 @@
 $loader = require '../vendor/autoload.php';
 $loader->setPsr4('App\\', APP_ROOT);
 
-// define authentication Middleware (application-level)
-// http://docs.slimframework.com/#Middleware-Overview
-class AuthMiddleware extends \Slim\Middleware
-{
-    public function call()
-    {
-        // Get reference to application
-        $app = $this->app;
-
-        $auth = $app->getCookie('duaac_auth');
-
-        // Run inner middleware and application
-        $this->next->call();
-
-        $res = $app->response;
-        //$body = $res->getBody();
-        //$res->setBody(strtoupper($body));
-    }
-}
+use App\models\Player;
+use App\models\Account;
 
 // Create Slim app
 $app = new \Slim\Slim(array(
     'debug' => ENABLE_DEBUG
 ));
-$app->add(new \AuthMiddleware());
-//$app->response->headers->set('Content-Type', 'application/json'); // by default we return json
 ENABLE_DEBUG or $app->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
+
+// define authentication route middleware
+// http://docs.slimframework.com/#Middleware-Overview
+class AuthMiddleware extends \Slim\Middleware
+{
+    /**
+     * This method will check the HTTP request headers for previous authentication. If
+     * the request has already authenticated, the next middleware is called.
+     */
+    public function call()
+    {
+        $req = $this->app->request();
+        $res = $this->app->response();
+        $authUser = $req->headers('PHP_AUTH_USER');
+        $authPass = $req->headers('PHP_AUTH_PW');
+
+        if($authUser && $authPass)
+            $this->app->auth_account = Account::where('name', $authUser)->where('password', sha1($authPass))->first();
+        //else
+        //    $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
+        $this->next->call();
+    }
+}
+$app->add(new AuthMiddleware());
+//$app->response->headers->set('Content-Type', 'application/json'); // by default we return json
+
 
 // HANDLE ERRORS
 $app->error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) use ($app) {
@@ -65,25 +72,6 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$app->post(ROUTES_PREFIX.'/login', function($id) use($app) {
-    $name = $app->request->params('name');
-    $pass = $app->request->params('password');
-    try {
-        $account = Account::where('name', $name)->where('password', sha1($pass))->firstOrFail();
-    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        $app->halt(403);
-    }
-
-    $app->setCookie(
-        'duaac_auth',
-        $auth,
-        '1 month'
-    );
-
-    $app->response->setBody($players->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
-});
-
 // API docs with Swagger
 // http://zircote.com/swagger-php/using_swagger.html
 // https://github.com/zircote/swagger-php/blob/master/library/Swagger/Swagger.php
@@ -98,8 +86,16 @@ $app->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($app) {
         $app->response->setBody($swagger->getResourceList(array('output' => 'json')));
 });
 
-//
-use App\models\Player;
+// THIS ONE IS USED TO DISCOVER IF USER/PASS COMBINATION IS OK
+$app->get(ROUTES_PREFIX.'/accounts/my', function() use($app) {
+    if( ! $app->auth_account ) {
+        $app->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
+        $app->halt(401);
+    }
+    $app->response->setBody($app->auth_account->toJson());
+    $app->response->headers->set('Content-Type', 'application/json');
+});
+
 /**
  * @SWG\Resource(
  *  basePath="http://example.com/api",
@@ -146,7 +142,6 @@ $app->get(ROUTES_PREFIX.'/players', function() use($app) {
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
-use App\models\Account;
 $app->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($app) {
     $accounts = Account::findOrFail($id);
     $app->response->setBody($accounts->toJson());
