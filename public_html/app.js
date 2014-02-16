@@ -23,8 +23,36 @@ $(function(){
 
     // This bound to top-most application template
     App.ApplicationController = Ember.Controller.extend({
-        "footer-year": moment().format('YYYY')
+        isAuth: false,
+        "footer-year": moment().format('YYYY'),
+
+        login: function() {
+            //var btn = $('#loading-login-btn');
+            $('#loading-login-btn').button('loading');
+
+            var request = $.post("/duaac/login", this.getProperties("name", "password"));
+            request.then(this.loginsuccess.bind(this), this.loginfailure.bind(this));
+        },
+
+        loginsuccess: function(response) {
+            alert("Success server response: " + response.status);
+            $('#loading-login-btn').button('reset');
+            this.set("isAuth", true);
+        },
+
+        loginfailure: function(response) {
+            alert("Failure server response: " + response.status);
+            $('#loading-login-btn').button('reset');
+            this.set("isAuth", false);
+        }
     });
+
+    App.Router.map(function() {
+        this.resource("account", function(){
+            this.route("register", { path: "/register" });
+        });
+    });
+
 
     App.ApplicationRoute = Ember.Route.extend({
         setupController: function(controller) {
@@ -53,8 +81,9 @@ $(function(){
     });
 
 
-    // about page
+    // pages
     App.Router.map(function() {
+        this.route("rules", { path: "/rules" });
         this.route("about", { path: "/about" });
     });
 
@@ -81,6 +110,4 @@ $(function(){
             this.transitionTo('index');
         }
     });
-
-
 });

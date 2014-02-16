@@ -57,9 +57,48 @@
         </ul>
     </script>
 
+    <script type="text/x-handlebars" data-template-name="account/register">
+        <h1 class="page-header">Register new account</h1>
+        <form role="form" {{action "register" on="submit"}}>
+            <div class="form-group">
+                <label for="InputEmail1">Login</label>
+                <input type="text" class="form-control" id="InputLogin1" placeholder="Enter login">
+            </div>
+            <div class="form-group">
+                <label for="InputEmail1">Email address</label>
+                <input type="email" class="form-control" id="InputEmail1" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label for="InputPassword1">Password</label>
+                <input type="password" class="form-control" id="InputPassword1" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <label for="InputPassword2">Password again</label>
+                <input type="password" class="form-control" id="InputPassword2" placeholder="Password again">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> I agree {{#link-to 'rules'}}server rules{{/link-to}}
+                </label>
+            </div>
+            <button type="submit" id="loading-register-btn" data-loading-text="Registering account..." class="btn btn-info">Register</button>
+        </form>
+    </script>
+
     <script type="text/x-handlebars" data-template-name="about">
         <h1><a href="#">About developers.pl</a></h1>
         <p class="lead">by <a href="index.php">Router works fine!!!</a></p>
+    </script>
+
+    <script type="text/x-handlebars" data-template-name="rules">
+        <h1 class="page-header">Server rules</h1>
+        <p>The golden rule: Have fun.</p>
+        <p>If you get pwn3d, don't hate the game.</p>
+        <p>No <a href='http://en.wikipedia.org/wiki/Cheating' target="_blank">cheating</a> allowed.</p>
+        <p>No <a href='http://en.wikipedia.org/wiki/Internet_bot' target="_blank">botting</a> allowed.</p>
+        <p>The staff can delete, ban, do whatever they want with your account and your <br>
+            submitted information. (Including exposing and logging your IP).</p>
+        <p></p>
     </script>
 
     <script type="text/x-handlebars" data-template-name="players/view">
@@ -119,21 +158,32 @@
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li>{{#link-to 'about'}}About{{/link-to}}</li>
-                <li><a href="#services">Services</a>
-                </li>
-                <li><a href="#contact">Contact</a>
-                </li>
+                <li>{{#link-to 'rules'}}Rules{{/link-to}}</li>
             </ul>
-
-            <form class="navbar-form navbar-right" role="form">
+            {{#if isAuth}}
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Signed in as Max Kwiatkowski<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">My account</a></li>
+                            <li><a href="#">My characters</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            {{else}}
+            <form class="navbar-form navbar-right" role="form" {{action "login" on="submit"}}>
                 <div class="form-group">
-                    <input type="text" placeholder="Email" class="form-control">
+                    {{input value=name placeholder="Login" type="text" class="form-control"}}
                 </div>
                 <div class="form-group">
-                    <input type="password" placeholder="Password" class="form-control">
+                    {{input value=password placeholder="Password" type="password" class="form-control"}}
                 </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
+                <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Sign in</button>
+                {{#link-to 'account.register' class="btn btn-info"}}Sign up{{/link-to}}
             </form>
+            {{/if}}
         </div><!--/.navbar-collapse -->
     </div>
 </div>
@@ -147,6 +197,19 @@
         </div>
 
         <div class="col-lg-4">
+            <div class="well">
+                <h4>Character Search</h4>
+                <div class="input-group">
+                    <input type="text" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                </div>
+                <!-- /input-group -->
+            </div>
+
             <div class="well">
                 <h4>Top 5 Level</h4>
                 <div class="row">

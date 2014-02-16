@@ -8,7 +8,8 @@
 $loader = require '../vendor/autoload.php';
 $loader->setPsr4('App\\', __DIR__.'/../app');
 
-// define authentication Middleware
+// define authentication Middleware (application-level)
+// http://docs.slimframework.com/#Middleware-Overview
 class AuthMiddleware extends \Slim\Middleware
 {
     public function call()
@@ -29,7 +30,7 @@ class AuthMiddleware extends \Slim\Middleware
 
 // Create Slim app
 $app = new \Slim\Slim(array(
-    'debug' => true
+    'debug' => ENABLE_DEBUG
 ));
 $app->add(new \AuthMiddleware());
 //$app->response->headers->set('Content-Type', 'application/json'); // by default we return json
@@ -58,7 +59,7 @@ $capsule->addConnection([
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
-$app->post('/duaac/login', function($id) use($app) {
+$app->post(ROUTES_PREFIX.'/login', function($id) use($app) {
     $name = $app->request->params('name');
     $pass = $app->request->params('password');
     try {
@@ -73,7 +74,6 @@ $app->post('/duaac/login', function($id) use($app) {
         '1 month'
     );
 
-    $players = Player::findOrFail($id);
     $app->response->setBody($players->toJson());
     $app->response->headers->set('Content-Type', 'application/json');
 });
@@ -82,7 +82,7 @@ $app->post('/duaac/login', function($id) use($app) {
 // http://zircote.com/swagger-php/using_swagger.html
 // https://github.com/zircote/swagger-php/blob/master/library/Swagger/Swagger.php
 use Swagger\Swagger;
-$app->get('/duaac/api-docs(/:path)', function($path = '/') use($app) {
+$app->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($app) {
     $swagger = new Swagger('../', '../vendor');
     $app->response->headers->set('Access-Control-Allow-Origin', '*');
     $app->response->headers->set('Content-Type', 'application/json');
@@ -111,7 +111,7 @@ use App\models\Player;
  *  )
  * )
  */
-$app->get('/duaac/players/:id', function($id) use($app) {
+$app->get(ROUTES_PREFIX.'/players/:id', function($id) use($app) {
     $player = Player::findOrFail($id);
     $app->response->setBody('{"players":'. $player->toJson() .'}');
     $app->response->headers->set('Content-Type', 'application/json');
@@ -133,21 +133,47 @@ $app->get('/duaac/players/:id', function($id) use($app) {
  *  )
  * )
  */
-$app->get('/duaac/players', function() use($app) {
+$app->get(ROUTES_PREFIX.'/players', function() use($app) {
     $players = Player::all();
     $app->response->setBody('{"players":'. $players->toJson() .'}');
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
 use App\models\Account;
-$app->get('/duaac/accounts/:id', function($id) use($app) {
+$app->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($app) {
     $accounts = Account::findOrFail($id);
     $app->response->setBody($accounts->toJson());
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
-$app->get('/duaac/accounts', function() use($app) {
+$app->get(ROUTES_PREFIX.'/accounts', function() use($app) {
     $accounts = Account::all();
     $app->response->setBody('{"accounts":'.$accounts->toJson() .'}');
     $app->response->headers->set('Content-Type', 'application/json');
 });
+
+////////////////////// PLUGINS SUPPORT ///////////////////////////////
+// plugins are loaded here (if they exist)
+if(is_dir('../plugins') && !DISABLE_PLUGINS) {
+    $loaded_plugins = array();
+    foreach (glob("../plugins/*.php") as $filename) {
+        $p = include $filename;
+        if($p)
+            if(is_array($p)) {
+                array_merge($p, array('id' => basename($filename)));
+                $loaded_plugins[] = $p;
+            } else
+                $loaded_plugins[] = array('id' => basename($filename));
+
+    }
+    $app->plugins = $loaded_plugins;
+}
+
+$app->get(ROUTES_PREFIX.'/plugins', function() use($app) {
+    $app->response->setBody('{"plugins":'.json_encode($app->plugins) .'}');
+    $app->response->headers->set('Content-Type', 'application/json');
+});
+
+//////////////////////////////////////////////////////////////////////
+// all done, any code after this call will not matter to the request
+$app->run();
