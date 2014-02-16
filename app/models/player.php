@@ -61,4 +61,19 @@ class Player extends \Illuminate\Database\Eloquent\Model {
             $mana = 5 * $level;
         $this->attributes['manamax'] = $this->attributes['mana'] = $mana;
     }
+
+    public function setMaglevelAttribute($mlvl)
+    {
+        // http://tibia.wikia.com/wiki/Formula
+        $this->attributes['maglevel'] = $mlvl;
+
+        // manaspent
+        if( in_array($this->vocation, array(1, 2, 5, 6, 9, 10)) ) // sorcerers and druids
+            $m = 1.1;
+        elseif( in_array($this->vocation, array(3, 7, 11)) ) // paladins
+            $m = 1.4;
+        else                                                // rookies, knights
+            $m = 3;
+        $this->attributes['manaspent'] = (1600 * (pow($m, $mlvl) - 1) ) / ( $m - 1 );
+    }
 }

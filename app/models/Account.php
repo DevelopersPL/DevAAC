@@ -7,6 +7,7 @@
 namespace App\models;
 
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
+// https://github.com/otland/forgottenserver/blob/master/schema.sql
 class Account extends \Illuminate\Database\Eloquent\Model {
 
     public $timestamps = false;
