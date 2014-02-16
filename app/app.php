@@ -34,6 +34,7 @@ $app = new \Slim\Slim(array(
 ));
 $app->add(new \AuthMiddleware());
 //$app->response->headers->set('Content-Type', 'application/json'); // by default we return json
+DEBUG_MODE or $app->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
 
 $app->error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) use ($app) {
     $app->response->setStatus(404);
