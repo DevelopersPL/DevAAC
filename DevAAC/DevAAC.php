@@ -115,7 +115,7 @@ $app->get(ROUTES_PREFIX.'/accounts/my', function() use($app) {
  */
 $app->get(ROUTES_PREFIX.'/players/:id', function($id) use($app) {
     $player = Player::findOrFail($id);
-    $app->response->setBody('{"players":'. $player->toJson() .'}');
+    $app->response->setBody($player->toJson());
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
@@ -137,7 +137,6 @@ $app->get(ROUTES_PREFIX.'/players/:id', function($id) use($app) {
  */
 $app->get(ROUTES_PREFIX.'/players', function() use($app) {
     $players = Player::all();
-    //$app->response->setBody('{"players":'. $players->toJson() .'}');
     $app->response->setBody($players->toJson());
     $app->response->headers->set('Content-Type', 'application/json');
 });
@@ -150,7 +149,7 @@ $app->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($app) {
 
 $app->get(ROUTES_PREFIX.'/accounts', function() use($app) {
     $accounts = Account::all();
-    $app->response->setBody('{"accounts":'.$accounts->toJson() .'}');
+    $app->response->setBody($accounts->toJson());
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
@@ -172,7 +171,7 @@ if(is_dir('../plugins') && !DISABLE_PLUGINS) {
 }
 
 $app->get(ROUTES_PREFIX.'/plugins', function() use($app) {
-    $app->response->setBody('{"plugins":'.json_encode($app->plugins) .'}');
+    $app->response->setBody(json_encode($app->plugins));
     $app->response->headers->set('Content-Type', 'application/json');
 });
 

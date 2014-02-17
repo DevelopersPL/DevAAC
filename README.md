@@ -19,11 +19,12 @@ Nice to have
 =====
 * APC(u) if you want plugins/ratelimiter.php to work
 
-Installation
+Installation (dev release)
 =====
-* Get composer: https://getcomposer.org/download/
-* Clone this repo
-* composer.phar install
+* [Get composer](https://getcomposer.org/download) ```curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin```
+* Clone this repo: ```git clone https://github.com/DonDaniello/DevAAC.git```
+* Install dependencies: ```composer.phar install```
+* Set up your web server to serve DevAAC/public_html as document root
 
 Authors
 =====
