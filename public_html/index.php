@@ -11,16 +11,16 @@ if(is_file('./config.php'))
 // DEFAULT CONFIG - DO NOT EDIT
 // PUT YOUR CUSTOMIZATIONS IN config.php
 defined('TFS_CONFIG') or die('Please follow instructions in public_html/config.sample.php');
-defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '/duaac');
+defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '/devaac');
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);
 defined('ENABLE_DEBUG') or define('ENABLE_DEBUG', false);
-defined('APP_ROOT') or define('APP_ROOT', '../app');
+defined('APP_ROOT') or define('APP_ROOT', '../DevAAC');
 
-// IF YOU INSTALL PUBLIC_HTML IN A SUBDIRECTORY, FOR EXAMPLE: http://example.com/ots/aac/duaac.php
+// IF YOU INSTALL PUBLIC_HTML IN A SUBDIRECTORY, FOR EXAMPLE: http://example.com/ots/aac/index.php
 // THEN YOU NEED TO SET APP_ROOT ACCORDINGLY. IN THIS CASE TO '../../../app'
 
 chdir(APP_ROOT);
-require './app.php';
+require './DevAAC.php';
 // NOTHING IN THIS FILE MATTERS AFTER THIS LINE
 
 // GOOD PLACE FOR PLUGINS, CUSTOMIZATIONS, ETC

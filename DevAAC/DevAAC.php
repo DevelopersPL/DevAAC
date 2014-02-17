@@ -6,10 +6,10 @@
  */
 // Autoload our dependencies with Composer
 $loader = require '../vendor/autoload.php';
-$loader->setPsr4('App\\', APP_ROOT);
+$loader->setPsr4('DevAAC\\', APP_ROOT);
 
-use App\models\Player;
-use App\models\Account;
+use DevAAC\Models\Player;
+use DevAAC\Models\Account;
 
 // Create Slim app
 $app = new \Slim\Slim(array(

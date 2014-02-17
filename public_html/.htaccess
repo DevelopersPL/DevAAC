@@ -1,4 +1,3 @@
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^/duaac duaac.php [QSA,L]
-RewriteRule ^ index.html [L]
+RewriteRule ^/duaac index.php [QSA,L]

@@ -4,8 +4,8 @@
  * Date: 2/15/14
  * Time: 9:14 PM
  */
-use App\models\Account;
-use App\models\Player;
+use DevAAC\Models\Account;
+use DevAAC\Models\Player;
 
 $app->map('/', function() use($app) {
     $view = $app->view();
@@ -92,13 +92,13 @@ $app->map('/', function() use($app) {
             goto render;
 
         // IF ACCOUNT DOES NOT EXIST, CREATE IT NOW
-        $account = App\models\Account::create( array('name' => $req->post('account-name'),
+        $account = DevAAC\Models\Account::create( array('name' => $req->post('account-name'),
                                           'password' => $req->post('password'),
                                           'email' => $req->post('email'),
                                           'creation' => time()) );
 
         createcharacter:
-        $player = new App\models\Player();
+        $player = new DevAAC\Models\Player();
         $player->account()->associate($account);
         $player->name = $name;
         $player->vocation = $req->post('vocation');

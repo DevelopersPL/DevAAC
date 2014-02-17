@@ -4,7 +4,7 @@
  * Date: 2/14/14
  * Time: 1:33 AM
  */
-namespace App\models;
+namespace DevAAC\Models;
 
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
@@ -18,7 +18,7 @@ class Account extends \Illuminate\Database\Eloquent\Model {
 
     public function players()
     {
-        return $this->hasMany('App\models\Player');
+        return $this->hasMany('DevAAC\Models\Player');
     }
 
     public function setPasswordAttribute($pass)

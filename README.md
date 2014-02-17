@@ -1,7 +1,6 @@
-DUAAC
+DevAAC
 =====
-
-DU AAC for TFS 1.0
+DevAAC for TFS 1.0 by developers.pl
 
 This software is designed to:
 * be easy to understand and modify
@@ -9,6 +8,7 @@ This software is designed to:
 * require zero configuration for simple and secure use
 * emphasize simplicity and security
 * follow [good practices of REST API](http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api)
+* follow [PSR-2 coding guidelines](http://www.php-fig.org/psr/psr-2/)
 
 Requirements
 =====
@@ -25,3 +25,10 @@ Installation
 * Clone this repo
 * composer.phar install
 
+Authors
+=====
+* Don Daniello
+* mrwogu
+* Znote
+
+Check [LICENSE](LICENSE).

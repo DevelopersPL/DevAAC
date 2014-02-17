@@ -4,7 +4,7 @@
  * Date: 2/14/14
  * Time: 1:33 AM
  */
-namespace App\models;
+namespace DevAAC\Models;
 
 /**
  * @SWG\Model()
@@ -21,7 +21,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
 
     public function account()
     {
-        return $this->belongsTo('App\models\Account');
+        return $this->belongsTo('DevAAC\Models\Account');
     }
 
     public function setLevelAttribute($level)
