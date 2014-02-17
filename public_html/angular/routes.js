@@ -12,7 +12,7 @@ function ApiUrl(link) {
 	ROUTES
 	(Routing all pages and hooking them to their controller)
 */
-var app = angular.module('app', []).config(function($routeProvider) {
+var app = angular.module('app', ['ngRoute']).config(function($routeProvider) {
 	
 	$routeProvider.when('/', {
 		templateUrl: PageUrl('news'),
