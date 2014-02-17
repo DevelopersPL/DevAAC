@@ -23,12 +23,13 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- MomentJS -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js"></script>
     <!-- Angular -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 </head>
 <body>
-
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -38,18 +39,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#/home">DU AAC</a>
+                <a class="navbar-brand" href="home">DU AAC</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/home">About</a>
-                    </li>
-                    <li><a href="#/home">Services</a>
-                    </li>
-                    <li><a href="#/home">Contact</a>
-                    </li>
+                    <li><a href="about">About</a></li>
+                    <li><a href="home">Services</a></li>
+                    <li><a href="home">Contact</a></li>
                 </ul>
                 <form ng-submit="Login()" ng-controller="WidgetController" class="navbar-form navbar-right">
                     <div class="form-group">
@@ -59,7 +57,7 @@
                         <input ng-model="login.password" required class="form-control" placeholder="Password" type="password" >
                     </div>
                     <button type="submit" class="btn btn-success">Sign in</button>
-                    <a class="btn btn-info" href="#/account/register">Sign up</a>
+                    <a class="btn btn-info" href="account/register">Sign up</a>
                 </form>
             </div>
             <!-- /.navbar-collapse -->
@@ -94,7 +92,7 @@
                         <div class="col-lg-12">
                             <ul class="list-unstyled">
                                 <li ng-repeat="player in playersWidget">
-                                    <a href="#/players/{{player.id}}">{{player.name}}</a>
+                                    <a href="players/{{player.id}}">{{player.name}}</a>
                                 </li>
                             </ul>
                         </div>
@@ -110,11 +108,10 @@
         </div>
 
         <hr>
-
-        <footer>
+        <footer ng-controller="globalFooter">
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Company 2014</p>
+                    <p>Copyright &copy; developers.pl {{footerYear}}</p>
                 </div>
             </div>
         </footer>
@@ -127,5 +124,4 @@
     <script src="factories.js"></script>
     <script src="controllers.js"></script>
 </body>
-
 </html>

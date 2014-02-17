@@ -78,8 +78,14 @@ app.controller('ProfileController',
 });
 
 // NEWS CONTROLLER
-app.controller('NewsController', 
-	function($scope, $location
-) {
-	console.log("News controller initialized.");
+app.controller('NewsController',
+    function($scope, $location
+        ) {
+        console.log("News controller initialized.");
+    });
+
+
+// GLOBALFOOTER CONTROLLER
+app.controller('globalFooter', function($scope) {
+    $scope.footerYear = moment().format('YYYY');
 });
