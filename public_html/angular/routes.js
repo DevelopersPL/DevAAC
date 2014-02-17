@@ -15,32 +15,30 @@ function ApiUrl(link) {
 var app = angular.module('app', ['ngRoute']);
 app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	
-	$routeProvider.when('/angular/', {
+	$routeProvider.when('/', {
 		templateUrl: PageUrl('news'),
 		controller: 'NewsController'
 	});
 
-	$routeProvider.when('/angular/home', {
+	$routeProvider.when('/home', {
 		templateUrl: PageUrl('news'),
 		controller: 'NewsController'
 	});
 
-	$routeProvider.when('/angular/players/:id', {
+	$routeProvider.when('/players/:id', {
 		templateUrl: PageUrl('profile'),
 		controller: 'ProfileController'
 	});
 
-	$routeProvider.when('/angular/404', {
+	$routeProvider.when('/404', {
 		templateUrl: PageUrl('404')
 	});
 
-    $routeProvider.when('/angular/about', {
+    $routeProvider.when('/about', {
         templateUrl: PageUrl('about')
     });
 
 	$routeProvider.otherwise({
-		redirectTo : '/angular/404'
+		redirectTo : '/404'
 	});
-
-    $locationProvider.html5Mode(true);
 }]);
