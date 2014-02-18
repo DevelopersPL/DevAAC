@@ -15,7 +15,15 @@ use DevAAC\Models\Account;
 $DevAAC = new \Slim\Slim(array(
     'debug' => ENABLE_DEBUG
 ));
-!ENABLE_DEBUG or $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
+
+if(ENABLE_DEBUG) {
+    // CORS
+    $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*');
+    $DevAAC->response->headers->set('Access-Control-Allow-Headers', 'Authorization');
+    $DevAAC->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    $DevAAC->response->headers->set('Access-Control-Allow-Credentials', 'true');
+    $DevAAC->options(':a+', function ($a) {}); // Send blank 200 to every OPTIONS request
+}
 
 // define authentication route middleware
 // http://docs.slimframework.com/#Middleware-Overview
@@ -158,7 +166,7 @@ $DevAAC->get(ROUTES_PREFIX.'/topplayers', function() use($DevAAC) {
  *      @SWG\Parameter( name="Authorization",
  *                      description="HTTP Basic Auth: base64(name:password)",
  *                      paramType="header",
- *                      required=true,
+ *                      required=false,
  *                      type="string"),
  *      @SWG\ResponseMessage(code=401, message="No or bad authentication provided")
  *   )
