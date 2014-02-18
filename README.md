@@ -17,8 +17,8 @@ Requirements
 =====
 * PHP >= 5.3.0
 * PHP JSON extension
-* PHP MySQL
-* APC or APCu if you want plugins/ratelimiter.php to work
+* PHP MySQL extension
+* PHp APC or APCu extension (if you want plugins/ratelimiter.php to work)
 
 Installation (dev release)
 =====
@@ -38,7 +38,11 @@ Check [LICENSE](LICENSE).
 
 Hacking
 =====
-Generate Swagger API docs:
+* [Slim](http://slimframework.com) framework [documentation](http://docs.slimframework.com/)
+* API documentation is awesome thanks to [Swagger](https://helloreverb.com/developers/swagger). Put [Swagger Annotations](http://zircote.com/swagger-php/annotations.html) in the code,
+* Swagger docs are dynamically server at /api-docs
+
+Generate Swagger API docs manually:
 ```
 php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 ```

@@ -17,9 +17,6 @@ DevAAC.controller('WidgetController',
 		Cache.setPlayers(data);
 	});
 
-	$scope.Login = function() {
-		console.log("Login button clicked.", $scope.login.username, $scope.login.password);
-	}
 	$scope.PlayerSearch = function() {
 		console.log("Search button clicked.", $scope.search);
 		var player = Cache.findPlayerName($scope.search);
@@ -88,4 +85,60 @@ DevAAC.controller('NewsController',
 // GLOBALFOOTER CONTROLLER
 DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
+});
+
+DevAAC.controller('userNav', function ($scope, $http, $window) {
+    //$scope.login = {username: 'john.doe', password: 'foobar'};
+    $scope.isAuthenticated = false;
+    $scope.welcome = '';
+    $scope.message = '';
+
+    $scope.Login = function () {
+        $('#loading-login-btn').button('loading');
+
+        $.ajax({
+            url: ApiUrl('accounts/my'),
+            dataType: 'json',
+            async: false,
+            username: $scope.login.username,
+            password: $scope.login.password,
+            success: function (data, status, headers, config) {
+                //$window.sessionStorage.token = data.token;
+                $scope.isAuthenticated = true;
+                $scope.username = data.name;
+            },
+            error: function (data, status, headers, config) {
+                console.log(
+                    'login error'
+                );
+
+                //delete $window.sessionStorage.token;
+                $scope.isAuthenticated = false;
+
+                // Handle login errors here
+                $scope.error = 'Error: Invalid user or password';
+                $scope.welcome = '';
+            }
+        }).always(function () {
+            $('#loading-login-btn').button('reset');
+            $scope.login = {};
+        });
+
+    };
+
+    $scope.Logout = function () {
+        $.ajax({
+            url: ApiUrl('accounts/my'),
+            dataType: 'json',
+            async: false,
+            username: 'logout',
+            password: 'logout'
+        }).always(function (data, status, headers, config) {
+                console.log(data + " : " + status);
+        });
+
+        $scope.welcome = '';
+        $scope.isAuthenticated = false;
+        delete $window.sessionStorage.token;
+    };
 });
