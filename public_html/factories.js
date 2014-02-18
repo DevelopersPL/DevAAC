@@ -60,7 +60,7 @@ app.factory("Highscores", function($http, $location) {
 	return {
 		experience: function() {
 			return $http({
-				url: ApiUrl('players'),
+				url: ApiUrl('topplayers'),
 				method: 'GET',
 				headers: { 'Content-Type': 'application/json' }
 				//data: JSON.stringify({year: yearString})

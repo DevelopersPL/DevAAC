@@ -141,6 +141,12 @@ $app->get(ROUTES_PREFIX.'/players', function() use($app) {
     $app->response->headers->set('Content-Type', 'application/json');
 });
 
+$app->get(ROUTES_PREFIX.'/topplayers', function() use($app) {
+    $players = Player::take(5)->orderBy('level', 'DESC')->orderBy('experience', 'DESC')->get();
+    $app->response->setBody($players->toJson());
+    $app->response->headers->set('Content-Type', 'application/json');
+});
+
 $app->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($app) {
     $accounts = Account::findOrFail($id);
     $app->response->setBody($accounts->toJson());
