@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Swagger UI</title>
+  <title>DevAAC REST API</title>
   <link href='https://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'/>
   <link href='css/highlight.default.css' media='screen' rel='stylesheet' type='text/css'/>
   <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
@@ -19,7 +19,7 @@
   <script type="text/javascript">
     $(function () {
       window.swaggerUi = new SwaggerUi({
-      url: "https://github.com/DonDaniello/DevAAC/blob/master/api-docs/api-docs.json",
+      url: "http://devots.dondaniello.com/devaac/api-docs",
       dom_id: "swagger-ui-container",
       supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
       onComplete: function(swaggerApi, swaggerUi){
@@ -32,34 +32,116 @@
       docExpansion: "none"
     });
 
-    $('#input_apiKey').change(function() {
-      var key = $('#input_apiKey')[0].value;
-      log("key: " + key);
-      if(key && key.trim() != "") {
-        log("added key " + key);
-        window.authorizations.add("key", new ApiKeyAuthorization("api_key", key, "query"));
+    $('#input_account').change(function() {
+      var username = $('#input_account').val();
+      var password = $('#input_password').val();
+      if(username && username.trim() != "" && password && password.trim() != "") {
+        log("added Authorization: Basic " + base64_encode(username + ':' + password));
+        window.authorizations.add("key", new ApiKeyAuthorization("Authorization", 'Basic ' + base64_encode(username + ':' + password), "header"));
       }
-    })
+    });
+
+    $('#input_password').change(function() {
+        var username = $('#input_account').val();
+        var password = $('#input_password').val();
+        if(username && username.trim() != "" && password && password.trim() != "") {
+            log("added Authorization: Basic " + base64_encode(username + ':' + password));
+            window.authorizations.add("key", new ApiKeyAuthorization("Authorization", 'Basic ' + base64_encode(username + ':' + password), "header"));
+        }
+    });
+
+    $('#reset-url').click(function() {
+        window.swaggerUi.headerView.trigger('update-swagger-ui', {
+            url: "http://devots.dondaniello.com/devaac/api-docs"
+        });
+    });
+
     window.swaggerUi.load();
+
+        function base64_encode (data) {
+            // From: http://phpjs.org/functions
+            // +   original by: Tyler Akins (http://rumkin.com)
+            // +   improved by: Bayron Guevara
+            // +   improved by: Thunder.m
+            // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+            // +   bugfixed by: Pellentesque Malesuada
+            // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+            // +   improved by: Rafał Kukawski (http://kukawski.pl)
+            // *     example 1: base64_encode('Kevin van Zonneveld');
+            // *     returns 1: 'S2V2aW4gdmFuIFpvbm5ldmVsZA=='
+            // mozilla has this native
+            // - but breaks in 2.0.0.12!
+            //if (typeof this.window['btoa'] === 'function') {
+            //    return btoa(data);
+            //}
+            var b64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+            var o1, o2, o3, h1, h2, h3, h4, bits, i = 0,
+                    ac = 0,
+                    enc = "",
+                    tmp_arr = [];
+
+            if (!data) {
+                return data;
+            }
+
+            do { // pack three octets into four hexets
+                o1 = data.charCodeAt(i++);
+                o2 = data.charCodeAt(i++);
+                o3 = data.charCodeAt(i++);
+
+                bits = o1 << 16 | o2 << 8 | o3;
+
+                h1 = bits >> 18 & 0x3f;
+                h2 = bits >> 12 & 0x3f;
+                h3 = bits >> 6 & 0x3f;
+                h4 = bits & 0x3f;
+
+                // use hexets to index into b64, and append result to encoded string
+                tmp_arr[ac++] = b64.charAt(h1) + b64.charAt(h2) + b64.charAt(h3) + b64.charAt(h4);
+            } while (i < data.length);
+
+            enc = tmp_arr.join('');
+
+            var r = data.length % 3;
+
+            return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
+
+        }
   });
 
   </script>
+    <style>
+        #header form#api_selector .input a#reset-url {
+            display: block;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 6px 8px;
+            font-size: 0.9em;
+            color: white;
+            background-color: #547f00;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            -o-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -khtml-border-radius: 4px;
+            border-radius: 4px;
+        }
+        #header form#api_selector .input a#reset-url:hover {
+            background-color: #547f00;
+        }
+    </style>
 </head>
 
 <body>
 <div id='header'>
   <div class="swagger-ui-wrap">
-    <a id="logo" href="http://swagger.wordnik.com">swagger</a>
+    <a id="logo" href="https://github.com/DonDaniello/DevAAC">DevAAC</a>
 
     <form id='api_selector'>
-      <div class='input icon-btn'>
-        <img id="show-pet-store-icon" src="images/pet_store_api.png" title="Show Swagger Petstore Example Apis">
-      </div>
-      <div class='input icon-btn'>
-        <img id="show-wordnik-dev-icon" src="images/wordnik_api.png" title="Show Wordnik Developer Apis">
-      </div>
-      <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
-      <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
+      <div class='input'><a id="reset-url" href="#">Reset URL</a></div>
+      <div class='input'><input placeholder="http://path-o-your-DevAAC/devaac/api-docs" id="input_baseUrl" name="baseUrl" type="text"/></div>
+      <div class='input'><input placeholder="account name" id="input_account" name="account" type="text" size="10"/></div>
+      <div class='input'><input placeholder="password" id="input_password" name="password" type="password" size="10"/></div>
       <div class='input'><a id="explore" href="#">Explore</a></div>
     </form>
   </div>
