@@ -12,8 +12,8 @@ function ApiUrl(link) {
 	ROUTES
 	(Routing all pages and hooking them to their controller)
 */
-var app = angular.module('app', ['ngRoute']);
-app.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+var DevAAC = angular.module('app', ['ngRoute']);
+DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/', {
 		templateUrl: PageUrl('news'),

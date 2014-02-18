@@ -1,5 +1,5 @@
 // WIDGET CONTROLLER
-app.controller('WidgetController', 
+DevAAC.controller('WidgetController',
 	function($scope, $location, Highscores, Cache
 ) {
 	$scope.playersWidget = {};
@@ -33,7 +33,7 @@ app.controller('WidgetController',
 });
 
 // PROFILE CONTROLLER
-app.controller('ProfileController', 
+DevAAC.controller('ProfileController',
 	function($scope, $location, $routeParams, Player, Cache
 ) {
 	$scope.player = {
@@ -78,7 +78,7 @@ app.controller('ProfileController',
 });
 
 // NEWS CONTROLLER
-app.controller('NewsController',
+DevAAC.controller('NewsController',
     function($scope, $location
         ) {
         console.log("News controller initialized.");
@@ -86,6 +86,6 @@ app.controller('NewsController',
 
 
 // GLOBALFOOTER CONTROLLER
-app.controller('globalFooter', function($scope) {
+DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
 });

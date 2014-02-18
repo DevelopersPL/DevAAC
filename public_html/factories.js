@@ -5,7 +5,7 @@
 
 // This will cache players to avoid unneccesary HTTP requests
 // Cache object
-app.factory("Cache", function($http, $location) {
+DevAAC.factory("Cache", function($http, $location) {
 	var players = false;
 
 	return {
@@ -56,7 +56,7 @@ app.factory("Cache", function($http, $location) {
 });
 
 // Highscore API (etc fetch top players)
-app.factory("Highscores", function($http, $location) {
+DevAAC.factory("Highscores", function($http, $location) {
 	return {
 		experience: function() {
 			return $http({
@@ -76,7 +76,7 @@ app.factory("Highscores", function($http, $location) {
 });
 
 // Player API
-app.factory("Player", function($http, $location, Cache) {
+DevAAC.factory("Player", function($http, $location, Cache) {
 	return {
 		get: function(player_id) {
 			return $http({
