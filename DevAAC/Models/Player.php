@@ -7,10 +7,14 @@
 namespace DevAAC\Models;
 
 /**
- * @SWG\Model()
+ * @SWG\Model(required="['id','name']")
  */
 class Player extends \Illuminate\Database\Eloquent\Model {
 
+    /**
+     * @SWG\Property(name="id", type="integer")
+     * @SWG\Property(name="name", type="string")
+     */
     public $timestamps = false;
 
     protected $guarded = array('id');

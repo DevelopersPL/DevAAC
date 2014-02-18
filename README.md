@@ -1,6 +1,7 @@
 DevAAC
 =====
 DevAAC for TFS 1.0 by developers.pl
+Check out the [REST API documentation](http://dondaniello.github.io/DevAAC)
 
 This software is designed to:
 
@@ -36,7 +37,7 @@ Check [LICENSE](LICENSE).
 
 Hacking
 =====
-Regenerate Swagger API docs:
+Generate Swagger API docs:
 ```
-php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs && rm api-docs/index.php
+php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 ```

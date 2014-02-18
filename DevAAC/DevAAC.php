@@ -15,7 +15,7 @@ use DevAAC\Models\Account;
 $DevAAC = new \Slim\Slim(array(
     'debug' => ENABLE_DEBUG
 ));
-ENABLE_DEBUG or $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
+!ENABLE_DEBUG or $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
 
 // define authentication route middleware
 // http://docs.slimframework.com/#Middleware-Overview
@@ -86,29 +86,24 @@ $DevAAC->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($DevAA
         $DevAAC->response->setBody($swagger->getResourceList(array('output' => 'json')));
 });
 
-// THIS ONE IS USED TO DISCOVER IF USER/PASS COMBINATION IS OK
-$DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
-    if( ! $DevAAC->auth_account ) {
-        $DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
-        $DevAAC->halt(401);
-    }
-    $DevAAC->response->setBody($DevAAC->auth_account->toJson());
-    $DevAAC->response->headers->set('Content-Type', 'application/json');
-});
-
 /**
  * @SWG\Resource(
- *  basePath="http://example.com/api",
+ *  basePath="/devaac",
  *  resourcePath="/players",
  *  @SWG\Api(
- *    path="/players/{playerId}",
- *    description="Operations about players",
+ *    path="/players/{id}",
+ *    description="Operations on players",
  *    @SWG\Operation(
  *      summary="Retrieve player based on ID",
  *      method="GET",
- *      type="object[Player]",
+ *      type="Player",
  *      nickname="getPlayerByID",
- *      @SWG\Parameter(name="playerId",type="integer")
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Player that needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found")
  *    )
  *  )
  * )
@@ -121,11 +116,11 @@ $DevAAC->get(ROUTES_PREFIX.'/players/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="http://example.com/api",
+ *  basePath="/devaac",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players",
- *    description="Operations about players",
+ *    description="Operations on players",
  *    @SWG\Operation(
  *      summary="Retrieve all players",
  *      method="GET",
@@ -147,6 +142,62 @@ $DevAAC->get(ROUTES_PREFIX.'/topplayers', function() use($DevAAC) {
     $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
+/**
+ * @SWG\Resource(
+ *  basePath="/devaac",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/my",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Retrieve authenticated account",
+ *      notes="name, password and email are returned only to authenticated user and admin",
+ *      method="GET",
+ *      type="Account",
+ *      nickname="getAccountByID",
+ *      @SWG\Parameter( name="Authorization",
+ *                      description="HTTP Basic Auth: base64(name:password)",
+ *                      paramType="header",
+ *                      required=true,
+ *                      type="string"),
+ *      @SWG\ResponseMessage(code=401, message="No or bad authentication provided")
+ *   )
+ *  )
+ * )
+ */
+// THIS ONE IS USED TO DISCOVER IF USER/PASS COMBINATION IS OK
+$DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
+    if( ! $DevAAC->auth_account ) {
+        $DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
+        $DevAAC->halt(401);
+    }
+    $DevAAC->response->setBody($DevAAC->auth_account->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/devaac",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/{id}",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Retrieve account by ID",
+ *      notes="name, password and email are returned only to authenticated user and admin",
+ *      method="GET",
+ *      type="Account",
+ *      nickname="getAccountByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account that needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found")
+ *   )
+ *  )
+ * )
+ */
 $DevAAC->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     $accounts = Account::findOrFail($id);
     $DevAAC->response->setBody($accounts->toJson());

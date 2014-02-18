@@ -8,8 +8,21 @@ namespace DevAAC\Models;
 
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
-class Account extends \Illuminate\Database\Eloquent\Model {
 
+/**
+ * @SWG\Model(required="['id','name','password','type','premdays','lastday','email','creation']")
+ */
+class Account extends \Illuminate\Database\Eloquent\Model {
+    /**
+     * @SWG\Property(name="id", type="integer")
+     * @SWG\Property(name="name", type="string")
+     * @SWG\Property(name="password", type="SHA1 hash")
+     * @SWG\Property(name="type", type="integer")
+     * @SWG\Property(name="premdays", type="integer")
+     * @SWG\Property(name="lastday", type="integer")
+     * @SWG\Property(name="email", type="string")
+     * @SWG\Property(name="creation", type="UNIX timestamp")
+     */
     public $timestamps = false;
 
     protected $guarded = array('id');
