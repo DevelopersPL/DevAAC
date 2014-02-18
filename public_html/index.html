@@ -31,7 +31,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.12/angular-route.min.js"></script>
 </head>
-<body>
+<body ng-app="DevAAC">
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -45,20 +45,31 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <div ng-controller="userNav" class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#/about">About</a></li>
                     <li><a href="#/rules">Rules</a></li>
                     <li><a href="#/home">Contact</a></li>
                 </ul>
-                <form ng-submit="Login()" ng-controller="WidgetController" class="navbar-form navbar-right">
+                <ul ng-show="isAuthenticated" class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome {{username}}!<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">My account</a></li>
+                            <li><a href="#">My characters</a></li>
+                            <li class="divider"></li>
+                            <li><a ng-click="Logout()" href="javascript://">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form ng-show="!isAuthenticated" ng-submit="Login()" class="navbar-form navbar-right">
                     <div class="form-group">
-                        <input ng-model="login.username" required class="form-control" placeholder="Login" type="text">
+                        <input ng-model="login.username" name="username" required class="form-control" placeholder="Login" type="text">
                     </div>
                     <div class="form-group">
-                        <input ng-model="login.password" required class="form-control" placeholder="Password" type="password" >
+                        <input ng-model="login.password" name="password" required class="form-control" placeholder="Password" type="password" >
                     </div>
-                    <button type="submit" class="btn btn-success">Sign in</button>
+                    <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Sign in</button>
                     <a class="btn btn-info" href="#/account/register">Sign up</a>
                 </form>
             </div>
