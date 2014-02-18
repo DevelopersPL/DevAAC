@@ -2,3 +2,4 @@
 vendor/
 .idea/
 public_html/config.php
+api-docs/index.php

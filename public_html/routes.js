@@ -25,6 +25,16 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
 		controller: 'NewsController'
 	});
 
+    $routeProvider.when('/account/register', {
+        templateUrl: PageUrl('register'),
+        controller: 'RegisterController'
+    });
+
+    $routeProvider.when('/rules', {
+        templateUrl: PageUrl('rules'),
+        controller: 'RulesController'
+    });
+
 	$routeProvider.when('/players/:id', {
 		templateUrl: PageUrl('profile'),
 		controller: 'ProfileController'
