@@ -5,7 +5,7 @@ function PageUrl(page) {
 	return "pages/" + page + ".html";
 }
 function ApiUrl(link) {
-	return "http://duots.dondaniello.com/duaac/" + link;
+	return "http://duots.dondaniello.com/devaac/" + link;
 }
 
 /*

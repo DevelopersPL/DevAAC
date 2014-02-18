@@ -3,7 +3,7 @@
 	Static classes you import and use in controllers and other factories.
 */
 
-// This will cache players to avoid uneccesary HTTP requests
+// This will cache players to avoid unneccesary HTTP requests
 // Cache object
 app.factory("Cache", function($http, $location) {
 	var players = false;
@@ -29,7 +29,7 @@ app.factory("Cache", function($http, $location) {
 		// Set cache with array of players
 		setPlayers: function(data) {
 			if (players == false) {
-				players = data;
+                players = data;
 			} else {
 				// Add any player in this array that is not in cache
 				for (var i = 0; i < data.length; i++) {
@@ -45,7 +45,7 @@ app.factory("Cache", function($http, $location) {
 			return true;
 		},
 		setPlayer: function(playerdata) {
-			console.log("Set player data to cache:",playerdata);
+			console.log("Set player data to cache:", playerdata);
 			if (players == false) {
 				players = new Array();
 			}

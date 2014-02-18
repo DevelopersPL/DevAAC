@@ -13,8 +13,8 @@ app.controller('WidgetController',
 
 	Highscores.experience()
 	.success(function(data, status) {
-		$scope.playersWidget = data.players;
-		Cache.setPlayers(data.players);
+		$scope.playersWidget = data;
+		Cache.setPlayers(data);
 	});
 
 	$scope.Login = function() {
@@ -68,8 +68,8 @@ app.controller('ProfileController',
 		// Since player not found in cache, fetch it from API
 		Player.get($routeParams.id)
 		.success(function(data, status) {
-			$scope.SetPlayerData(data.players);
-			Cache.setPlayer(data.players);
+			$scope.SetPlayerData(data);
+			Cache.setPlayer(data);
 		});
 	} else {
 		console.log("Player found in cache.");
