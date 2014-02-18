@@ -3,10 +3,6 @@ DevAAC.controller('WidgetController',
 	function($scope, $location, Highscores, Cache
 ) {
 	$scope.playersWidget = {};
-	$scope.login = {
-		username: "",
-		password: ""
-	};
 	$scope.search = "";
 
 	console.log("Widget controller initialized.");
@@ -100,10 +96,12 @@ DevAAC.controller('userNav', function ($scope, $http, $window) {
             url: ApiUrl('accounts/my'),
             dataType: 'json',
             async: false,
-            username: $scope.login.username,
-            password: $scope.login.password,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", "Basic " + btoa($scope.login.username + ":" + $scope.login.password));
+            },
             success: function (data, status, headers, config) {
-                //$window.sessionStorage.token = data.token;
+                console.log(data);
+                $window.sessionStorage.token = btoa($scope.login.username + ":" + $scope.login.password);
                 $scope.isAuthenticated = true;
                 $scope.username = data.name;
             },
@@ -127,16 +125,6 @@ DevAAC.controller('userNav', function ($scope, $http, $window) {
     };
 
     $scope.Logout = function () {
-        $.ajax({
-            url: ApiUrl('accounts/my'),
-            dataType: 'json',
-            async: false,
-            username: 'logout',
-            password: 'logout'
-        }).always(function (data, status, headers, config) {
-                console.log(data + " : " + status);
-        });
-
         $scope.welcome = '';
         $scope.isAuthenticated = false;
         delete $window.sessionStorage.token;

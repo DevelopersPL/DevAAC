@@ -62,17 +62,17 @@ $DevAAC->error(function (\Exception $e) use ($DevAAC) {
 });
 
 // you need to define TFS_CONFIG to be an array with config.lua options or a path to config.lua
-$tfs_config = is_file(TFS_CONFIG) ? parse_ini_file(TFS_CONFIG) : unserialize(TFS_CONFIG) or die('TFS_CONFIG is not defined properly.');
+$DevAAC->tfs_config = is_file(TFS_CONFIG) ? parse_ini_file(TFS_CONFIG) : unserialize(TFS_CONFIG) or die('TFS_CONFIG is not defined properly.');
 
 // Bootstrap Eloquent ORM // https://github.com/illuminate/database
 use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
 $capsule->addConnection([
     'driver'    => 'mysql',
-    'host'      => $tfs_config['mysqlHost'],
-    'database'  => $tfs_config['mysqlDatabase'],
-    'username'  => $tfs_config['mysqlUser'],
-    'password'  => $tfs_config['mysqlPass'],
+    'host'      => $DevAAC->tfs_config['mysqlHost'],
+    'database'  => $DevAAC->tfs_config['mysqlDatabase'],
+    'username'  => $DevAAC->tfs_config['mysqlUser'],
+    'password'  => $DevAAC->tfs_config['mysqlPass'],
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => '',
@@ -164,7 +164,7 @@ $DevAAC->get(ROUTES_PREFIX.'/topplayers', function() use($DevAAC) {
  *      type="Account",
  *      nickname="getAccountByID",
  *      @SWG\Parameter( name="Authorization",
- *                      description="HTTP Basic Auth: base64(name:password)",
+ *                      description="HTTP Basic Authorization: Basic base64(name:password)",
  *                      paramType="header",
  *                      required=false,
  *                      type="string"),
@@ -176,7 +176,7 @@ $DevAAC->get(ROUTES_PREFIX.'/topplayers', function() use($DevAAC) {
 // THIS ONE IS USED TO DISCOVER IF USER/PASS COMBINATION IS OK
 $DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
     if( ! $DevAAC->auth_account ) {
-        $DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
+        //$DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
         $DevAAC->halt(401);
     }
     $DevAAC->response->setBody($DevAAC->auth_account->toJson());
