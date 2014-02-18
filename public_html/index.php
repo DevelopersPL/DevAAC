@@ -15,6 +15,7 @@ defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '/devaac');
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);
 defined('ENABLE_DEBUG') or define('ENABLE_DEBUG', false);
 defined('APP_ROOT') or define('APP_ROOT', '../DevAAC');
+defined('CORS_ALLOW_ORIGIN') or define('CORS_ALLOW_ORIGIN', false); // origin or false
 
 // IF YOU INSTALL PUBLIC_HTML IN A SUBDIRECTORY, FOR EXAMPLE: http://example.com/ots/aac/index.php
 // THEN YOU NEED TO SET APP_ROOT ACCORDINGLY. IN THIS CASE TO '../../../app'

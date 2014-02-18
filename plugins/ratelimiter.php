@@ -31,15 +31,15 @@ defined('RATELIMITER_RULES') or define('RATELIMITER_RULES', serialize(array(
 defined('RATELIMITER_PENALIZE') or define('RATELIMITER_PENALIZE', false);
 
 // http://docs.slimframework.com/#How-to-Use-Hooks
-$app->hook('slim.before.dispatch', function () use ($app) {
+$DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
 
     $rules = unserialize(RATELIMITER_RULES);
 
-    // $app->router->currentRoute is NULL in this hook plus it's prtoected
+    // $DevAAC->router->currentRoute is NULL in this hook plus it's prtoected
     // we cannot use route names (even if we assigned them)
     // unfortunately we need to base on path
 
-    $req = $app->request;
+    $req = $DevAAC->request;
     $path = $req->getPath();
     $method = $req->getMethod();
 
@@ -53,13 +53,13 @@ $app->hook('slim.before.dispatch', function () use ($app) {
         $objname = $req->getIp() . '_' . $path;
 
         if(apc_fetch($objname) + $rules[$method][$path] > time()) {
-            $app->halt(429, 'Too many requests.');
+            $DevAAC->halt(429, 'Too many requests.');
 
             if(!RATELIMITER_PENALIZE)
                 return;
         }
         apc_store($objname, time());
-        $app->expires('+'.$rules[$method][$path].' seconds');
+        $DevAAC->expires('+'.$rules[$method][$path].' seconds');
     }
 });
 
