@@ -12,10 +12,10 @@ use DevAAC\Models\Player;
 use DevAAC\Models\Account;
 
 // Create Slim app
-$app = new \Slim\Slim(array(
+$DevAAC = new \Slim\Slim(array(
     'debug' => ENABLE_DEBUG
 ));
-ENABLE_DEBUG or $app->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
+ENABLE_DEBUG or $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*'); // DEBUG ONLY
 
 // define authentication route middleware
 // http://docs.slimframework.com/#Middleware-Overview
@@ -39,18 +39,18 @@ class AuthMiddleware extends \Slim\Middleware
         $this->next->call();
     }
 }
-$app->add(new AuthMiddleware());
-//$app->response->headers->set('Content-Type', 'application/json'); // by default we return json
+$DevAAC->add(new AuthMiddleware());
+//$DevAAC->response->headers->set('Content-Type', 'application/json'); // by default we return json
 
 
 // HANDLE ERRORS
-$app->error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) use ($app) {
-    $app->response->setStatus(404);
-    $app->response->setBody(json_encode(null));
+$DevAAC->error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) use ($DevAAC) {
+    $DevAAC->response->setStatus(404);
+    $DevAAC->response->setBody(json_encode(null));
 });
 
-$app->error(function (\Exception $e) use ($app) {
-    $app->halt(500, 'Fatal error occured.');
+$DevAAC->error(function (\Exception $e) use ($DevAAC) {
+    $DevAAC->halt(500, 'Fatal error occured.');
 });
 
 // you need to define TFS_CONFIG to be an array with config.lua options or a path to config.lua
@@ -76,24 +76,24 @@ $capsule->bootEloquent();
 // http://zircote.com/swagger-php/using_swagger.html
 // https://github.com/zircote/swagger-php/blob/master/library/Swagger/Swagger.php
 use Swagger\Swagger;
-$app->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($app) {
+$DevAAC->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($DevAAC) {
     $swagger = new Swagger('../', '../vendor');
-    $app->response->headers->set('Access-Control-Allow-Origin', '*');
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*');
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
     if($path != '/')
-        $app->response->setBody($swagger->getResource('/'.$path, array('output' => 'json')));
+        $DevAAC->response->setBody($swagger->getResource('/'.$path, array('output' => 'json')));
     else
-        $app->response->setBody($swagger->getResourceList(array('output' => 'json')));
+        $DevAAC->response->setBody($swagger->getResourceList(array('output' => 'json')));
 });
 
 // THIS ONE IS USED TO DISCOVER IF USER/PASS COMBINATION IS OK
-$app->get(ROUTES_PREFIX.'/accounts/my', function() use($app) {
-    if( ! $app->auth_account ) {
-        $app->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
-        $app->halt(401);
+$DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
+    if( ! $DevAAC->auth_account ) {
+        $DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
+        $DevAAC->halt(401);
     }
-    $app->response->setBody($app->auth_account->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($DevAAC->auth_account->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
 /**
@@ -113,10 +113,10 @@ $app->get(ROUTES_PREFIX.'/accounts/my', function() use($app) {
  *  )
  * )
  */
-$app->get(ROUTES_PREFIX.'/players/:id', function($id) use($app) {
+$DevAAC->get(ROUTES_PREFIX.'/players/:id', function($id) use($DevAAC) {
     $player = Player::findOrFail($id);
-    $app->response->setBody($player->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($player->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
 /**
@@ -135,28 +135,28 @@ $app->get(ROUTES_PREFIX.'/players/:id', function($id) use($app) {
  *  )
  * )
  */
-$app->get(ROUTES_PREFIX.'/players', function() use($app) {
+$DevAAC->get(ROUTES_PREFIX.'/players', function() use($DevAAC) {
     $players = Player::all();
-    $app->response->setBody($players->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($players->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
-$app->get(ROUTES_PREFIX.'/topplayers', function() use($app) {
+$DevAAC->get(ROUTES_PREFIX.'/topplayers', function() use($DevAAC) {
     $players = Player::take(5)->orderBy('level', 'DESC')->orderBy('experience', 'DESC')->get();
-    $app->response->setBody($players->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($players->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
-$app->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($app) {
+$DevAAC->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     $accounts = Account::findOrFail($id);
-    $app->response->setBody($accounts->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($accounts->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
-$app->get(ROUTES_PREFIX.'/accounts', function() use($app) {
+$DevAAC->get(ROUTES_PREFIX.'/accounts', function() use($DevAAC) {
     $accounts = Account::all();
-    $app->response->setBody($accounts->toJson());
-    $app->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($accounts->toJson());
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
 ////////////////////// PLUGINS SUPPORT ///////////////////////////////
@@ -173,14 +173,14 @@ if(is_dir('../plugins') && !DISABLE_PLUGINS) {
                 $loaded_plugins[] = array('id' => basename($filename));
 
     }
-    $app->plugins = $loaded_plugins;
+    $DevAAC->plugins = $loaded_plugins;
 }
 
-$app->get(ROUTES_PREFIX.'/plugins', function() use($app) {
-    $app->response->setBody(json_encode($app->plugins));
-    $app->response->headers->set('Content-Type', 'application/json');
+$DevAAC->get(ROUTES_PREFIX.'/plugins', function() use($DevAAC) {
+    $DevAAC->response->setBody(json_encode($DevAAC->plugins));
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
 });
 
 //////////////////////////////////////////////////////////////////////
 // all done, any code after this call will not matter to the request
-$app->run();
+$DevAAC->run();
