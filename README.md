@@ -1,7 +1,8 @@
 DevAAC
 =====
 DevAAC for TFS 1.0 by developers.pl
-Check out the [REST API documentation](http://dondaniello.github.io/DevAAC)
+
+__Check out the [REST API documentation](http://dondaniello.github.io/DevAAC)!__
 
 This software is designed to:
 

@@ -16,9 +16,9 @@ $DevAAC = new \Slim\Slim(array(
     'debug' => ENABLE_DEBUG
 ));
 
-if(ENABLE_DEBUG) {
+if(CORS_ALLOW_ORIGIN) {
     // CORS
-    $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*');
+    $DevAAC->response->headers->set('Access-Control-Allow-Origin', CORS_ALLOW_ORIGIN);
     $DevAAC->response->headers->set('Access-Control-Allow-Headers', 'Authorization');
     $DevAAC->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     $DevAAC->response->headers->set('Access-Control-Allow-Credentials', 'true');
