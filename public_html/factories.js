@@ -95,4 +95,34 @@ DevAAC.factory("Player", function($http, $location, Cache) {
 	}
 });
 
-/* Empty success call: return { success: function(func) { func();}} */
+
+/*
+ $http.get(ApiUrl('api/command')).success(function (data, status, headers, config) {
+    // success handle
+ }).error(function (data, status, headers, config) {
+    // error handle
+ });
+ */
+// Add auth header to all $http request (example above)
+DevAAC.factory('authInterceptor', function ($rootScope, $q, $window) {
+    return {
+        request: function (config) {
+            config.headers = config.headers || {};
+            console.log($window.sessionStorage.token);
+            if ($window.sessionStorage.token) {
+                config.headers.Authorization = 'Basic ' + $window.sessionStorage.token;
+            }
+            return config;
+        },
+        response: function (response) {
+            if (response.status === 401) {
+                // TODO: Add $rootscope.isAuthenticated globally.
+            }
+            return response || $q.when(response);
+        }
+    };
+});
+
+DevAAC.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('authInterceptor');
+});

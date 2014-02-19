@@ -84,7 +84,6 @@ DevAAC.controller('globalFooter', function($scope) {
 });
 
 DevAAC.controller('userNav', function ($scope, $http, $window) {
-    //$scope.login = {username: 'john.doe', password: 'foobar'};
     $scope.isAuthenticated = false;
     $scope.welcome = '';
     $scope.message = '';
@@ -100,28 +99,25 @@ DevAAC.controller('userNav', function ($scope, $http, $window) {
                 xhr.setRequestHeader("Authorization", "Basic " + btoa($scope.login.username + ":" + $scope.login.password));
             },
             success: function (data, status, headers, config) {
-                console.log(data);
+                console.log('Login passed');
+
                 $window.sessionStorage.token = btoa($scope.login.username + ":" + $scope.login.password);
                 $scope.isAuthenticated = true;
                 $scope.username = data.name;
             },
             error: function (data, status, headers, config) {
-                console.log(
-                    'login error'
-                );
+                console.log('Login error');
 
-                //delete $window.sessionStorage.token;
+                delete $window.sessionStorage.token;
                 $scope.isAuthenticated = false;
 
                 // Handle login errors here
-                $scope.error = 'Error: Invalid user or password';
                 $scope.welcome = '';
             }
         }).always(function () {
             $('#loading-login-btn').button('reset');
             $scope.login = {};
         });
-
     };
 
     $scope.Logout = function () {
