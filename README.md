@@ -15,7 +15,7 @@ This software is designed to:
 
 Requirements
 =====
-* PHP >= 5.3.0
+* PHP >= 5.4
 * PHP JSON extension
 * PHP MySQL extension
 * PHp APC or APCu extension (if you want plugins/ratelimiter.php to work)
@@ -28,13 +28,11 @@ Installation (dev release)
 * Set up your web server to serve DevAAC/public_html as document root
 * Rename ```config.sample.php``` to ```config.php``` and follow instructions
 
-Authors
+REST API
 =====
-* Don Daniello
-* mrwogu
-* with contributions from Znote
-
-Check [LICENSE](LICENSE).
+* Receive JSON
+* Send JSON with Content-Type: application/json or form input with Content-Type: application/x-www-form-urlencoded but don't mix them!
+* You can override method with X-HTTP-Method-Override header
 
 Hacking
 =====
@@ -46,3 +44,11 @@ Generate Swagger API docs manually:
 ```
 php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 ```
+
+Authors
+=====
+* Don Daniello
+* mrwogu
+* with contributions from Znote
+
+Check [LICENSE](LICENSE).

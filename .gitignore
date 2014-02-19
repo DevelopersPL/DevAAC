@@ -1,5 +1,8 @@
 # Composer-installed libraries
 vendor/
+
+# PHPStorm
 .idea/
+
+# Config
 public_html/config.php
-api-docs/index.php

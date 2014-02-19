@@ -7,6 +7,14 @@
 use DevAAC\Models\Account;
 use DevAAC\Models\Player;
 
+$meta = array('name' => 'Simple AAC',
+    'description' => 'Dead simple one-page AAC',
+    'version' => '0.1'
+);
+
+if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
+    return array_merge($meta, array('enabled' => false));
+
 $DevAAC->map('/', function() use($DevAAC) {
     $view = $DevAAC->view();
     $view->setTemplatesDirectory('../plugins/templates');
@@ -16,14 +24,6 @@ $DevAAC->map('/', function() use($DevAAC) {
     $error = false;
     if($req->isPost()) {
         $data['val'] = $req->post();
-
-        // VALIDATE ACCOUNT NAME
-        if( !filter_var($req->post('account-name'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/^[a-zA-Z]{2,12}$/"))) ) {
-            $DevAAC->flashNow('account-name_class', 'has-error');
-            $DevAAC->flashNow('danger', 'Account name must have 2-12 characters, only letters.');
-            $error = true;
-        }
 
         // VALIDATE CHARACTER NAME
         if( !filter_var($req->post('character-name'), FILTER_VALIDATE_REGEXP,
@@ -72,6 +72,14 @@ $DevAAC->map('/', function() use($DevAAC) {
         if($account)
             goto createcharacter;
 
+        // VALIDATE ACCOUNT NAME ONLY IF THE ACCOUNT DOES NOT EXIST
+        if( !filter_var($req->post('account-name'), FILTER_VALIDATE_REGEXP,
+            array("options" => array("regexp" => "/^[a-zA-Z]{2,12}$/"))) ) {
+            $DevAAC->flashNow('account-name_class', 'has-error');
+            $DevAAC->flashNow('danger', 'Account name must have 2-12 characters, only letters.');
+            $error = true;
+        }
+
         // VALIDATE PASSWORD ONLY IF THE ACCOUNT DOES NOT EXIST
         if( !filter_var($req->post('password'), FILTER_VALIDATE_REGEXP,
             array("options" => array("regexp" => "/^.{6,20}$/"))) ) {
@@ -115,6 +123,4 @@ $DevAAC->map('/', function() use($DevAAC) {
 
 })->via('GET', 'POST');
 
-return array('name' => 'Simple AAC',
-             'description' => 'Dead simple one-page AAC',
-             'version' => '0.1');
+return array_merge($meta, array('enabled' => true));

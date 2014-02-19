@@ -6,11 +6,13 @@
  */
 namespace DevAAC\Models;
 
+use DevAAC\Helpers\DateTime;
+
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['id','name','password','type','premdays','lastday','email','creation']")
+ * @SWG\Model(required="['name','password','email']")
  */
 class Account extends \Illuminate\Database\Eloquent\Model {
     /**
@@ -21,13 +23,26 @@ class Account extends \Illuminate\Database\Eloquent\Model {
      * @SWG\Property(name="premdays", type="integer")
      * @SWG\Property(name="lastday", type="integer")
      * @SWG\Property(name="email", type="string")
-     * @SWG\Property(name="creation", type="UNIX timestamp")
+     * @SWG\Property(name="creation", type="DateTime::ISO8601")
      */
     public $timestamps = false;
 
     protected $guarded = array('id');
 
-    protected $dates = array('creation');
+    public function getCreationAttribute()
+    {
+        return DateTime::createFromFormat('U', $this->attributes['creation']);
+    }
+
+    public function setCreationAttribute($d)
+    {
+        if($d instanceof \DateTime)
+            $this->attributes['creation'] = $d->getTimestamp();
+        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
+            $this->attributes['creation'] = DateTime($d)->getTimestamp();
+        } else // it is a UNIX timestamp
+            $this->attributes['creation'] = $d;
+    }
 
     public function players()
     {
@@ -36,7 +51,11 @@ class Account extends \Illuminate\Database\Eloquent\Model {
 
     public function setPasswordAttribute($pass)
     {
-        $this->attributes['password'] = sha1($pass);
+        if( !filter_var($pass, FILTER_VALIDATE_REGEXP,
+            array("options" => array("regexp" => "/^[0-9a-f]{40}$/i"))) )
+            $pass = sha1($pass);
+
+        $this->attributes['password'] = $pass;
     }
 
     public function comparePassword($pass) {

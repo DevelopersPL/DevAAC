@@ -5,7 +5,15 @@
  * Time: 10:12 PM
  */
 
-//return; // UNCOMMENT TO DISABLE THIS PLUGIN
+$meta = array('name' => 'Rate limiter',
+    'description' => 'Rate limiter requires APC user cache (APC or APCu)',
+    'version' => '0.1',
+    'author' => 'Don Daniello',
+    'link' => 'https://github.com/DonDaniello/DevAAC'
+);
+
+if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
+    return array_merge($meta, array('enabled' => false));
 
 // THIS PLUGIN CURRENTLY SUPPORTS APC ONLY
 if(!extension_loaded('apc') or !ini_get('apc.enabled'))
@@ -63,9 +71,4 @@ $DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
     }
 });
 
-return array('name' => 'Rate limiter',
-             'description' => 'Rate limiter requires APC user cache (APC or APCu)',
-             'version' => '0.1',
-             'author' => 'Don Daniello',
-             'link' => 'http://blablabal',
-             'time' => date(DATE_ATOM));
+return array_merge($meta, array('enabled' => true));
