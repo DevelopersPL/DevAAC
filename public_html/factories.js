@@ -108,7 +108,6 @@ DevAAC.factory('authInterceptor', function ($rootScope, $q, $window) {
     return {
         request: function (config) {
             config.headers = config.headers || {};
-            console.log($window.sessionStorage.token);
             if ($window.sessionStorage.token) {
                 config.headers.Authorization = 'Basic ' + $window.sessionStorage.token;
             }
@@ -116,6 +115,7 @@ DevAAC.factory('authInterceptor', function ($rootScope, $q, $window) {
         },
         response: function (response) {
             if (response.status === 401) {
+                console.log('User is not logged in');
                 // TODO: Add $rootscope.isAuthenticated globally.
             }
             return response || $q.when(response);
