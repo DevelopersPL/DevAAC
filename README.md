@@ -31,16 +31,16 @@ Installation (dev release)
 REST API
 =====
 * Receive JSON
-* Send JSON with Content-Type: application/json or form input with Content-Type: application/x-www-form-urlencoded but don't mix them!
+* Send JSON with ```Content-Type: application/json``` or form input with ```Content-Type: application/x-www-form-urlencoded``` but don't mix them!
 * You can override method with X-HTTP-Method-Override header
 
 Hacking
 =====
 * [Slim](http://slimframework.com) framework [documentation](http://docs.slimframework.com/)
-* API documentation is awesome thanks to [Swagger](https://helloreverb.com/developers/swagger). Put [Swagger Annotations](http://zircote.com/swagger-php/annotations.html) in the code,
+* API documentation is awesome thanks to [Swagger](https://helloreverb.com/developers/swagger). Put [Swagger Annotations](http://zircote.com/swagger-php/annotations.html) in the code!
 * Swagger docs are dynamically server at /api-docs
 
-Generate Swagger API docs manually:
+You can generate Swagger API docs manually:
 ```
 php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 ```
