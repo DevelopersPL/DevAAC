@@ -7,8 +7,11 @@
 
 namespace DevAAC\Helpers;
 
+use Illuminate\Support\Contracts\JsonableInterface;
+use Illuminate\Support\Contracts\ArrayableInterface;
 
-class DateTime extends \DateTime implements \JsonSerializable {
+
+class DateTime extends \DateTime implements \JsonSerializable, JsonableInterface, ArrayableInterface {
 
     public function __toString()
     {
@@ -20,5 +23,14 @@ class DateTime extends \DateTime implements \JsonSerializable {
         return $this->format(DateTime::ISO8601);
     }
 
+    public function toArray()
+    {
+        return array($this->format(DateTime::ISO8601));
+    }
+
+    public function toJson($options = 0)
+    {
+        return json_encode($this->format(DateTime::ISO8601, $options));
+    }
     // TODO: Eloquent's toJson does not respect that
 } 

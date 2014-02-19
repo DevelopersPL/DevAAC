@@ -6,6 +6,7 @@
  */
 
 use DevAAC\Models\Account;
+use DevAAC\Models\AccountPublic;
 use DevAAC\Models\Player;
 
 /**
@@ -37,8 +38,8 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
         //$DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
         $DevAAC->halt(401);
     }
-    $DevAAC->response->setBody($DevAAC->auth_account->toJson(JSON_PRETTY_PRINT));
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($DevAAC->auth_account->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
@@ -63,8 +64,8 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my/players', function() use($DevAAC) {
     if( ! $DevAAC->auth_account ) {
         $DevAAC->halt(401);
     }
-    $DevAAC->response->setBody($DevAAC->auth_account->players->toJson(JSON_PRETTY_PRINT));
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($DevAAC->auth_account->players->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
@@ -92,14 +93,37 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my/players', function() use($DevAAC) {
  */
 $DevAAC->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     $accounts = Account::findOrFail($id);
-    $DevAAC->response->setBody($accounts->toJson(JSON_PRETTY_PRINT));
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($accounts->toJson(JSON_PRETTY_PRINT));
 });
 
+/**
+ * @SWG\Resource(
+ *  basePath="/devaac",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Get all accounts",
+ *      notes="name, password and email are returned only to authenticated user and admin",
+ *      method="GET",
+ *      type="Account",
+ *      nickname="getAccounts",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account that needs to be fetched",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found")
+ *   )
+ *  )
+ * )
+ */
 $DevAAC->get(ROUTES_PREFIX.'/accounts', function() use($DevAAC) {
-    $accounts = Account::all();
-    $DevAAC->response->setBody($accounts->toJson(JSON_PRETTY_PRINT));
+    $accounts = AccountPublic::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($accounts->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
