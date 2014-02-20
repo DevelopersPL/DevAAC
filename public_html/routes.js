@@ -119,3 +119,11 @@ DevAAC.directive("markdown", function ($compile, $http) {
         }
     };
 });
+
+DevAAC.filter('markdown', function($sce) {
+    var converter = new Showdown.converter();
+    return function(input) {
+        if(input)
+            return $sce.trustAsHtml(converter.makeHtml(input))
+    };
+});

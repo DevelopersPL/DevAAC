@@ -1,12 +1,11 @@
 <!-- blog entry -->
 <h1><a href="#">{{news.title}}</a></h1>
-<p class="lead">by <a href="index.php">Start Bootstrap</a></p>
 <hr>
 <p>
     <span class="glyphicon glyphicon-time"></span> Posted on {{news.date}}
 </p>
 <hr>
-<markdown>{{news.content}}</markdown>
+<div ng-bind-html="news.content | markdown"></div>
 <hr>
 <!-- pager -->
 <ul class="pager">
