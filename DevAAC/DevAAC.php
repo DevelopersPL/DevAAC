@@ -8,6 +8,7 @@
 $loader = require '../vendor/autoload.php';
 $loader->setPsr4('DevAAC\\', APP_ROOT);
 
+use DevAAC\Helpers\DateTime;
 use DevAAC\Models\Account;
 
 //////////////////////// CREATE Slim APPLICATION //////////////////////////////////
@@ -118,10 +119,30 @@ $DevAAC->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($DevAA
 require('routes/accounts.php');
 require('routes/players.php');
 
-$DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC) {
-    $date = new \DevAAC\Helpers\DateTime();
-    echo json_encode($date);
+$DevAAC->get(ROUTES_API_PREFIX.'/news', function() use($DevAAC) {
+    $news = array();
+    if(is_dir(PUBLIC_HTML_PATH.'/news')) {
+        foreach (glob(PUBLIC_HTML_PATH.'/news/*.md') as $filename) {
+            $date = new \DevAAC\Helpers\DateTime;
+            $date->createFromFormat('U', filectime($filename));
+            $news[] = array(
+                'title' => basename($filename, '.md'),
+                'date' => $date,
+                'content' => file_get_contents($filename)
+            );
+        }
+    }
 
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode($news, JSON_PRETTY_PRINT));
+});
+
+$DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC) {
+    $DevAAC->response->headers->set('Content-Type', 'text');
+    $date = new \DevAAC\Helpers\DateTime();
+    echo $date . PHP_EOL;
+    echo json_encode($date) . PHP_EOL;
+    echo serialize($date) . PHP_EOL;
 });
 
 ////////////////////// PLUGINS SUPPORT ///////////////////////////////
@@ -137,7 +158,6 @@ if(is_dir('../plugins') && !DISABLE_PLUGINS) {
                 $loaded_plugins[] = $p;
             } else
                 $loaded_plugins[] = array('id' => basename($filename));
-
     }
     $DevAAC->plugins = $loaded_plugins;
 }

@@ -6,6 +6,7 @@
  */
 
 use DevAAC\Models\Player;
+use DevAAC\Models\PlayerPublic;
 
 /**
  * @SWG\Resource(
@@ -30,9 +31,9 @@ use DevAAC\Models\Player;
  * )
  */
 $DevAAC->get(ROUTES_PREFIX.'/players/:id', function($id) use($DevAAC) {
-    $player = Player::findOrFail($id);
-    $DevAAC->response->setBody($player->toJson(JSON_PRETTY_PRINT));
+    $player = PlayerPublic::findOrFail($id);
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($player->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
@@ -52,13 +53,13 @@ $DevAAC->get(ROUTES_PREFIX.'/players/:id', function($id) use($DevAAC) {
  * )
  */
 $DevAAC->get(ROUTES_PREFIX.'/players', function() use($DevAAC) {
-    $players = Player::all();
-    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
+    $players = PlayerPublic::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
 });
 
 $DevAAC->get(ROUTES_PREFIX.'/topplayers', function() use($DevAAC) {
-    $players = Player::take(5)->orderBy('level', 'DESC')->orderBy('experience', 'DESC')->get();
-    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
+    $players = PlayerPublic::take(5)->orderBy('level', 'DESC')->orderBy('experience', 'DESC')->get();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
 });

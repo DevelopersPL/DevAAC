@@ -62,7 +62,7 @@ function base64_encode (data) {
 	ROUTES
 	(Routing all pages and hooking them to their controller)
 */
-var DevAAC = angular.module('app', ['ngRoute']);
+var DevAAC = angular.module('app', ['ngRoute', 'ngResource']);
 DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 	
 	$routeProvider.when('/', {
@@ -102,3 +102,20 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
 		redirectTo : '/404'
 	});
 }]);
+
+DevAAC.directive("markdown", function ($compile, $http) {
+    var converter = new Showdown.converter();
+    return {
+        restrict: 'E',
+        replace: true,
+        link: function (scope, element, attrs) {
+            if ("src" in attrs) {
+                $http.get(attrs.src).then(function(data) {
+                    element.html(converter.makeHtml(data.data));
+                });
+            } else {
+                element.html(converter.makeHtml(element.text()));
+            }
+        }
+    };
+});

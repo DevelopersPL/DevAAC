@@ -72,8 +72,21 @@ DevAAC.controller('ProfileController',
 
 // NEWS CONTROLLER
 DevAAC.controller('NewsController',
-    function($scope, $location
-        ) {
+    function($scope, $location, $routeParams, News) {
+        $scope.newsA = News.query(function(result){
+            $scope.news = result[0];
+        });
+
+        $scope.current = 0;
+
+        $scope.next = function() {
+
+        }
+
+        $scope.previous = function() {
+
+        }
+
         console.log("News controller initialized.");
     });
 
@@ -126,3 +139,4 @@ DevAAC.controller('userNav', function ($scope, $http, $window) {
         delete $window.sessionStorage.token;
     };
 });
+

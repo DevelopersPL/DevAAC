@@ -3,7 +3,7 @@
 	Static classes you import and use in controllers and other factories.
 */
 
-// This will cache players to avoid unneccesary HTTP requests
+// This will cache players to avoid unnecessary HTTP requests
 // Cache object
 DevAAC.factory("Cache", function($http, $location) {
 	var players = false;
@@ -66,7 +66,7 @@ DevAAC.factory("Highscores", function($http, $location) {
 				//data: JSON.stringify({year: yearString})
 			})
 			.success(function (data, status) {
-				console.log(data, status);
+				//console.log(data, status);
 			})
 			.error(function (data, status) {
 				console.log(data, status);
@@ -126,3 +126,11 @@ DevAAC.factory('authInterceptor', function ($rootScope, $q, $window) {
 DevAAC.config(function ($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 });
+
+DevAAC.factory('News', ['$resource',
+    function($resource){
+        return $resource('/api/news', {}, {
+            query: {method:'GET', isArray:true}
+        });
+    }
+]);

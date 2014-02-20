@@ -31,7 +31,9 @@ class Account extends \Illuminate\Database\Eloquent\Model {
 
     public function getCreationAttribute()
     {
-        return DateTime::createFromFormat('U', $this->attributes['creation']);
+        $date = new DateTime();
+        $date->createFromFormat('U', $this->attributes['creation']);
+        return $date;
     }
 
     public function setCreationAttribute($d)
