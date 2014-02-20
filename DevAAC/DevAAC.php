@@ -36,18 +36,16 @@ $DevAAC->container->singleton('request', function ($c) {
 // http://docs.slimframework.com/#Middleware-Overview
 class AuthMiddleware extends \Slim\Middleware
 {
-    /**
-     * This method will check the HTTP request headers for previous authentication. If
-     * the request has already authenticated, the next middleware is called.
-     */
     public function call()
     {
         $req = $this->app->request();
-        $res = $this->app->response();
         $auth_user = $req->headers('PHP_AUTH_USER');
         $auth_pass = $req->headers('PHP_AUTH_PW');
 
         if($auth_user && $auth_pass)
+            $this->app->auth_account = Account::where('name', $auth_user)->where('password', $auth_pass)->first();
+
+        if(!$this->app->auth_account)
             $this->app->auth_account = Account::where('name', $auth_user)->where('password', sha1($auth_pass))->first();
         //else
         //    $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
@@ -125,7 +123,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/news', function() use($DevAAC) {
     if(is_dir(PUBLIC_HTML_PATH.'/news')) {
         foreach (glob(PUBLIC_HTML_PATH.'/news/*.md') as $filename) {
             $date = new \DevAAC\Helpers\DateTime;
-            $date->createFromFormat('U', filectime($filename));
+            $date->setTimestamp(filectime($filename));
             $news[] = array(
                 'title' => basename($filename, '.md'),
                 'date' => $date,
