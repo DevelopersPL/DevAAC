@@ -8,7 +8,6 @@
 $loader = require '../vendor/autoload.php';
 $loader->setPsr4('DevAAC\\', APP_ROOT);
 
-use DevAAC\Helpers\DateTime;
 use DevAAC\Models\Account;
 
 //////////////////////// CREATE Slim APPLICATION //////////////////////////////////
@@ -104,7 +103,7 @@ $capsule->bootEloquent();
 // http://zircote.com/swagger-php/using_swagger.html
 // https://github.com/zircote/swagger-php/blob/master/library/Swagger/Swagger.php
 use Swagger\Swagger;
-$DevAAC->get(ROUTES_PREFIX.'/api-docs(/:path)', function($path = '/') use($DevAAC) {
+$DevAAC->get(ROUTES_API_PREFIX.'/docs(/:path)', function($path = '/') use($DevAAC) {
     $swagger = new Swagger('../', '../vendor');
     $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*');
     $DevAAC->response->headers->set('Content-Type', 'application/json');
@@ -161,7 +160,7 @@ if(is_dir('../plugins') && !DISABLE_PLUGINS) {
     $DevAAC->plugins = $loaded_plugins;
 }
 
-$DevAAC->get(ROUTES_PREFIX.'/plugins', function() use($DevAAC) {
+$DevAAC->get(ROUTES_API_PREFIX.'/plugins', function() use($DevAAC) {
     $DevAAC->response->setBody(json_encode($DevAAC->plugins), JSON_PRETTY_PRINT);
     $DevAAC->response->headers->set('Content-Type', 'application/json');
 });

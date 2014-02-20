@@ -15,7 +15,7 @@ $meta = array('name' => 'Simple AAC',
 if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
     return array_merge($meta, array('enabled' => false));
 
-$DevAAC->map('/', function() use($DevAAC) {
+$DevAAC->map(ROUTES_PREFIX.'/', function() use($DevAAC) {
     $view = $DevAAC->view();
     $view->setTemplatesDirectory('../plugins/templates');
     $req = $DevAAC->request;

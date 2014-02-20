@@ -17,16 +17,11 @@ if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
 
 // THIS PLUGIN CURRENTLY SUPPORTS APC ONLY
 if(!extension_loaded('apc') or !ini_get('apc.enabled'))
-    return array('name' => 'Rate limiter',
-        'description' => 'Rate limiter is disabled because APC or APCu is missing.',
-        'version' => '0.1',
-        'author' => 'Don Daniello',
-        'link' => 'http://blablabal',
-        'enabled' => false);
+    return array_merge($meta, array('enabled' => false));
 
 // DEFAULT CONFIG
 defined('RATELIMITER_RULES') or define('RATELIMITER_RULES', serialize(array(
-    // DEFINE RULES WITHOUT ROUTES_PREFIX
+    // DEFINE RULES WITHOUT ROUTES_PREFIX OR ROUTES_API_PREFIX
     // PATH -> NUMBER OF SECONDS TO WAIT BETWEEN REQUESTS
     'GET' => array(
         '/plugins' => 5
@@ -50,6 +45,10 @@ $DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
     $req = $DevAAC->request;
     $path = $req->getPath();
     $method = $req->getMethod();
+
+    // REMOVE ROUTES_API_PREFIX FROM PATH
+    if (substr($path, 0, strlen(ROUTES_API_PREFIX)) == ROUTES_API_PREFIX)
+        $path = substr($path, strlen(ROUTES_API_PREFIX));
 
     // REMOVE ROUTES_PREFIX FROM PATH
     if (substr($path, 0, strlen(ROUTES_PREFIX)) == ROUTES_PREFIX)
