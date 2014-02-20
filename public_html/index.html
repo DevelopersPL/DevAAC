@@ -135,10 +135,16 @@
     </div>
     <!-- /.container -->
 
-    <!-- JavaScript -->
-    <script src="routes.js"></script>
-    <script src="factories.js"></script>
-    <script src="controllers.js"></script>
+    <!-- Initiate Angular app, custom functions and config -->
+    <script src="app.js"></script>
     <script src="sha1.js"></script>
+    <!-- Add URL routing logic -->
+    <script src="routes.js"></script>
+    <!-- Classes, Models, Objects you use in controllers -->
+    <script src="factories.js"></script>
+    <!-- Controllers, self explanatory. 
+    Avoid mixing it with stuff that should be in factories. -->
+    <script src="controllers.js"></script>
+    
 </body>
 </html>

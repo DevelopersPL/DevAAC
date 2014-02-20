@@ -97,8 +97,11 @@ DevAAC.factory("Player", function($http, $location) {
 
 // Account API
 DevAAC.factory("Account", function($http, $location) {
+	var accToken = false;
+	var accData = false;
 	return {
 		register: function(name, password, email) {
+			console.log("Name: "+name+". Email: "+email+". Password: "+password);
 			return $http({
 				url: ApiUrl('accounts'),
 				method: 'POST',
@@ -106,11 +109,32 @@ DevAAC.factory("Account", function($http, $location) {
 				data: JSON.stringify({'name': name, 'password': password, 'email': email})
 			})
 			.success(function (data, status) {
+				accData = data;
 				console.log(data, status);
 			})
 			.error(function (data, status) {
 				console.log(data, status);
 			});
+		},
+		authenticate: function(token) {
+			accToken = token;
+			return $http({
+				url: ApiUrl('accounts/my'),
+				method: 'GET',
+				headers: { 'Authorization': "Basic " + token },
+			})
+			.success(function (data, status) {
+				console.log(data, status);
+			})
+			.error(function (data, status) {
+				console.log(data, status);
+			});
+		},
+		getToken: function() {
+			return accToken;
+		},
+		getAccount: function() {
+			return accData;
 		}
 	}
 });

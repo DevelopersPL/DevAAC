@@ -95,40 +95,38 @@ DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
 });
 
-DevAAC.controller('userNav', function ($scope, $http, $window) {
+DevAAC.controller('userNav', function ($scope, $http, $window, Account) {
     $scope.isAuthenticated = false;
     $scope.welcome = '';
     $scope.message = '';
 
+    $scope.Always = function() {
+    	$('#loading-login-btn').button('reset');
+        $scope.login = {};
+    };
+    
     $scope.Login = function () {
         $('#loading-login-btn').button('loading');
+        var token = btoa($scope.login.username + ":" + Sha1.hash($scope.login.password));
 
-        $.ajax({
-            url: ApiUrl('accounts/my'),
-            dataType: 'json',
-            async: false,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "Basic " + btoa($scope.login.username + ":" + $scope.login.password));
-            },
-            success: function (data, status, headers, config) {
-                console.log('Login passed');
-
-                $window.sessionStorage.token = btoa($scope.login.username + ":" + $scope.login.password);
-                $scope.isAuthenticated = true;
-                $scope.username = data.name;
-            },
-            error: function (data, status, headers, config) {
-                console.log('Login error');
-
-                delete $window.sessionStorage.token;
-                $scope.isAuthenticated = false;
-
-                // Handle login errors here
-                $scope.welcome = '';
-            }
-        }).always(function () {
-            $('#loading-login-btn').button('reset');
-            $scope.login = {};
+        // Removed ajax in favor of angular xhr $http.
+        // Migrated previous ajax code into the account class. (Account.authenticate)
+        // Look into factories.js for "Account".
+        Account.authenticate(token)
+        .success(function(data, status) {
+        	console.log('Login passed');
+            $window.sessionStorage.token = token;
+            $scope.isAuthenticated = true;
+            $scope.username = data.name;
+            $scope.Always();
+        })
+        .error(function(data, status) {
+        	console.log('Login error');
+            delete $window.sessionStorage.token;
+            $scope.isAuthenticated = false;
+            // Handle login errors here
+            $scope.welcome = '';
+            $scope.Always();
         });
     };
 
@@ -151,6 +149,7 @@ DevAAC.controller('RegisterController',
 		passwordAgain : ""
 	};
 	$scope.errorMessage = "";
+	$scope.successMessage = "";
 
 	console.log("Register controller initialized.");
 
@@ -166,12 +165,14 @@ DevAAC.controller('RegisterController',
 		$scope.form.password = Sha1.hash($scope.form.password);
 		$scope.form.passwordAgain = "";
 		
-		Account.register()
+		Account.register($scope.form.accountName, $scope.form.password, $scope.form.email)
 		.success(function(data, status) {
-			console.log("Success!");
+			$scope.form.password = "";
+			$scope.successMessage = "Account has been created!";
 		})
 		.error(function(data, status) {
-			// $scope.errorMessage = "";
+			$scope.form.password = "";
+			$scope.errorMessage = data.message;
 		});
 	}
 });
