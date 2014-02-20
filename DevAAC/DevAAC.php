@@ -22,7 +22,7 @@ $DevAAC->add(new \Slim\Middleware\ContentTypes());
 ////////////////////// ALLOW CROSS-SITE REQUESTS (OR NOT) /////////////////////////
 if(CORS_ALLOW_ORIGIN) {
     $DevAAC->response->headers->set('Access-Control-Allow-Origin', CORS_ALLOW_ORIGIN);
-    $DevAAC->response->headers->set('Access-Control-Allow-Headers', 'Authorization');
+    $DevAAC->response->headers->set('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
     $DevAAC->response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     $DevAAC->response->headers->set('Access-Control-Allow-Credentials', 'true');
     $DevAAC->options(':a+', function ($a) {}); // Send blank 200 to every OPTIONS request
@@ -57,26 +57,27 @@ class AuthMiddleware extends \Slim\Middleware
 $DevAAC->add(new AuthMiddleware());
 
 ////////////////////////////// HANDLE ERRORS ////////////////////////////////////
-// MUST DEFINE HANDLERS IN ORDER FROM THE LOWEST CLASS \Exception TO THE HIGHEST
-$DevAAC->error(function (\Exception $e) use ($DevAAC) {
-    $DevAAC->halt(500, 'Fatal error occured: ' . $e->getMessage() . ' at line ' . $e->getLine() . ' in file ' . $e->getFile());
-});
-
-$DevAAC->error(function (Illuminate\Database\Eloquent\ModelNotFoundException $e) use ($DevAAC) {
-    $DevAAC->response->setStatus(404);
-    $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody(json_encode(null), JSON_PRETTY_PRINT);
-});
-
 class InputErrorException extends \Exception {};
-$DevAAC->error(function (\InputErrorException $e) use ($DevAAC) {
-    $DevAAC->response->setStatus($e->getCode());
-    $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody(json_encode(array('code' => $e->getCode(), 'message' => $e->getMessage()), JSON_PRETTY_PRINT));
-});
-
-$DevAAC->error(function (\ErrorException $e) use ($DevAAC) {
-    $DevAAC->halt(500, 'Fatal error occured: ' . $e->getMessage() . ' at line ' . $e->getLine() . ' in file ' . $e->getFile());
+$DevAAC->error(function ($e) use ($DevAAC) {
+    if($e instanceof Illuminate\Database\Eloquent\ModelNotFoundException)
+    {
+        $DevAAC->response->headers->set('Content-Type', 'application/json');
+        $DevAAC->response->setStatus(404);
+        $DevAAC->response->setBody(json_encode(null), JSON_PRETTY_PRINT);
+    }
+    elseif($e instanceof InputErrorException)
+    {
+        $DevAAC->response->headers->set('Content-Type', 'application/json');
+        $DevAAC->response->setStatus($e->getCode());
+        $DevAAC->response->setBody(json_encode(array('code' => $e->getCode(), 'message' => $e->getMessage()), JSON_PRETTY_PRINT));
+    }
+    else
+    {
+        $DevAAC->response->headers->set('Content-Type', 'application/json');
+        $DevAAC->response->setStatus(500);
+        $DevAAC->response->setBody(json_encode(array('code' => $e->getCode(),
+            'message' => 'Fatal error occured: ' . $e->getMessage() . ' at line ' . $e->getLine() . ' in file ' . $e->getFile()), JSON_PRETTY_PRINT));
+    }
 });
 
 //////////////////////////// LOAD TFS CONFIG ////////////////////////////////////
