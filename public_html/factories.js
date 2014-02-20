@@ -76,7 +76,7 @@ DevAAC.factory("Highscores", function($http, $location) {
 });
 
 // Player API
-DevAAC.factory("Player", function($http, $location, Cache) {
+DevAAC.factory("Player", function($http, $location) {
 	return {
 		get: function(player_id) {
 			return $http({
@@ -84,6 +84,26 @@ DevAAC.factory("Player", function($http, $location, Cache) {
 				method: 'GET',
 				headers: { 'Content-Type': 'application/json' }
 				//data: JSON.stringify({year: yearString})
+			})
+			.success(function (data, status) {
+				console.log(data, status);
+			})
+			.error(function (data, status) {
+				console.log(data, status);
+			});
+		}
+	}
+});
+
+// Account API
+DevAAC.factory("Account", function($http, $location) {
+	return {
+		register: function(name, password, email) {
+			return $http({
+				url: ApiUrl('accounts'),
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				data: JSON.stringify({'name': name, 'password': password, 'email': email})
 			})
 			.success(function (data, status) {
 				console.log(data, status);

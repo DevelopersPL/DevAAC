@@ -90,7 +90,6 @@ DevAAC.controller('NewsController',
         console.log("News controller initialized.");
     });
 
-
 // GLOBALFOOTER CONTROLLER
 DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
@@ -140,3 +139,39 @@ DevAAC.controller('userNav', function ($scope, $http, $window) {
     };
 });
 
+// REGISTER CONTROLLER
+DevAAC.controller('RegisterController',
+	function($scope, $location, Account
+) {
+	// Scope variables
+	$scope.form = {
+		accountName : "",
+		email : "",
+		password : "",
+		passwordAgain : ""
+	};
+	$scope.errorMessage = "";
+
+	console.log("Register controller initialized.");
+
+	$scope.registerAccount = function() {
+		// Reset notification
+		if ($scope.errorMessage.length > 1) $scope.errorMessage = "";
+		
+		// Verify that passwords match
+		if ($scope.form.password !== $scope.form.passwordAgain) {
+			$scope.errorMessage = "Password mismatch.";
+		}
+		// Remove traces of password in plain format, convert it to SHA1.
+		$scope.form.password = Sha1.hash($scope.form.password);
+		$scope.form.passwordAgain = "";
+		
+		Account.register()
+		.success(function(data, status) {
+			console.log("Success!");
+		})
+		.error(function(data, status) {
+			// $scope.errorMessage = "";
+		});
+	}
+});
