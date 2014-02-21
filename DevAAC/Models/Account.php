@@ -29,6 +29,12 @@ class Account extends \Illuminate\Database\Eloquent\Model {
 
     protected $guarded = array('id');
 
+    protected $attributes = array(
+        'type' => 1,
+        'premdays' => 0,
+        'lastday' => 0
+    );
+
     public function getCreationAttribute()
     {
         $date = new DateTime();
