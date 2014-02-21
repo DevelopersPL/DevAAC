@@ -46,11 +46,12 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
  *    description="Operations on players",
  *    @SWG\Operation(
  *      summary="Get all players",
+ *      notes="Non-admins get only public fields",
  *      method="GET",
  *      type="array[Player]",
  *      nickname="getPlayers",
  *      @SWG\Parameter( name="sort",
- *                      description="The field or fields (delimeted by comma) to sort by ascending, specify -field to sort descending, e.g.: ?sort=level,-skill_fist",
+ *                      description="The field or fields (separated by comma) to sort by ascending, specify -field to sort descending, e.g.: ?sort=level,-skill_fist",
  *                      paramType="query",
  *                      required=false,
  *                      type="string"),
@@ -95,7 +96,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
                 $players->orderBy($rule, 'asc');
 
             // check if has permission to sort by this field
-            if(!in_array($rule, $visible) && ( !$DevAAC->authenticated_account->isAdmin() || !$DevAAC->authenticated_account->isAdmin() ) )
+            if(!in_array($rule, $visible) && ( !$DevAAC->authenticated_account || !$DevAAC->authenticated_account->isAdmin() ) )
                 throw new InputErrorException('You cannot sort by '.$rule, 400);
         }
     }
@@ -108,18 +109,19 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
         {
             // check if has permission to select this field
             if(!in_array($field, $visible) && ( !$DevAAC->authenticated_account || !$DevAAC->authenticated_account->isAdmin() ) )
-                throw new InputErrorException('You cannot select '.$rule, 400);
+                throw new InputErrorException('You cannot select '.$field, 400);
         }
         $players->select($fields);
     }
-    else
+    elseif(!$DevAAC->authenticated_account || !$DevAAC->authenticated_account->isAdmin())
         $players->select($visible);
 
-    if($req->get('offset'))
+    if(intval($req->get('offset')))
         $players->skip($req->get('offset'));
 
-    if($req->get('limit') && ($req->get('limit') <= 100 or ( $DevAAC->authenticated_account && $DevAAC->authenticated_account->isAdmin() ) ) )
-        $players->take($req->get('limit'));
+    $limit = intval($req->get('limit'));
+    if($limit && ($limit <= 100 or ( $DevAAC->authenticated_account && $DevAAC->authenticated_account->isAdmin() ) ) )
+        $players->take($limit);
     else
         $players->take(100);
 
