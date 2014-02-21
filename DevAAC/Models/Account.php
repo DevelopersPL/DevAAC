@@ -32,7 +32,7 @@ class Account extends \Illuminate\Database\Eloquent\Model {
     public function getCreationAttribute()
     {
         $date = new DateTime();
-        $date->createFromFormat('U', $this->attributes['creation']);
+        $date->setTimestamp($this->attributes['creation']);
         return $date;
     }
 

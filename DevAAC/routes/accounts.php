@@ -11,7 +11,7 @@ use DevAAC\Models\Player;
 
 /**
  * @SWG\Resource(
- *  basePath="/devaac",
+ *  basePath="/api",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/my",
@@ -33,7 +33,7 @@ use DevAAC\Models\Player;
  * )
  */
 // THIS ONE IS USED TO DISCOVER IF USER/PASS COMBINATION IS OK
-$DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
+$DevAAC->get(ROUTES_API_PREFIX.'/accounts/my', function() use($DevAAC) {
     if( ! $DevAAC->auth_account ) {
         //$DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
         $DevAAC->halt(401);
@@ -44,7 +44,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/devaac",
+ *  basePath="/api",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/my/players",
@@ -60,7 +60,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my', function() use($DevAAC) {
  *  )
  * )
  */
-$DevAAC->get(ROUTES_PREFIX.'/accounts/my/players', function() use($DevAAC) {
+$DevAAC->get(ROUTES_API_PREFIX.'/accounts/my/players', function() use($DevAAC) {
     if( ! $DevAAC->auth_account ) {
         $DevAAC->halt(401);
     }
@@ -70,7 +70,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my/players', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/devaac",
+ *  basePath="/api",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}",
@@ -91,7 +91,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/my/players', function() use($DevAAC) {
  *  )
  * )
  */
-$DevAAC->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
+$DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     $accounts = Account::findOrFail($id);
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($accounts->toJson(JSON_PRETTY_PRINT));
@@ -99,7 +99,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/devaac",
+ *  basePath="/api",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts",
@@ -120,7 +120,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
  *  )
  * )
  */
-$DevAAC->get(ROUTES_PREFIX.'/accounts', function() use($DevAAC) {
+$DevAAC->get(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
     $accounts = AccountPublic::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($accounts->toJson(JSON_PRETTY_PRINT));
@@ -128,7 +128,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/devaac",
+ *  basePath="/api",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts",
@@ -149,7 +149,7 @@ $DevAAC->get(ROUTES_PREFIX.'/accounts', function() use($DevAAC) {
  *  )
  * )
  */
-$DevAAC->post(ROUTES_PREFIX.'/accounts', function() use($DevAAC) {
+$DevAAC->post(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
     $req = $DevAAC->request;
     if( !filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
         array("options" => array("regexp" => "/^[a-zA-Z]{2,12}$/"))) )

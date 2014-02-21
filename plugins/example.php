@@ -32,5 +32,10 @@ $DevAAC->get(ROUTES_PREFIX.'/uptime', function() use($DevAAC) {
     $DevAAC->response->setBody(shell_exec('uptime'));
 });
 
+$DevAAC->get(ROUTES_API_PREFIX.'/uptime', function() use($DevAAC) {
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(array('uptime' => shell_exec('uptime')), JSON_PRETTY_PRINT));
+});
+
 // THIS RETURNS META DATA SPECIFIED ABOVE
 return array_merge($meta, array('enabled' => true));
