@@ -7,6 +7,7 @@
 
 use DevAAC\Models\Player;
 use DevAAC\Models\PlayerPublic;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * @SWG\Resource(
@@ -47,19 +48,81 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
  *      summary="Get all players",
  *      method="GET",
  *      type="array[Player]",
- *      nickname="getPlayers"
+ *      nickname="getPlayers",
+ *      @SWG\Parameter( name="sort",
+ *                      description="The field or fields (delimeted by comma) to sort by ascending, specify -field to sort descending, e.g.: ?sort=level,-skill_fist",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string"),
+ *      @SWG\Parameter( name="fields",
+ *                      description="The field to return (Non-admin: only public fields)",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string"),
+ *      @SWG\Parameter( name="offset",
+ *                      description="The number of records to skip",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string"),
+ *      @SWG\Parameter( name="limit",
+ *                      description="The number of records to return at maximum (Non-admin: max 100)",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string")
  *    )
  *  )
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
-    $players = PlayerPublic::all();
-    $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
-});
+    $req = $DevAAC->request;
+    $players = Capsule::table('players');
 
-$DevAAC->get(ROUTES_API_PREFIX.'/topplayers', function() use($DevAAC) {
-    $players = PlayerPublic::take(5)->orderBy('level', 'DESC')->orderBy('experience', 'DESC')->get();
+    // for field validation - it's not the best way ;/
+    $tmp = new PlayerPublic();
+    $visible = $tmp->getVisibleFields();
+
+    // support ?sort=level,-skill_club
+    if($req->get('sort'))
+    {
+        $sort_rules = explode(',', $req->get('sort'));
+        foreach($sort_rules as $rule)
+        {
+            if(0 === strpos($rule, '-')) {
+                $rule = trim($rule, '-');
+                $players->orderBy($rule, 'desc');
+            }
+            else
+                $players->orderBy($rule, 'asc');
+
+            // check if has permission to sort by this field
+            if(!in_array($rule, $visible) && ( !$DevAAC->authenticated_account->isAdmin() || !$DevAAC->authenticated_account->isAdmin() ) )
+                throw new InputErrorException('You cannot sort by '.$rule, 400);
+        }
+    }
+
+    // support ?fields=id,name,level
+    if($req->get('fields'))
+    {
+        $fields = explode(',', $req->get('fields'));
+        foreach($fields as $field)
+        {
+            // check if has permission to select this field
+            if(!in_array($field, $visible) && ( !$DevAAC->authenticated_account || !$DevAAC->authenticated_account->isAdmin() ) )
+                throw new InputErrorException('You cannot select '.$rule, 400);
+        }
+        $players->select($fields);
+    }
+    else
+        $players->select($visible);
+
+    if($req->get('offset'))
+        $players->skip($req->get('offset'));
+
+    if($req->get('limit') && ($req->get('limit') <= 100 or ( $DevAAC->authenticated_account && $DevAAC->authenticated_account->isAdmin() ) ) )
+        $players->take($req->get('limit'));
+    else
+        $players->take(100);
+
     $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
+    $DevAAC->response->setBody(json_encode($players->get(), JSON_PRETTY_PRINT));
 });

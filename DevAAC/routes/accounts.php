@@ -135,7 +135,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
  *    description="Operations on accounts",
  *    @SWG\Operation(
  *      summary="Create new account",
- *      notes="You can also pass account object's attributes as form input",
+ *      notes="You can also pass account object's attributes as form input, do not specify fields marked as optional",
  *      method="POST",
  *      type="Account",
  *      nickname="createAccount",

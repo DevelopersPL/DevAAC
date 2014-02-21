@@ -60,10 +60,10 @@ DevAAC.factory("Highscores", function($http, $location) {
 	return {
 		experience: function() {
 			return $http({
-				url: ApiUrl('topplayers'),
+				url: ApiUrl('players'),
 				method: 'GET',
-				headers: { 'Content-Type': 'application/json' }
-				//data: JSON.stringify({year: yearString})
+				headers: { 'Content-Type': 'application/json' },
+                params: {'sort': '-experience', 'limit': 5}
 			})
 			.success(function (data, status) {
 				//console.log(data, status);

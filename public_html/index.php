@@ -16,6 +16,9 @@ defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '');
 defined('ROUTES_API_PREFIX') or define('ROUTES_API_PREFIX', '/api');
 defined('CORS_ALLOW_ORIGIN') or define('CORS_ALLOW_ORIGIN', false); // origin or false
 
+// GAME
+defined('ACCOUNT_TYPE_ADMIN') or define('ACCOUNT_TYPE_ADMIN', 6);
+
 // PLUGINS CONFIG - DO NOT EDIT - PUT YOUR CUSTOMIZATIONS IN config.php
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);
 defined('ENABLED_PLUGINS') or define('ENABLED_PLUGINS', serialize(array('ratelimiter.php', 'simple.php')));

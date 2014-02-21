@@ -8,7 +8,6 @@
 $loader = require '../vendor/autoload.php';
 $loader->setPsr4('DevAAC\\', APP_ROOT);
 
-use DevAAC\Models\Account;
 
 //////////////////////// CREATE Slim APPLICATION //////////////////////////////////
 $DevAAC = new \Slim\Slim(array(
@@ -42,10 +41,10 @@ class AuthMiddleware extends \Slim\Middleware
         $auth_pass = $req->headers('PHP_AUTH_PW');
 
         if($auth_user && $auth_pass)
-            $this->app->auth_account = Account::where('name', $auth_user)->where('password', $auth_pass)->first();
+            $this->app->auth_account = DevAAC\Models\Account::where('name', $auth_user)->where('password', $auth_pass)->first();
 
         if(!$this->app->auth_account)
-            $this->app->auth_account = Account::where('name', $auth_user)->where('password', sha1($auth_pass))->first();
+            $this->app->auth_account = DevAAC\Models\Account::where('name', $auth_user)->where('password', sha1($auth_pass))->first();
         //else
         //    $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
         $this->next->call();
@@ -138,6 +137,9 @@ $DevAAC->get(ROUTES_API_PREFIX.'/news', function() use($DevAAC) {
 $DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC) {
     $DevAAC->response->headers->set('Content-Type', 'text');
     $date = new \DevAAC\Helpers\DateTime();
+    $tmp = \DevAAC\Models\Player::find(2);
+    foreach($tmp->toArray() as $key => $value)
+        echo '* @SWG\Property(name="'.$key.'", type="string")'. PHP_EOL;
     echo $date . PHP_EOL;
     echo json_encode($date) . PHP_EOL;
     echo serialize($date) . PHP_EOL;

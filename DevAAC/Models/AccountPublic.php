@@ -11,6 +11,6 @@ class AccountPublic extends Account {
 
     protected $table = 'accounts';
 
-    protected $visible = array('id', 'type', 'premdays', 'lastday', 'creation');
+    protected $hidden = array('name', 'password', 'email');
 
 }

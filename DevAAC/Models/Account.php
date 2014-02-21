@@ -60,7 +60,13 @@ class Account extends \Illuminate\Database\Eloquent\Model {
         $this->attributes['password'] = $pass;
     }
 
-    public function comparePassword($pass) {
+    public function comparePassword($pass)
+    {
         return $this->password === sha1($pass);
+    }
+
+    public function isAdmin()
+    {
+        return $this->type >= ACCOUNT_TYPE_ADMIN;
     }
 }
