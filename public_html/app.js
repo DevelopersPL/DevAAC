@@ -62,7 +62,7 @@ function base64_encode (data) {
 var DevAAC = angular.module('app', ['ngRoute', 'ngResource']);
 
 // Add authentication headers to all xhr requests after login.
-module.run(function($http, Account) {
+DevAAC.run(function($http, Account) {
     if (Account.getToken() !== false) {
         $http.defaults.headers.common.Authentication = 'Basic '+Account.getToken();
     }
