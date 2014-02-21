@@ -36,7 +36,7 @@ use DevAAC\Models\Player;
 $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my', function() use($DevAAC) {
     if( ! $DevAAC->auth_account ) {
         //$DevAAC->response->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
-        $DevAAC->halt(401);
+        throw new InputErrorException('You are not logged in.', 401);
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($DevAAC->auth_account->toJson(JSON_PRETTY_PRINT));
@@ -62,7 +62,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my', function() use($DevAAC) {
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my/players', function() use($DevAAC) {
     if( ! $DevAAC->auth_account ) {
-        $DevAAC->halt(401);
+        throw new InputErrorException('You are not logged in.', 401);
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($DevAAC->auth_account->players->toJson(JSON_PRETTY_PRINT));
