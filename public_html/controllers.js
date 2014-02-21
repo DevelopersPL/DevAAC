@@ -95,16 +95,67 @@ DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
 });
 
-DevAAC.controller('userNav', function ($scope, $http, $window, Account) {
-    $scope.isAuthenticated = false;
-    $scope.welcome = '';
+DevAAC.controller('NavigationController', function ($scope, $http, $window, Account, WindowSession) {
     $scope.message = '';
+    $scope.account = false;
+    $scope.login = {
+    	username: "",
+    	password: ""
+    };
+    $scope.online = false;
+    $scope.waiting = false;
+    $scope.checked = false;
+
+    console.log("NavigationController controller is initialized.");
 
     $scope.Always = function() {
     	$('#loading-login-btn').button('reset');
-        $scope.login = {};
+    	$scope.login.username = "";
+        $scope.login.password = "";
     };
     
+    // This will log in user from cookie if it exist.
+    $scope.checkCookie = function() {
+    	// Check if we got cookie token from previous login, as long as we are not logged in.
+    	if (!$scope.waiting && !$scope.online && !$scope.checked && Cookie.get('DevAACToken') !== false) {
+    		$scope.waiting = true;
+    		Account.authenticate(Cookie.get('DevAACToken'))
+    		.success(function(data, status) {
+    			console.log("Logged in from cookie.");
+    			$scope.account = data;
+    			$scope.waiting = false;
+    			$scope.checked = true;
+    		})
+    		.error(function() {
+    			console.log("Failed to authenticate from cookie.");
+    			$scope.waiting = false;
+    			$scope.checked = true;
+    		});
+    	}
+    	// No point to check user if we are still waiting for API response
+    	if (!$scope.waiting) return $scope.checkUser();
+    }
+    /* This will check if user is online
+    // If online it will check if it got the account data
+    // If he don't got it, fetch it.
+    // If not online but have account data, remove account data.
+    // So this takes care of all the neccesary flow of information regarding login/logout.
+    // So this will automatically detect, set and logout user depending on available
+    //  information in the Account model. */
+    $scope.checkUser = function() {
+    	$scope.online = WindowSession.checkToken();
+    	if ($scope.online) {
+    		if ($scope.account === false) {
+    			$scope.account = Account.getAccount();
+    		} else {
+    			if ($scope.account !== false) {
+    				$scope.account = false;
+    			}
+    		}
+    	}
+    	return $scope.online;
+	}
+
     $scope.Login = function () {
         $('#loading-login-btn').button('loading');
         var token = btoa($scope.login.username + ":" + Sha1.hash($scope.login.password));
@@ -115,25 +166,21 @@ DevAAC.controller('userNav', function ($scope, $http, $window, Account) {
         Account.authenticate(token)
         .success(function(data, status) {
         	console.log('Login passed');
-            $window.sessionStorage.token = token;
-            $scope.isAuthenticated = true;
-            $scope.username = data.name;
+        	$scope.checked = true;
+            $scope.account = data;
+            WindowSession.registerToken(Account.getToken());
             $scope.Always();
         })
         .error(function(data, status) {
         	console.log('Login error');
-            delete $window.sessionStorage.token;
-            $scope.isAuthenticated = false;
-            // Handle login errors here
-            $scope.welcome = '';
+	        WindowSession.removeToken();
             $scope.Always();
         });
     };
 
     $scope.Logout = function () {
-        $scope.welcome = '';
-        $scope.isAuthenticated = false;
-        delete $window.sessionStorage.token;
+        $scope.Always();
+        WindowSession.removeToken();
     };
 });
 
@@ -165,8 +212,13 @@ DevAAC.controller('RegisterController',
 		$scope.form.password = Sha1.hash($scope.form.password);
 		$scope.form.passwordAgain = "";
 		
+		// Registering account, extending success and error with logic
 		Account.register($scope.form.accountName, $scope.form.password, $scope.form.email)
 		.success(function(data, status) {
+			// Auto login:
+			var token = btoa($scope.form.accountName + ":" + Sha1.hash($scope.form.password));
+			// TODO Authenticate. (Need to remake mrWogus system)
+			// Clearing password form
 			$scope.form.password = "";
 			$scope.successMessage = "Account has been created!";
 		})
@@ -175,4 +227,11 @@ DevAAC.controller('RegisterController',
 			$scope.errorMessage = data.message;
 		});
 	}
+});
+
+// RULES CONTROLLER
+DevAAC.controller('RulesController',
+	function($scope
+) {
+	console.log("Rules controller initialized.");
 });

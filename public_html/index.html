@@ -31,6 +31,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.min.js"></script>
+
     <!-- Showdown -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 </head>
@@ -48,15 +49,15 @@
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
-            <div ng-controller="userNav" class="collapse navbar-collapse navbar-ex1-collapse">
+            <div ng-controller="NavigationController" class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="#/about">About</a></li>
                     <li><a href="#/rules">Rules</a></li>
                     <li><a href="#/home">Contact</a></li>
                 </ul>
-                <ul ng-show="isAuthenticated" class="nav navbar-nav navbar-right">
+                <ul ng-if="checkCookie()" class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{username}}!<b class="caret"></b></a>
+                        <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="#">My account</a></li>
                             <li><a href="#">My characters</a></li>
@@ -65,7 +66,7 @@
                         </ul>
                     </li>
                 </ul>
-                <form ng-show="!isAuthenticated" ng-submit="Login()" class="navbar-form navbar-right">
+                <form ng-if="!checkCookie()" ng-submit="Login()" class="navbar-form navbar-right">
                     <div class="form-group">
                         <input ng-model="login.username" name="username" required class="form-control" placeholder="Login" type="text">
                     </div>

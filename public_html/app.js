@@ -8,6 +8,9 @@ function ApiUrl(link) {
 	return "http://duots.dondaniello.com/api/" + link;
 }
 
+/*
+    CUSTOM FUNCTIONS
+*/
 function base64_encode (data) {
     // From: http://phpjs.org/functions
     // +   original by: Tyler Akins (http://rumkin.com)
@@ -56,6 +59,28 @@ function base64_encode (data) {
 
     return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
 
+}
+
+// Simple singleton to set and get cookies.
+// (For persistent login/future "remember me" functionality)
+var Cookie = {
+    set: function (cname,cvalue,exdays) {
+        var d = new Date();
+        d.setTime(d.getTime()+(exdays*24*60*60*1000));
+        var expires = "expires="+d.toGMTString();
+        document.cookie = cname + "=" + cvalue + "; " + expires;
+    },
+    get: function (cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        var value = false;
+        for(var i=0; i<ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(name)==0) value = c.substring(name.length,c.length);
+        }
+        if (value === false || value.length < 1) return false;
+        else return value;
+    }
 }
 
 // Initiate DevAAC

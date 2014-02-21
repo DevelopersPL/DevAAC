@@ -55,7 +55,28 @@ DevAAC.factory("Cache", function($http, $location) {
 	}
 });
 
+// WindowSession
+DevAAC.factory("WindowSession", function($http, Account, $window) {
+	return {
+		checkToken: function() {
+			var token = Account.getToken();
+			if (token !== false) return true;
+			else return token;
+		},
+		registerToken: function(token) {
+			$window.sessionStorage.token = token;
+			Cookie.set('DevAACToken', token, 1);
+		},
+		removeToken: function() {
+			delete $window.sessionStorage.token;
+			Cookie.set('DevAACToken', '', 0);
+			return Account.removeTokenData();
+		}
+	}
+});
+
 // Highscore API (etc fetch top players)
+// Migrate this with players table later?
 DevAAC.factory("Highscores", function($http, $location) {
 	return {
 		experience: function() {
@@ -110,6 +131,7 @@ DevAAC.factory("Account", function($http, $location) {
 			})
 			.success(function (data, status) {
 				accData = data;
+				accToken = btoa(name + ":" + password);;
 				console.log(data, status);
 			})
 			.error(function (data, status) {
@@ -117,13 +139,14 @@ DevAAC.factory("Account", function($http, $location) {
 			});
 		},
 		authenticate: function(token) {
-			accToken = token;
 			return $http({
 				url: ApiUrl('accounts/my'),
 				method: 'GET',
 				headers: { 'Authorization': "Basic " + token },
 			})
 			.success(function (data, status) {
+				accToken = token;
+				accData = data;
 				console.log(data, status);
 			})
 			.error(function (data, status) {
@@ -135,6 +158,12 @@ DevAAC.factory("Account", function($http, $location) {
 		},
 		getAccount: function() {
 			return accData;
+		},
+		removeTokenData: function() {
+			accToken = false;
+		},
+		removeAccountData: function() {
+			accData = false;
 		}
 	}
 });
