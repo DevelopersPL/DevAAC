@@ -95,6 +95,8 @@ $capsule->addConnection([
     'collation' => 'utf8_unicode_ci',
     'prefix'    => '',
 ]);
+if (strpos($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION), 'mysqlnd') === false)
+    die('PHP PDO is using non-native MySQL extension, php-mysqlnd native extension is required. You most likely have to execute: apt-get install php5-mysqlnd');
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
@@ -134,8 +136,9 @@ $DevAAC->get(ROUTES_API_PREFIX.'/news', function() use($DevAAC) {
     $DevAAC->response->setBody(json_encode($news, JSON_PRETTY_PRINT));
 });
 
-$DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC) {
+$DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC, $capsule) {
     $DevAAC->response->headers->set('Content-Type', 'text');
+    var_dump($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION));
     $date = new \DevAAC\Helpers\DateTime();
     $tmp = \DevAAC\Models\Player::find(2);
     foreach($tmp->toArray() as $key => $value)

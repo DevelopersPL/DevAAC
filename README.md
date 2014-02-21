@@ -17,8 +17,8 @@ Requirements
 =====
 * PHP >= 5.4
 * PHP JSON extension
-* PHP MySQL extension
-* PHp APC or APCu extension (if you want plugins/ratelimiter.php to work)
+* PHP MySQL NATIVE DRIVER (mysqlnd) extension (or [this](http://forumsarchive.laravel.io/viewtopic.php?pid=58151) will happen)
+* PHp APC or APCu extension (if you want ```plugins/ratelimiter.php``` to work)
 
 Installation (dev release)
 =====
