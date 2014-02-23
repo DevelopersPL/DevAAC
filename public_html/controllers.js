@@ -44,12 +44,12 @@ DevAAC.controller('ProfileController',
 	$scope.SetPlayerData = function(playerInfo) {
 		console.log(playerInfo);
 		$scope.player.name = playerInfo.name;
-		$scope.player.sex = playerInfo.sex;
+		$scope.player.sex = playerInfo.sex ? 'male' : 'female';
 		$scope.player.profession = playerInfo.vocation;
 		$scope.player.level = playerInfo.level;
 		$scope.player.residence = playerInfo.town_id;
-		$scope.player.seen = playerInfo.lastlogin + " → " + playerInfo.lastlogout;
-		$scope.player.onlineTime = playerInfo.onlinetime;
+		$scope.player.seen = moment.unix(playerInfo.lastlogin).format('LLLL') + " → " + moment.unix(playerInfo.lastlogout).format('LLLL');
+		$scope.player.onlineTime = moment.duration(playerInfo.onlinetime, 'seconds').humanize();
 	}
 
 	console.log("Profile controller initialized.");
@@ -75,6 +75,7 @@ DevAAC.controller('NewsController',
     function($scope, $location, $routeParams, News) {
         $scope.newsA = News.query(function(result){
             $scope.news = result[0];
+            $scope.news['date'] = moment($scope.news['date']).format('LLLL');
         });
 
         $scope.current = 0;

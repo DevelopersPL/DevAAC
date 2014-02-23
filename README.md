@@ -1,6 +1,6 @@
 DevAAC
 =====
-DevAAC for TFS 1.0 by developers.pl
+DevAAC by developers.pl for [TFS 1.0](https://github.com/otland/forgottenserver)
 
 __Check out the [REST API documentation](http://dondaniello.github.io/DevAAC)!__
 
