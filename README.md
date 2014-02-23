@@ -1,6 +1,12 @@
-DevAAC
-=====
 DevAAC by developers.pl for [TFS 1.0](https://github.com/otland/forgottenserver)
+=====
+Quick facts:
+
+* This AAC is built as a SPA (Single Page Application) on the front-end and a RESTful API on the back-end.
+* It is supposed to be easily extensible via plugins (check ```plugins/example.php```.
+* The core of this AAC does not modify TFS' database schema. News are loaded as static markdown files from ```public_html/news```.
+* The REST API is planned to be utilized by many external projects like OT server lists and OT Client.
+
 
 __Check out the [REST API documentation](http://dondaniello.github.io/DevAAC)!__
 
@@ -18,7 +24,7 @@ Requirements
 * PHP >= 5.4
 * PHP JSON extension
 * PHP MySQL NATIVE DRIVER (mysqlnd) extension (or [this](http://forumsarchive.laravel.io/viewtopic.php?pid=58151) will happen)
-* PHp APC or APCu extension (if you want ```plugins/ratelimiter.php``` to work)
+* PHP APC or APCu extension (if you want ```plugins/ratelimiter.php``` to work)
 
 Installation (dev release)
 =====
@@ -50,5 +56,9 @@ Authors
 * Don Daniello
 * mrwogu
 * with contributions from Znote
+
+Contributions are always welcome, please submit pull requests!
+We are looking for back-end plugins and front-end functionality of themes.
+(It is proper to keep non-essential functionality in the form of plugins.)
 
 Check [LICENSE](LICENSE).

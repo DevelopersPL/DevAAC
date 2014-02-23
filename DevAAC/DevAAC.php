@@ -142,7 +142,8 @@ $DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC, $capsule) {
     $date = new \DevAAC\Helpers\DateTime();
     $tmp = \DevAAC\Models\Player::find(2);
     foreach($tmp->toArray() as $key => $value)
-        echo '* @SWG\Property(name="'.$key.'", type="string")'. PHP_EOL;
+        echo "'".$key."' => 0,". PHP_EOL;
+        //echo '* @SWG\Property(name="'.$key.'", type="string")'. PHP_EOL;
     echo $date . PHP_EOL;
     echo json_encode($date) . PHP_EOL;
     echo serialize($date) . PHP_EOL;

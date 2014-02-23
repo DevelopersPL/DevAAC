@@ -18,6 +18,8 @@ defined('CORS_ALLOW_ORIGIN') or define('CORS_ALLOW_ORIGIN', false); // origin or
 
 // GAME
 defined('ACCOUNT_TYPE_ADMIN') or define('ACCOUNT_TYPE_ADMIN', 6);
+defined('ALLOWED_VOCATIONS') or define('ALLOWED_VOCATIONS', serialize(array(1, 2, 3, 4)));
+defined('NEW_PLAYER_LEVEL') or define('NEW_PLAYER_LEVEL', 8);
 
 // PLUGINS CONFIG - DO NOT EDIT - PUT YOUR CUSTOMIZATIONS IN config.php
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);

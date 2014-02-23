@@ -27,9 +27,9 @@ $DevAAC->map(ROUTES_PREFIX.'/', function() use($DevAAC) {
 
         // VALIDATE CHARACTER NAME
         if( !filter_var($req->post('character-name'), FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/^[a-zA-Z ]{2,12}$/"))) ) {
+            array("options" => array("regexp" => "/^[a-zA-Z ]{5,20}$/"))) ) {
             $DevAAC->flashNow('character-name_class', 'has-error');
-            $DevAAC->flashNow('danger', 'Character name must have 6-20 characters, only letters and space.');
+            $DevAAC->flashNow('danger', 'Character name must have 5-20 characters, only letters and space.');
             $error = true;
         }
 

@@ -7,7 +7,7 @@
 namespace DevAAC\Models;
 
 /**
- * @SWG\Model(required="['name', 'vocation']")
+ * @SWG\Model(required="['name', 'vocation', 'sex']")
  */
 class Player extends \Illuminate\Database\Eloquent\Model {
 
@@ -72,7 +72,60 @@ class Player extends \Illuminate\Database\Eloquent\Model {
     protected $guarded = array('id');
 
     protected $attributes = array(
+        'id' => 0,
+        'name' => 0,
+        'group_id' => 1,
+        'account_id' => 0,
+        'level' => 1,
         'vocation' => 1, // we set some vocation by default in case we need it for a formula before setting it
+        'health' => 150,
+        'healthmax' => 150,
+        'experience' => 0,
+        'lookbody' => 0,
+        'lookfeet' => 0,
+        'lookhead' => 0,
+        'looklegs' => 0,
+        'looktype' => 136,
+        'lookaddons' => 0,
+        'maglevel' => 0,
+        'mana' => 0,
+        'manamax' => 0,
+        'manaspent' => 0,
+        'soul' => 0,
+        'town_id' => 0,
+        'posx' => 0,
+        'posy' => 0,
+        'posz' => 0,
+        'conditions' => '',
+        'cap' => 0,
+        'sex' => 0,
+        'lastlogin' => 0,
+        'lastip' => 0,
+        'save' => 1,
+        'skull' => 0,
+        'skulltime' => 0,
+        'lastlogout' => 0,
+        'blessings' => 0,
+        'onlinetime' => 0,
+        'deletion' => 0,
+        'balance' => 0,
+        'offlinetraining_time' => 43200,
+        'offlinetraining_skill' => -1,
+        'stamina' => 2520,
+        'skill_fist' => 10,
+        'skill_fist_tries' => 0,
+        'skill_club' => 10,
+        'skill_club_tries' => 0,
+        'skill_sword' => 10,
+        'skill_sword_tries' => 0,
+        'skill_axe' => 10,
+        'skill_axe_tries' => 0,
+        'skill_dist' => 10,
+        'skill_dist_tries' => 0,
+        'skill_shielding' => 10,
+        'skill_shielding_tries' => 0,
+        'skill_fishing' => 10,
+        'skill_fishing_tries' => 0
     );
 
     public function account()

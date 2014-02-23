@@ -27,7 +27,9 @@ defined('RATELIMITER_RULES') or define('RATELIMITER_RULES', serialize(array(
         '/plugins' => 5
     ),
     'POST' => array(
-        '/' => 5 // for Simple AAC (plugin)
+        '/' => 5, // for Simple AAC (plugin)
+        '/accounts' => 10,
+        '/players' => 5,
     )
 )));
 // SHOULD WE RESET THE TIMER ON EVERY ATTEMPT?

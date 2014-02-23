@@ -168,3 +168,62 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
 });
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/players",
+ *  @SWG\Api(
+ *    path="/players",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Create new player",
+ *      notes="You can also pass player object's attributes as form input, do not specify fields marked as optional",
+ *      method="POST",
+ *      type="Player",
+ *      nickname="createPlayer",
+ *      @SWG\Parameter( name="player",
+ *                      description="Player object",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="Player"),
+ *      @SWG\ResponseMessage(code=400, message="Input parameter error"),
+ *      @SWG\ResponseMessage(code=401, message="Authentication required")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
+    if( ! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    $req = $DevAAC->request;
+
+    if( !filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
+        array("options" => array("regexp" => "/^[a-zA-Z ]{5,20}$/"))) )
+        throw new InputErrorException('Player name must have 5-20 characters, only letters and space.', 400);
+
+    if( !in_array($req->getAPIParam('vocation'), unserialize(ALLOWED_VOCATIONS)) )
+        throw new InputErrorException('Vocation is out of bounds.', 400);
+
+    if( !in_array($req->getAPIParam('sex'), array(0, 1)) )
+        throw new InputErrorException('Sex is invalid.', 400);
+
+    $player = Player::where('name', $req->getAPIParam('name'))->first();
+    if($player)
+        throw new InputErrorException('Player with this name already exists.', 400);
+
+    $player = new Player(
+        array(
+            'name' => $req->getAPIParam('name'),
+            'vocation' => $req->getAPIParam('vocation'),
+            'sex' => $req->getAPIParam('sex'),
+            'level' => NEW_PLAYER_LEVEL
+        )
+    );
+
+    $DevAAC->auth_account->players()->save($player);
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($player->toJson(JSON_PRETTY_PRINT));
+});
