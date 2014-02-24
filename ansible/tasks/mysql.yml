@@ -1,0 +1,11 @@
+---
+- name: Install Mysql package
+  apt: pkg={{ item }} state=present
+  with_items:
+   - mysql-server
+   - python-mysqldb
+
+- name: Start Mysql Service
+  service: name=mysql state=started enabled=true
+
+  

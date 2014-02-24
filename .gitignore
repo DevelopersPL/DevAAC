@@ -4,5 +4,9 @@ vendor/
 # PHPStorm
 .idea/
 
+# Vagrant
+.vagrant/
+vagrant_ansible_inventory_default
+
 # Config
 public_html/config.php

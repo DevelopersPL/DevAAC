@@ -1,0 +1,15 @@
+---
+- name: Download latest TFS from git
+  git: repo=https://github.com/otland/forgottenserver.git
+       dest=/home/vagrant/forgottenserver
+
+- name: Create database user for TFS
+  mysql_user: name=forgottenserver password="" priv=forgottenserver.*:ALL state=present check_implicit_admin=yes
+
+- name: Create database for TFS
+  mysql_db: name=forgottenserver state=present
+
+- name: Import MySQL database from schema.sql
+  shell: (cat /home/vagrant/forgottenserver/schema.sql | mysql forgottenserver) && touch /home/vagrant/.imported_db
+          creates=/home/vagrant/.imported_db
+

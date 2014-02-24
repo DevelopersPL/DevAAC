@@ -5,7 +5,7 @@ function PageUrl(page) {
 	return "pages/" + page + ".html";
 }
 function ApiUrl(link) {
-	return "http://duots.dondaniello.com/api/" + link;
+	return "/api/" + link;
 }
 
 /*
