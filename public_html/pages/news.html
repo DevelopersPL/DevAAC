@@ -9,8 +9,8 @@
 <hr>
 <!-- pager -->
 <ul class="pager">
-    <li class="previous"><a href="#">&larr; Older</a>
+    <li ng-show="previousAvailable()" class="previous"><a href="" ng-click="previous()">&larr; Previous</a>
     </li>
-    <li class="next"><a href="#">Newer &rarr;</a>
+    <li ng-show="nextAvailable()" class="next"><a href="" ng-click="next()">Next &rarr;</a>
     </li>
 </ul>

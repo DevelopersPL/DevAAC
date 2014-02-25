@@ -78,14 +78,32 @@ DevAAC.controller('NewsController',
             $scope.news['date'] = moment($scope.news['date']).format('LLLL');
         });
 
-        $scope.current = 0;
-
         $scope.next = function() {
+            index = $scope.newsA.indexOf($scope.news);
+            if(index >= 0 && index < $scope.newsA.length - 1) {
+                $scope.news = $scope.newsA[index + 1];
+                $scope.news['date'] = moment($scope.news['date']).format('LLLL');
+            }
+        }
 
+        $scope.nextAvailable = function() {
+            index = $scope.newsA.indexOf($scope.news);
+            if(index >= 0 && index < $scope.newsA.length - 1)
+                return true;
         }
 
         $scope.previous = function() {
+            index = $scope.newsA.indexOf($scope.news);
+            if(index > 0 && index <= $scope.newsA.length - 1) {
+                $scope.news = $scope.newsA[index - 1];
+                $scope.news['date'] = moment($scope.news['date']).format('LLLL');
+            }
+        }
 
+        $scope.previousAvailable = function() {
+            index = $scope.newsA.indexOf($scope.news);
+            if(index > 0 && index <= $scope.newsA.length - 1)
+                return true;
         }
 
         console.log("News controller initialized.");
