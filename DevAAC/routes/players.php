@@ -14,15 +14,15 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  *  basePath="/api",
  *  resourcePath="/players",
  *  @SWG\Api(
- *    path="/players/{id}",
+ *    path="/players/{id/name}",
  *    description="Operations on players",
  *    @SWG\Operation(
- *      summary="Get player based on ID",
+ *      summary="Get player based on ID or name",
  *      method="GET",
  *      type="Player",
  *      nickname="getPlayerByID",
- *      @SWG\Parameter( name="id",
- *                      description="ID of Player that needs to be fetched",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Player that needs to be fetched",
  *                      paramType="path",
  *                      required=true,
  *                      type="integer"),
@@ -32,7 +32,13 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
-    $player = PlayerPublic::findOrFail($id);
+    try {
+        $player = PlayerPublic::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $player = PlayerPublic::where('name', $id)->first();
+        if(!$player)
+            throw $e;
+    }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($player->toJson(JSON_PRETTY_PRINT));
 });
