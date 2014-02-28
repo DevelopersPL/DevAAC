@@ -37,67 +37,49 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['name','password','email']")
+ * @SWG\Model(required="['name','ownerid', 'creationdata', 'motd']")
  */
-class Account extends \Illuminate\Database\Eloquent\Model {
+class Guild extends \Illuminate\Database\Eloquent\Model {
     /**
      * @SWG\Property(name="id", type="integer")
      * @SWG\Property(name="name", type="string")
-     * @SWG\Property(name="password", type="SHA1 hash")
-     * @SWG\Property(name="type", type="integer")
-     * @SWG\Property(name="premdays", type="integer")
-     * @SWG\Property(name="lastday", type="integer")
-     * @SWG\Property(name="email", type="string")
-     * @SWG\Property(name="creation", type="DateTime::ISO8601")
+     * @SWG\Property(name="ownerid", type="integer")
+     * @SWG\Property(name="creationdata", type="integer")
+     * @SWG\Property(name="motd", type="string")
      */
+
     public $timestamps = false;
 
     protected $guarded = array('id');
 
     protected $attributes = array(
-        'type' => 1,
-        'premdays' => 0,
-        'lastday' => 0
+        'motd' => ''
     );
 
-    public function getCreationAttribute()
+    public function getCreationdataAttribute()
     {
         $date = new DateTime();
-        $date->setTimestamp($this->attributes['creation']);
+        $date->setTimestamp($this->attributes['creationdata']);
         return $date;
     }
 
-    public function setCreationAttribute($d)
+    public function setCreationdataAttribute($d)
     {
         if($d instanceof \DateTime)
-            $this->attributes['creation'] = $d->getTimestamp();
+            $this->attributes['creationdata'] = $d->getTimestamp();
         elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['creation'] = DateTime($d)->getTimestamp();
+            $this->attributes['creationdata'] = DateTime($d)->getTimestamp();
         } else // it is a UNIX timestamp
-            $this->attributes['creation'] = $d;
+            $this->attributes['creationdata'] = $d;
     }
 
-    public function players()
+    public function owner()
     {
-        return $this->hasMany('DevAAC\Models\Player');
+        return $this->belongsTo('DevAAC\Models\Player', 'ownerid');
     }
 
-    public function setPasswordAttribute($pass)
+    public function members()
     {
-        if( !filter_var($pass, FILTER_VALIDATE_REGEXP,
-            array("options" => array("regexp" => "/^[0-9a-f]{40}$/i"))) )
-            $pass = sha1($pass);
-
-        $this->attributes['password'] = $pass;
-    }
-
-    public function comparePassword($pass)
-    {
-        return $this->password === sha1($pass);
-    }
-
-    public function isAdmin()
-    {
-        return $this->type >= ACCOUNT_TYPE_ADMIN;
+        return $this->hasManyThrough('DevAAC\Models\Player', 'DevAAC\Models\GuildMembership');
     }
 }

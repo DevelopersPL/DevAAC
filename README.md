@@ -8,7 +8,7 @@ Quick facts:
 * The REST API is planned to be utilized by many external projects like OT server lists and OT Client.
 
 
-__Check out the [REST API documentation](http://dondaniello.github.io/DevAAC)!__
+__Check out the [REST API documentation](http://developerspl.github.io/DevAAC)!__
 
 This software is designed to:
 
@@ -54,9 +54,9 @@ php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 
 Authors
 =====
-* Don Daniello
-* mrwogu
-* with contributions from Znote
+* [Daniel Speichert](https://github.com/DSpeichert)
+* [Wojciech Guziak](https://github.com/mrwogu)
+* with contributions from [Znote](https://github.com/Znote)
 
 Contributions are always welcome, please submit pull requests!
 We are looking for back-end plugins and front-end functionality of themes.

@@ -29,30 +29,27 @@
  * @link       https://github.com/DevelopersPL/DevAAC
  */
 
-namespace DevAAC\Models;
+use DevAAC\Models\Guild;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
-
-class PlayerPublic extends Player {
-
-    protected $table = 'players';
-
-    // not needed
-    protected $hidden = array(
-        'health', 'mana', 'manaspent', 'conditions', 'lastip', 'save', 'offlinetraining_time', 'offlinetraining_skill',
-        'skill_fist_tries', 'skill_club_tries', 'skill_sword_tries', 'skill_axe_tries','skill_dist_tries',
-        'skill_shielding_tries', 'skill_fishing_tries'
-    );
-
-    protected $visible = array(
-        'id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'healthmax', 'experience', 'lookbody', 'lookfeet',
-        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'town_id', 'posx', 'posy', 'posz',
-        'cap', 'sex', 'lastlogin', 'skull', 'skulltime', 'lastlogout', 'blessings', 'onlinetime', 'deletion', 'balance',
-        'stamina', 'skill_fist', 'skill_club', 'skill_sword', 'skill_axe', 'skill_dist', 'skill_shielding', 'skill_fishing'
-    );
-
-    public function getVisibleFields() {
-        return $this->visible;
-    }
-
-}
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get all guilds",
+ *      notes="",
+ *      method="GET",
+ *      type="Guild",
+ *      nickname="getGuilds"
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
+    $guilds = Guild::all();
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guilds->toJson(JSON_PRETTY_PRINT));
+});
