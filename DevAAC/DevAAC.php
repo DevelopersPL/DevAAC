@@ -143,6 +143,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/docs(/:path)', function($path = '/') use($DevAA
 require('routes/accounts.php');
 require('routes/players.php');
 require('routes/guilds.php');
+require('routes/server.php');
 
 $DevAAC->get(ROUTES_API_PREFIX.'/news', function() use($DevAAC) {
     $news = array();

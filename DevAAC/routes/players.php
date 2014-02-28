@@ -50,7 +50,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  *                      paramType="path",
  *                      required=true,
  *                      type="integer"),
- *      @SWG\ResponseMessage(code=404, message="Account not found")
+ *      @SWG\ResponseMessage(code=404, message="Player not found")
  *    )
  *  )
  * )
@@ -65,6 +65,40 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($player->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/players",
+ *  @SWG\Api(
+ *    path="/players/{id/name}/spells",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Get player's spells based on ID or name",
+ *      method="GET",
+ *      type="PlayerSpell",
+ *      nickname="getPlayerSpellsByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Player whose spells need to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="Player not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/players/:id/spells', function($id) use($DevAAC) {
+    try {
+        $player = Player::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $player = Player::where('name', $id)->first();
+        if(!$player)
+            throw $e;
+    }
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($player->spells->toJson(JSON_PRETTY_PRINT));
 });
 
 /**

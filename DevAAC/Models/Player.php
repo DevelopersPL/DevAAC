@@ -158,6 +158,12 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsTo('DevAAC\Models\Account');
     }
 
+    public function spells()
+    {
+        return $this->hasMany('DevAAC\Models\PlayerSpell');
+    }
+
+
     public function setLevelAttribute($level)
     {
         // http://tibia.wikia.com/wiki/Formula
