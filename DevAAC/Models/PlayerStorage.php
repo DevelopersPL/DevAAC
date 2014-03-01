@@ -31,55 +31,28 @@
 
 namespace DevAAC\Models;
 
-use DevAAC\Helpers\DateTime;
-
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['name','ownerid', 'creationdata', 'motd']")
+ * @SWG\Model(required="['player_id','key','value']")
  */
-class Guild extends \Illuminate\Database\Eloquent\Model {
+class PlayerStorage extends \Illuminate\Database\Eloquent\Model {
     /**
-     * @SWG\Property(name="id", type="integer")
-     * @SWG\Property(name="name", type="string")
-     * @SWG\Property(name="ownerid", type="integer")
-     * @SWG\Property(name="creationdata", type="DateTime::ISO8601")
-     * @SWG\Property(name="motd", type="string")
+     * @SWG\Property(name="player_id", type="integer")
+     * @SWG\Property(name="key", type="integer")
+     * @SWG\Property(name="value", type="integer")
      */
-
     public $timestamps = false;
 
-    protected $guarded = array('id');
+    protected $primaryKey = null;
 
-    protected $attributes = array(
-        'motd' => ''
-    );
+    public $incrementing = false;
 
-    public function getCreationdataAttribute()
+    protected $table = 'player_storage';
+
+    public function player()
     {
-        $date = new DateTime();
-        $date->setTimestamp($this->attributes['creationdata']);
-        return $date;
-    }
-
-    public function setCreationdataAttribute($d)
-    {
-        if($d instanceof \DateTime)
-            $this->attributes['creationdata'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['creationdata'] = DateTime($d)->getTimestamp();
-        } else // it is a UNIX timestamp
-            $this->attributes['creationdata'] = $d;
-    }
-
-    public function owner()
-    {
-        return $this->belongsTo('DevAAC\Models\Player', 'ownerid');
-    }
-
-    public function members()
-    {
-        return $this->hasManyThrough('DevAAC\Models\Player', 'DevAAC\Models\GuildMembership');
+        return $this->belongsTo('DevAAC\Models\Player');
     }
 }

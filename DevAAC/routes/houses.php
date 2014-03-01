@@ -29,61 +29,55 @@
  * @link       https://github.com/DevelopersPL/DevAAC
  */
 
-use DevAAC\Models\Guild;
+use DevAAC\Models\House;
 
 /**
  * @SWG\Resource(
  *  basePath="/api",
- *  resourcePath="/guilds",
+ *  resourcePath="/houses",
  *  @SWG\Api(
- *    path="/guilds",
- *    description="Operations on guilds",
+ *    path="/houses",
+ *    description="Operations on houses",
  *    @SWG\Operation(
- *      summary="Get all guilds",
+ *      summary="Get all houses",
  *      notes="",
  *      method="GET",
- *      type="Guild",
- *      nickname="getGuilds"
+ *      type="House",
+ *      nickname="getHouses"
  *   )
  *  )
  * )
  */
-$DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
-    $guilds = Guild::all();
+$DevAAC->get(ROUTES_API_PREFIX.'/houses', function() use($DevAAC) {
+    $houses = House::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody($guilds->toJson(JSON_PRETTY_PRINT));
+    $DevAAC->response->setBody($houses->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
  * @SWG\Resource(
  *  basePath="/api",
- *  resourcePath="/guilds",
+ *  resourcePath="/houses",
  *  @SWG\Api(
- *    path="/guilds/{id/name}",
- *    description="Operations on guilds",
+ *    path="/houses/{id}",
+ *    description="Operations on houses",
  *    @SWG\Operation(
- *      summary="Get guild based on ID or name",
+ *      summary="Get house based on ID or name",
  *      method="GET",
- *      type="Guild",
+ *      type="House",
  *      nickname="getGuildByID",
- *      @SWG\Parameter( name="id/name",
- *                      description="ID or name of Guild that needs to be fetched",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of House that needs to be fetched",
  *                      paramType="path",
  *                      required=true,
- *                      type="integer/string"),
- *      @SWG\ResponseMessage(code=404, message="Guild not found")
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="House not found")
  *    )
  *  )
  * )
  */
-$DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id', function($id) use($DevAAC) {
-    try {
-        $guild = Guild::findOrFail($id);
-    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        $guild = Guild::where('name', $id)->first();
-        if(!$guild)
-            throw $e;
-    }
+$DevAAC->get(ROUTES_API_PREFIX.'/houses/:id', function($id) use($DevAAC) {
+    $house = House::findOrFail($id);
     $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody($guild->toJson(JSON_PRETTY_PRINT));
+    $DevAAC->response->setBody($house->toJson(JSON_PRETTY_PRINT));
 });

@@ -37,11 +37,11 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['account_id','reason','banned_at','expires_at','banned_by']")
+ * @SWG\Model(required="['ip','reason','banned_at','expires_at','banned_by']")
  */
-class AccountBan extends \Illuminate\Database\Eloquent\Model {
+class IpBan extends \Illuminate\Database\Eloquent\Model {
     /**
-     * @SWG\Property(name="account_id", type="integer")
+     * @SWG\Property(name="ip", type="string")
      * @SWG\Property(name="reason", type="string")
      * @SWG\Property(name="banned_at", type="DateTime::ISO8601")
      * @SWG\Property(name="expires_at", type="DateTime::ISO8601")
@@ -53,14 +53,19 @@ class AccountBan extends \Illuminate\Database\Eloquent\Model {
 
     public $incrementing = false;
 
-    public function account()
-    {
-        return $this->belongsTo('DevAAC\Models\Account');
-    }
-
     public function bannedBy()
     {
         return $this->belongsTo('DevAAC\Models\Player', 'banned_by');
+    }
+
+    public function getIpAttribute()
+    {
+        return long2ip((float)$this->attributes['ip']);
+    }
+
+    public function setIpAttribute($ip)
+    {
+        $this->attributes['ip'] = ip2long($ip);
     }
 
     public function getBannedAtAttribute()

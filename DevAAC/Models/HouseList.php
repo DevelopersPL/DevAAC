@@ -37,15 +37,13 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['account_id','reason','banned_at','expires_at','banned_by']")
+ * @SWG\Model(required="['house_id','list_id','text']")
  */
-class AccountBan extends \Illuminate\Database\Eloquent\Model {
+class HouseList extends \Illuminate\Database\Eloquent\Model {
     /**
-     * @SWG\Property(name="account_id", type="integer")
-     * @SWG\Property(name="reason", type="string")
-     * @SWG\Property(name="banned_at", type="DateTime::ISO8601")
-     * @SWG\Property(name="expires_at", type="DateTime::ISO8601")
-     * @SWG\Property(name="banned_by", type="integer")
+     * @SWG\Property(name="house_id", type="integer")
+     * @SWG\Property(name="list_id", type="integer")
+     * @SWG\Property(name="text", type="string")
      */
     public $timestamps = false;
 
@@ -53,47 +51,8 @@ class AccountBan extends \Illuminate\Database\Eloquent\Model {
 
     public $incrementing = false;
 
-    public function account()
+    public function house()
     {
-        return $this->belongsTo('DevAAC\Models\Account');
-    }
-
-    public function bannedBy()
-    {
-        return $this->belongsTo('DevAAC\Models\Player', 'banned_by');
-    }
-
-    public function getBannedAtAttribute()
-    {
-        $date = new DateTime();
-        $date->setTimestamp($this->attributes['banned_at']);
-        return $date;
-    }
-
-    public function setBannedAtAttribute($d)
-    {
-        if($d instanceof \DateTime)
-            $this->attributes['banned_at'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['banned_at'] = DateTime($d)->getTimestamp();
-        } else // it is a UNIX timestamp
-            $this->attributes['banned_at'] = $d;
-    }
-
-    public function getExpiresAtAttribute()
-    {
-        $date = new DateTime();
-        $date->setTimestamp($this->attributes['expires_at']);
-        return $date;
-    }
-
-    public function setExpiresAtAttribute($d)
-    {
-        if($d instanceof \DateTime)
-            $this->attributes['expires_at'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['expires_at'] = DateTime($d)->getTimestamp();
-        } else // it is a UNIX timestamp
-            $this->attributes['expires_at'] = $d;
+        return $this->belongsTo('DevAAC\Models\House');
     }
 }
