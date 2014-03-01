@@ -31,29 +31,26 @@
 
 namespace DevAAC\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+// https://github.com/illuminate/database/blob/master/Eloquent/Model.php
+// https://github.com/otland/forgottenserver/blob/master/schema.sql
 
-class PlayerPublic extends Player {
+/**
+ * @SWG\Model(required="['player_id']")
+ */
+class PlayerOnline extends \Illuminate\Database\Eloquent\Model {
+    /**
+     * @SWG\Property(name="player_id", type="integer")
+     */
+    public $timestamps = false;
 
-    protected $table = 'players';
+    protected $primaryKey = null;
 
-    // not needed
-    protected $hidden = array(
-        'health', 'mana', 'manaspent', 'conditions', 'lastip', 'save', 'offlinetraining_time', 'offlinetraining_skill',
-        'skill_fist_tries', 'skill_club_tries', 'skill_sword_tries', 'skill_axe_tries','skill_dist_tries',
-        'skill_shielding_tries', 'skill_fishing_tries'
-    );
+    public $incrementing = false;
 
-    protected $visible = array(
-        'id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'healthmax', 'experience', 'lookbody', 'lookfeet',
-        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'town_id', 'posx', 'posy', 'posz',
-        'cap', 'sex', 'lastlogin', 'skull', 'skulltime', 'lastlogout', 'blessings', 'onlinetime', 'deletion', 'balance',
-        'stamina', 'skill_fist', 'skill_club', 'skill_sword', 'skill_axe', 'skill_dist', 'skill_shielding', 'skill_fishing',
-        'online'
-    );
+    protected $table = 'players_online';
 
-    public function getVisibleFields() {
-        return $this->visible;
+    public function player()
+    {
+        return $this->belongsTo('DevAAC\Models\Player');
     }
-
 }

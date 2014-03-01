@@ -31,7 +31,42 @@
 
 use DevAAC\Models\Player;
 use DevAAC\Models\PlayerPublic;
+use DevAAC\Models\PlayerOnline;
 use Illuminate\Database\Capsule\Manager as Capsule;
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/players",
+ *  @SWG\Api(
+ *    path="/players/online",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Get online players",
+ *      notes="Non-admins get only public fields",
+ *      method="GET",
+ *      type="array[Player]",
+ *      nickname="getOnlinePlayers",
+ *      @SWG\Parameter( name="embed",
+ *                      description="Pass player to embed player object instead of showing just ID",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string list separated by comma")
+ *     )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/players/online', function() use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if($req->get('embed') == 'player')
+        $players = Player::has('online')->get();
+    else
+        $players = PlayerOnline::all();
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($players->toJson(JSON_PRETTY_PRINT));
+});
+
 
 /**
  * @SWG\Resource(

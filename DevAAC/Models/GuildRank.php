@@ -31,29 +31,26 @@
 
 namespace DevAAC\Models;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+// https://github.com/illuminate/database/blob/master/Eloquent/Model.php
+// https://github.com/otland/forgottenserver/blob/master/schema.sql
 
-class PlayerPublic extends Player {
+/**
+ * @SWG\Model(required="['id','guild_id','name','level']")
+ */
+class GuildRank extends \Illuminate\Database\Eloquent\Model {
+    /**
+     * @SWG\Property(name="id", type="integer")
+     * @SWG\Property(name="guild_id", type="integer")
+     * @SWG\Property(name="name", type="string")
+     * @SWG\Property(name="level", type="integer")
+     */
 
-    protected $table = 'players';
+    public $timestamps = false;
 
-    // not needed
-    protected $hidden = array(
-        'health', 'mana', 'manaspent', 'conditions', 'lastip', 'save', 'offlinetraining_time', 'offlinetraining_skill',
-        'skill_fist_tries', 'skill_club_tries', 'skill_sword_tries', 'skill_axe_tries','skill_dist_tries',
-        'skill_shielding_tries', 'skill_fishing_tries'
-    );
+    protected $guarded = array('id');
 
-    protected $visible = array(
-        'id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'healthmax', 'experience', 'lookbody', 'lookfeet',
-        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'town_id', 'posx', 'posy', 'posz',
-        'cap', 'sex', 'lastlogin', 'skull', 'skulltime', 'lastlogout', 'blessings', 'onlinetime', 'deletion', 'balance',
-        'stamina', 'skill_fist', 'skill_club', 'skill_sword', 'skill_axe', 'skill_dist', 'skill_shielding', 'skill_fishing',
-        'online'
-    );
-
-    public function getVisibleFields() {
-        return $this->visible;
+    public function guild()
+    {
+        return $this->belongsTo('DevAAC\Models\Guild');
     }
-
 }

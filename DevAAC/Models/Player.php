@@ -91,6 +91,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
      * @SWG\Property(name="skill_shielding_tries", type="integer")
      * @SWG\Property(name="skill_fishing", type="integer")
      * @SWG\Property(name="skill_fishing_tries", type="integer")
+     * @SWG\Property(name="online", type="boolean")
      */
     public $timestamps = false;
 
@@ -153,6 +154,8 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         'skill_fishing_tries' => 0
     );
 
+    protected $appends = array('online');
+
     public function account()
     {
         return $this->belongsTo('DevAAC\Models\Account');
@@ -166,6 +169,16 @@ class Player extends \Illuminate\Database\Eloquent\Model {
     public function deaths()
     {
         return $this->hasMany('DevAAC\Models\PlayerDeath');
+    }
+
+    public function namelock()
+    {
+        return $this->hasOne('DevAAC\Models\PlayerNamelock');
+    }
+
+    public function online()
+    {
+        return $this->hasOne('DevAAC\Models\PlayerOnline', 'player_id');
     }
 
     public function setLevelAttribute($level)
@@ -219,5 +232,10 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         else                                                // rookies, knights
             $m = 3;
         $this->attributes['manaspent'] = (1600 * (pow($m, $mlvl) - 1) ) / ( $m - 1 );
+    }
+
+    public function getOnlineAttribute()
+    {
+        return (bool)$this->online();
     }
 }

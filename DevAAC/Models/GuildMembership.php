@@ -31,8 +31,6 @@
 
 namespace DevAAC\Models;
 
-use DevAAC\Helpers\DateTime;
-
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
@@ -49,9 +47,26 @@ class GuildMembership extends \Illuminate\Database\Eloquent\Model {
 
     public $timestamps = false;
 
-    protected $guarded = array();
+    protected $primaryKey = null;
+
+    public $incrementing = false;
 
     protected $attributes = array(
         'nick' => ''
     );
+
+    public function player()
+    {
+        return $this->belongsTo('DevAAC\Models\Player');
+    }
+
+    public function guild()
+    {
+        return $this->belongsTo('DevAAC\Models\Guild');
+    }
+
+    public function rank()
+    {
+        return $this->belongsTo('DevAAC\Models\GuildRank');
+    }
 }
