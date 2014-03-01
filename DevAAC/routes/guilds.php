@@ -87,3 +87,37 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id', function($id) use($DevAAC) {
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($guild->toJson(JSON_PRETTY_PRINT));
 });
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id/name}/invitations",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get guild invitations based on ID or name",
+ *      method="GET",
+ *      type="array[GuildInvite]",
+ *      nickname="getGuildInvitationsByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Guild that invitations needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer/string"),
+ *      @SWG\ResponseMessage(code=404, message="Guild not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/invitations', function($id) use($DevAAC) {
+    try {
+        $guild = Guild::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $guild = Guild::where('name', $id)->first();
+        if(!$guild)
+            throw $e;
+    }
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guild->invitations->toJson(JSON_PRETTY_PRINT));
+});

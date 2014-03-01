@@ -65,7 +65,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses', function() use($DevAAC) {
  *      summary="Get house based on ID or name",
  *      method="GET",
  *      type="House",
- *      nickname="getGuildByID",
+ *      nickname="getHouseByID",
  *      @SWG\Parameter( name="id",
  *                      description="ID of House that needs to be fetched",
  *                      paramType="path",
@@ -80,4 +80,32 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id', function($id) use($DevAAC) {
     $house = House::findOrFail($id);
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($house->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/houses",
+ *  @SWG\Api(
+ *    path="/houses/{id}/lists",
+ *    description="Operations on houses",
+ *    @SWG\Operation(
+ *      summary="Get house lists based on ID or name",
+ *      method="GET",
+ *      type="array[HouseList]",
+ *      nickname="getHouseListsByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of House that lists needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="House not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
+    $house = House::findOrFail($id);
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($house->lists->toJson(JSON_PRETTY_PRINT));
 });

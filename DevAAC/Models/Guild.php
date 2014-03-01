@@ -82,4 +82,9 @@ class Guild extends \Illuminate\Database\Eloquent\Model {
     {
         return $this->hasManyThrough('DevAAC\Models\Player', 'DevAAC\Models\GuildMembership');
     }
+
+    public function invitations()
+    {
+        return $this->hasMany('DevAAC\Models\GuildInvite');
+    }
 }
