@@ -163,6 +163,10 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         return $this->hasMany('DevAAC\Models\PlayerSpell');
     }
 
+    public function deaths()
+    {
+        return $this->hasMany('DevAAC\Models\PlayerDeath');
+    }
 
     public function setLevelAttribute($level)
     {

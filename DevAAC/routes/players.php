@@ -49,7 +49,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
  *                      description="ID or name of Player that needs to be fetched",
  *                      paramType="path",
  *                      required=true,
- *                      type="integer"),
+ *                      type="integer/string"),
  *      @SWG\ResponseMessage(code=404, message="Player not found")
  *    )
  *  )
@@ -83,7 +83,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
  *                      description="ID or name of Player whose spells need to be fetched",
  *                      paramType="path",
  *                      required=true,
- *                      type="integer"),
+ *                      type="integer/string"),
  *      @SWG\ResponseMessage(code=404, message="Player not found")
  *    )
  *  )
@@ -99,6 +99,40 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id/spells', function($id) use($DevAAC)
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($player->spells->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/players",
+ *  @SWG\Api(
+ *    path="/players/{id/name}/deaths",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Get player's deaths based on ID or name",
+ *      method="GET",
+ *      type="PlayerDeath",
+ *      nickname="getPlayerDeathsByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Player whose deaths need to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer/string"),
+ *      @SWG\ResponseMessage(code=404, message="Player not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/players/:id/deaths', function($id) use($DevAAC) {
+    try {
+        $player = Player::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $player = Player::where('name', $id)->first();
+        if(!$player)
+            throw $e;
+    }
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($player->deaths->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
