@@ -55,6 +55,12 @@ class IpBan extends \Illuminate\Database\Eloquent\Model {
 
     protected $guarded = array();
 
+    // See this: https://github.com/laravel/framework/issues/3762
+    public function getKey()
+    {
+        return $this->attributes['ip'];
+    }
+
     public function bannedBy()
     {
         return $this->belongsTo('DevAAC\Models\Player', 'banned_by');

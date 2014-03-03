@@ -180,10 +180,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAA
     if(!$ipban)
         throw new InputErrorException('This IP is not banned.', 404);
 
-    // TODO: This actually does not work
-    // https://github.com/laravel/framework/issues/3762
     $ipban->delete();
-    IpBan::destroy(ip2long($ip));
 
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
