@@ -31,9 +31,9 @@
 
 $meta = array('name' => 'Rate limiter',
     'description' => 'Rate limiter requires APC user cache (APC or APCu)',
-    'version' => '0.1',
+    'version' => '1.0',
     'author' => 'Don Daniello',
-    'link' => 'https://github.com/DonDaniello/DevAAC'
+    'link' => 'https://github.com/DevelopersPL/DevAAC'
 );
 
 if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
@@ -64,7 +64,7 @@ $DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
 
     $rules = unserialize(RATELIMITER_RULES);
 
-    // $DevAAC->router->currentRoute is NULL in this hook plus it's prtoected
+    // $DevAAC->router->currentRoute is NULL in this hook plus it's protected
     // we cannot use route names (even if we assigned them)
     // unfortunately we need to base on path
 

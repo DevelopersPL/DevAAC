@@ -34,7 +34,9 @@ use DevAAC\Models\Player;
 
 $meta = array('name' => 'Simple AAC',
     'description' => 'Dead simple one-page AAC',
-    'version' => '0.1'
+    'version' => '1.0',
+    'author' => 'Don Daniello',
+    'link' => 'https://github.com/DevelopersPL/DevAAC'
 );
 
 if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )

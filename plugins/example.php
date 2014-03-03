@@ -33,9 +33,9 @@
 // THIS CAN BE ANY INFORMATION YOU WANT
 $meta = array('name' => 'Example plugin',
     'description' => 'This is an example how to write plugins. It exposes /uptime. It requires shell_exec function.',
-    'version' => '0.1',
+    'version' => '1.0',
     'author' => 'Don Daniello',
-    'link' => 'https://github.com/DonDaniello/DevAAC'
+    'link' => 'https://github.com/DevelopersPL/DevAAC'
 );
 
 // IF THE PLUGIN IS NOT ACTIVATED IN CONFIG, THEN DISABLE IT

@@ -29,28 +29,47 @@
  * @link       https://github.com/DevelopersPL/DevAAC
  */
 
-use \DevAAC\Models\ServerConfig;
+use DevAAC\Models\IpBan;
 
-/**
- * @SWG\Resource(
- *  basePath="/api",
- *  resourcePath="/server",
- *  @SWG\Api(
- *    path="/server/config",
- *    description="Operations on server",
- *    @SWG\Operation(
- *      summary="Get server config values",
- *      notes="",
- *      method="GET",
- *      type="ServerConfig",
- *      nickname="getServerConfig"
- *   )
- *  )
- * )
+$meta = array('name' => 'IP Ban',
+    'description' => 'Disallows access to users who are IP banned. APC user cache is recommended for performance.',
+    'version' => '0.1',
+    'author' => 'Don Daniello',
+    'link' => 'https://github.com/DevelopersPL/DevAAC'
+);
+
+/*
+ * This plugin strongly benefits from APC user cache!
  */
-$DevAAC->get(ROUTES_API_PREFIX.'/server/config', function() use($DevAAC) {
-    $config = ServerConfig::all();
-    $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody($config->toJson(JSON_PRETTY_PRINT));
+
+if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
+    return array_merge($meta, array('enabled' => false));
+
+// http://docs.slimframework.com/#How-to-Use-Hooks
+$DevAAC->hook('slim.before', function () use ($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(extension_loaded('apc') && ini_get('apc.enabled'))
+    {
+        $apc = true;
+        $objname = 'ipban_'.$req->getIp();
+    }
+
+    if($apc && apc_fetch($objname))
+    {
+        $DevAAC->halt(403, 'Your IP address is banned.');
+    }
+    else
+    {
+        $ipban = IpBan::find( ip2long($req->getIp()) );
+        if($ipban)
+        {
+            $DevAAC->halt(403, 'Your IP address is banned.');
+            if($apc)
+                apc_store($objname, true, 10 * 60);
+                // THE INFORMATION WILL BE IN CACHE FOR 10 MINUTES SO WE CAN REJECT REQUESTS WITHOUT RUNNING ANY SQL QUERIES
+        }
+    }
 });
 
+return array_merge($meta, array('enabled' => true));

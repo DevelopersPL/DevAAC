@@ -194,6 +194,23 @@ if(is_dir('../plugins') && !DISABLE_PLUGINS) {
     $DevAAC->plugins = $loaded_plugins;
 }
 
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/plugins",
+ *  @SWG\Api(
+ *    path="/plugins",
+ *    description="Operations on DevAAC",
+ *    @SWG\Operation(
+ *      summary="Get information about used plugins",
+ *      notes="",
+ *      method="GET",
+ *      type="array",
+ *      nickname="getDevAACPlugins"
+ *   )
+ *  )
+ * )
+ */
 $DevAAC->get(ROUTES_API_PREFIX.'/plugins', function() use($DevAAC) {
     $DevAAC->response->setBody(json_encode($DevAAC->plugins), JSON_PRETTY_PRINT);
     $DevAAC->response->headers->set('Content-Type', 'application/json');

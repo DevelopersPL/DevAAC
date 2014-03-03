@@ -23,7 +23,7 @@ defined('NEW_PLAYER_LEVEL') or define('NEW_PLAYER_LEVEL', 8);
 
 // PLUGINS CONFIG - DO NOT EDIT - PUT YOUR CUSTOMIZATIONS IN config.php
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);
-defined('ENABLED_PLUGINS') or define('ENABLED_PLUGINS', serialize(array('ratelimiter.php', 'simple.php')));
+defined('ENABLED_PLUGINS') or define('ENABLED_PLUGINS', serialize(array('ratelimiter.php', 'simple.php', 'ipban.php')));
 
 // DO NOT EDIT
 define('PUBLIC_HTML_PATH', realpath('.'));
