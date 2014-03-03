@@ -48,7 +48,7 @@ class PlayerNamelock extends \Illuminate\Database\Eloquent\Model {
      */
     public $timestamps = false;
 
-    protected $primaryKey = null;
+    protected $primaryKey = 'player_id';
 
     public $incrementing = false;
 
@@ -73,8 +73,9 @@ class PlayerNamelock extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['namelocked_at'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['namelocked_at'] = DateTime($d)->getTimestamp();
+        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['namelocked_at'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['namelocked_at'] = $d;
     }

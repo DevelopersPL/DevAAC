@@ -75,8 +75,9 @@ class House extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['paid'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['paid'] = DateTime($d)->getTimestamp();
+        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['paid'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['paid'] = $d;
     }
@@ -92,8 +93,9 @@ class House extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['bid_end'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['bid_end'] = DateTime($d)->getTimestamp();
+        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['bid_end'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['bid_end'] = $d;
     }
@@ -109,8 +111,9 @@ class House extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['last_bid'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['last_bid'] = DateTime($d)->getTimestamp();
+        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['last_bid'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['last_bid'] = $d;
     }

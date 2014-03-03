@@ -37,55 +37,66 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['name','ownerid', 'creationdata', 'motd']")
+ * @SWG\Model(required="['id','account_id','reason','banned_at','expired_at','banned_by']")
  */
-class Guild extends \Illuminate\Database\Eloquent\Model {
+class AccountBanHistory extends \Illuminate\Database\Eloquent\Model {
     /**
      * @SWG\Property(name="id", type="integer")
-     * @SWG\Property(name="name", type="string")
-     * @SWG\Property(name="ownerid", type="integer")
-     * @SWG\Property(name="creationdata", type="DateTime::ISO8601")
-     * @SWG\Property(name="motd", type="string")
+     * @SWG\Property(name="account_id", type="integer")
+     * @SWG\Property(name="reason", type="string")
+     * @SWG\Property(name="banned_at", type="DateTime::ISO8601")
+     * @SWG\Property(name="expired_at", type="DateTime::ISO8601")
+     * @SWG\Property(name="banned_by", type="integer")
      */
-
     public $timestamps = false;
 
     protected $guarded = array('id');
 
-    protected $attributes = array(
-        'motd' => ''
-    );
+    protected $table = 'account_ban_history';
 
-    public function getCreationdataAttribute()
+    public function account()
+    {
+        return $this->belongsTo('DevAAC\Models\Account');
+    }
+
+    public function bannedBy()
+    {
+        return $this->belongsTo('DevAAC\Models\Player', 'banned_by');
+    }
+
+    public function getBannedAtAttribute()
     {
         $date = new DateTime();
-        $date->setTimestamp($this->attributes['creationdata']);
+        $date->setTimestamp($this->attributes['banned_at']);
         return $date;
     }
 
-    public function setCreationdataAttribute($d)
+    public function setBannedAtAttribute($d)
     {
         if($d instanceof \DateTime)
-            $this->attributes['creationdata'] = $d->getTimestamp();
+            $this->attributes['banned_at'] = $d->getTimestamp();
         elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
             $dt = new DateTime($d);
-            $this->attributes['creationdata'] = $dt->getTimestamp();
+            $this->attributes['banned_at'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
-            $this->attributes['creationdata'] = $d;
+            $this->attributes['banned_at'] = $d;
     }
 
-    public function owner()
+    public function getExpiredAtAttribute()
     {
-        return $this->belongsTo('DevAAC\Models\Player', 'ownerid');
+        $date = new DateTime();
+        $date->setTimestamp($this->attributes['expired_at']);
+        return $date;
     }
 
-    public function members()
+    public function setExpiredAtAttribute($d)
     {
-        return $this->hasManyThrough('DevAAC\Models\Player', 'DevAAC\Models\GuildMembership');
-    }
-
-    public function invitations()
-    {
-        return $this->hasMany('DevAAC\Models\GuildInvite');
+        if($d instanceof \DateTime)
+            $this->attributes['expired_at'] = $d->getTimestamp();
+        elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['expired_at'] = $dt->getTimestamp();
+        } else // it is a UNIX timestamp
+            $this->attributes['expired_at'] = $d;
     }
 }

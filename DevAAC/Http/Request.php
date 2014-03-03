@@ -60,7 +60,10 @@ class Request extends \Slim\Http\Request
         elseif( $this->get($key) )
             return $this->get($key);
 
-        else
+        elseif( $default !== null )
             return $default;
+
+        else
+            throw new \InputErrorException('API parameter "' . $key . '" is missing.', 400);
     }
 }

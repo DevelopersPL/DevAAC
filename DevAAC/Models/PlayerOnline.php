@@ -43,7 +43,7 @@ class PlayerOnline extends \Illuminate\Database\Eloquent\Model {
      */
     public $timestamps = false;
 
-    protected $primaryKey = null;
+    protected $primaryKey = 'player_id';
 
     public $incrementing = false;
 

@@ -73,8 +73,9 @@ class PlayerDeath extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['time'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['time'] = DateTime($d)->getTimestamp();
+        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['time'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['time'] = $d;
     }

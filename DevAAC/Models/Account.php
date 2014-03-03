@@ -71,8 +71,9 @@ class Account extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['creation'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['creation'] = DateTime($d)->getTimestamp();
+        elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['creation'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['creation'] = $d;
     }
@@ -99,5 +100,15 @@ class Account extends \Illuminate\Database\Eloquent\Model {
     public function isAdmin()
     {
         return $this->type >= ACCOUNT_TYPE_ADMIN;
+    }
+
+    public function ban()
+    {
+        return $this->hasOne('DevAAC\Models\AccountBan');
+    }
+
+    public function banHistory()
+    {
+        return $this->hasMany('DevAAC\Models\AccountBanHistory');
     }
 }

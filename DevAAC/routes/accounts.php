@@ -31,6 +31,7 @@
 
 use DevAAC\Models\Account;
 use DevAAC\Models\AccountPublic;
+use DevAAC\Models\AccountBan;
 use DevAAC\Models\Player;
 
 /**
@@ -124,6 +125,247 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
 
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($account->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/{id}/ban",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Get account's ban by ID",
+ *      notes="Each account can only have one ban at a time",
+ *      method="GET",
+ *      type="AccountBan",
+ *      nickname="getAccountBanByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account that ban to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
+    $account = Account::findOrFail($id);
+
+    $ban = $account->getBan;
+    if(!$ban)
+        throw new InputErrorException('This account is not banned', 404);
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($ban->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/{id}/ban",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Ban account by ID",
+ *      notes="Need to have admin rights<br />
+ *      Do not provide account_id or banned_at in AccountBan object - they will be ignored<br />
+ *      The ID of player in banned_by must be of group_id > 1<br />
+ *      expires_at defaults to 0 which means the ban does not expire",
+ *      method="POST",
+ *      type="AccountBan",
+ *      nickname="banAccountByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account to ban",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="ban",
+ *                      description="AccountBan object",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="AccountBan"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found / player not found"),
+ *      @SWG\ResponseMessage(code=406, message="Account is already banned / banned_by player group_id < 2 / banned_by player not on account")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+        throw new InputErrorException('You are not an admin.', 403);
+
+    $account = Account::findOrFail($id);
+    if($account->ban)
+        throw new InputErrorException('This account is already banned.', 406);
+
+    $player = Player::find($req->getAPIParam('banned_by'));
+    if(!$player)
+        throw new InputErrorException('The banned_by player not found.', 404);
+
+    if($player->account->id !== $DevAAC->auth_account->id)
+        throw new InputErrorException('The banned_by player is not yours!', 406);
+
+    if($player->group_id < 2)
+        throw new InputErrorException('The banned_by player must have group_id > 1.', 406);
+
+    $ban = new AccountBan(
+        array(
+            'reason' => $req->getAPIParam('reason'),
+            'banned_at' => new \DevAAC\Helpers\DateTime(),
+            'expires_at' => $req->getAPIParam('expires_at', 0),
+            'banned_by' => $player->id
+        )
+    );
+
+    //$ban->bannedByPlayer()->associate($player);
+
+    $account->ban()->save($ban);
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($ban->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/{id}/ban",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Ban account by ID",
+ *      notes="Need to have admin rights and be the one who created the ban, you can only change reason and expiration date, other parameters are ignored",
+ *      method="PUT",
+ *      type="AccountBan",
+ *      nickname="updateAccountBanByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account to update ban",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="ban",
+ *                      description="AccountBan object",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="AccountBan"),
+ *      @SWG\ResponseMessage(code=400, message="Missing parameters"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found"),
+ *      @SWG\ResponseMessage(code=406, message="Account is not banned")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+        throw new InputErrorException('You are not an admin.', 403);
+
+    $account = Account::findOrFail($id);
+    $ban = $account->ban;
+    if(!$ban)
+        throw new InputErrorException('This account is not banned.', 406);
+
+    // TODO: Calling bannedByPlayer and account here makes these two embedded in the $ban that is returned
+    // TODO: Fortunately, we restrict this route to only the owner of the ban, so they can see their own information only
+    if($ban->bannedByPlayer->account->id !== $DevAAC->auth_account->id)
+        throw new InputErrorException('The banned_by player is not yours! You cannot change a ban issued by someone else.', 406);
+
+    if( !$req->getAPIParam('reason', false) && !$req->getAPIParam('expires_at', false) && $req->getAPIParam('expires_at', false) !== 0 )
+        throw new InputErrorException('You need to provide a new reason or expires_at.', 400);
+
+    try
+    {
+        $ban->reason = $req->getAPIParam('reason');
+    }
+    catch(\InputErrorException $e) {}
+
+    try
+    {
+        $ban->expiresAt = $req->getAPIParam('expires_at');
+    }
+    catch(\InputErrorException $e) {}
+
+    $ban->save();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($ban->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/{id}/ban",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Delete account's ban by ID",
+ *      notes="Need to have admin rights, once removed, the ban will NOT appear in ban history!",
+ *      method="DELETE",
+ *      type="null",
+ *      nickname="deleteAccountBanByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account to lift ban",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found"),
+ *      @SWG\ResponseMessage(code=406, message="Account is not banned")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+        throw new InputErrorException('You are not an admin', 403);
+
+    $account = Account::findOrFail($id);
+    $ban = $account->ban;
+    if(!$ban)
+        throw new InputErrorException('This account is not banned', 406);
+
+    $ban->delete();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
+ *    path="/accounts/{id}/banHistory",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Get account's ban history by ID",
+ *      notes="",
+ *      method="GET",
+ *      type="array[AccountBanHistory]",
+ *      nickname="getAccountBanHistoryByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Account that ban history to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id/banHistory', function($id) use($DevAAC) {
+    $account = Account::findOrFail($id);
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($account->banHistory->toJson(JSON_PRETTY_PRINT));
 });
 
 /**

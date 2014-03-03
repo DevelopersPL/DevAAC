@@ -37,7 +37,7 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['account_id','reason','banned_at','expires_at','banned_by']")
+ * @SWG\Model(required="['reason','expires_at','banned_by']")
  */
 class AccountBan extends \Illuminate\Database\Eloquent\Model {
     /**
@@ -49,16 +49,18 @@ class AccountBan extends \Illuminate\Database\Eloquent\Model {
      */
     public $timestamps = false;
 
-    protected $primaryKey = null;
+    protected $primaryKey = 'account_id';
 
     public $incrementing = false;
+
+    protected $guarded = array();
 
     public function account()
     {
         return $this->belongsTo('DevAAC\Models\Account');
     }
 
-    public function bannedBy()
+    public function bannedByPlayer()
     {
         return $this->belongsTo('DevAAC\Models\Player', 'banned_by');
     }
@@ -74,8 +76,9 @@ class AccountBan extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['banned_at'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['banned_at'] = DateTime($d)->getTimestamp();
+        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['banned_at'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['banned_at'] = $d;
     }
@@ -91,8 +94,9 @@ class AccountBan extends \Illuminate\Database\Eloquent\Model {
     {
         if($d instanceof \DateTime)
             $this->attributes['expires_at'] = $d->getTimestamp();
-        elseif((string) (int) $d !== $d) { // it's not a UNIX timestamp
-            $this->attributes['expires_at'] = DateTime($d)->getTimestamp();
+        elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['expires_at'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['expires_at'] = $d;
     }

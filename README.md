@@ -52,6 +52,11 @@ You can generate Swagger API docs manually:
 php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 ```
 
+TODO
+=====
+* Log admin/GM-like actions
+* Hierarchy of privileges for Tutors/GMs/CMs
+
 Authors
 =====
 * [Daniel Speichert](https://github.com/DSpeichert)
