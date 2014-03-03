@@ -30,6 +30,8 @@
  */
 
 use \DevAAC\Models\ServerConfig;
+use \DevAAC\Models\Player;
+use \DevAAC\Models\IpBan;
 
 /**
  * @SWG\Resource(
@@ -54,3 +56,135 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/config', function() use($DevAAC) {
     $DevAAC->response->setBody($config->toJson(JSON_PRETTY_PRINT));
 });
 
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/server",
+ *  @SWG\Api(
+ *    path="/server/ipBans",
+ *    description="Operations on server",
+ *    @SWG\Operation(
+ *      summary="Get IP bans",
+ *      notes="",
+ *      method="GET",
+ *      type="array[IpBan]",
+ *      nickname="getIPBans"
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
+    $ipbans = IpBan::all();
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($ipbans->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/server",
+ *  @SWG\Api(
+ *    path="/server/ipBans",
+ *    description="Operations on server",
+ *    @SWG\Operation(
+ *      summary="Ban IP",
+ *      notes="Need to have admin rights<br />
+ *      Do not provide banned_at in IpBan object - it will be ignored<br />
+ *      The ID of player in banned_by must be of group_id > 1<br />
+ *      expires_at defaults to 0 which means the ban does not expire",
+ *      method="POST",
+ *      type="IpBan",
+ *      nickname="banIP",
+ *      @SWG\Parameter( name="ban",
+ *                      description="IpBan object",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="IpBan"),
+ *      @SWG\ResponseMessage(code=403, message="IP address is not valid"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=404, message="banned_by player not found"),
+ *      @SWG\ResponseMessage(code=406, message="banned_by player group_id < 2 / banned_by player not on account"),
+ *      @SWG\ResponseMessage(code=409, message="IP is already banned")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+        throw new InputErrorException('You are not an admin.', 403);
+
+    $ipban = IpBan::find(ip2long($req->getAPIParam('ip')));
+    if($ipban)
+        throw new InputErrorException('This IP is already banned.', 409);
+
+    if( !filter_var($req->getAPIParam('ip'), FILTER_VALIDATE_IP) )
+        throw new InputErrorException('IP address is not valid.', 400);
+
+    $player = Player::find($req->getAPIParam('banned_by'));
+    if(!$player)
+        throw new InputErrorException('The banned_by player not found.', 404);
+
+    if($player->account->id !== $DevAAC->auth_account->id)
+        throw new InputErrorException('The banned_by player is not yours!', 406);
+
+    if($player->group_id < 2)
+        throw new InputErrorException('The banned_by player must have group_id > 1.', 406);
+
+    $ban = new IpBan(
+        array(
+            'ip' => $req->getAPIParam('ip'),
+            'reason' => $req->getAPIParam('reason'),
+            'banned_at' => new \DevAAC\Helpers\DateTime(),
+            'expires_at' => $req->getAPIParam('expires_at', 0),
+            'banned_by' => $player->id
+        )
+    );
+
+    $ban->save();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($ban->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/server",
+ *  @SWG\Api(
+ *    path="/server/ipBans/{ip}",
+ *    description="Operations on server",
+ *    @SWG\Operation(
+ *      summary="Delete IP ban",
+ *      notes="Need to have admin rights",
+ *      method="DELETE",
+ *      type="null",
+ *      nickname="deleteIPBan",
+ *      @SWG\Parameter( name="ip",
+ *                      description="IP to lift ban",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="string"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=404, message="IP is not banned")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAAC) {
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+        throw new InputErrorException('You are not an admin', 403);
+
+    $ipban = IpBan::find(ip2long($ip));
+    if(!$ipban)
+        throw new InputErrorException('This IP is not banned.', 404);
+
+    // TODO: This actually does not work
+    // https://github.com/laravel/framework/issues/3762
+    $ipban->delete();
+    IpBan::destroy(ip2long($ip));
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
+});

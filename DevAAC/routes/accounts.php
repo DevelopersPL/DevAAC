@@ -189,7 +189,8 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
  *                      type="AccountBan"),
  *      @SWG\ResponseMessage(code=403, message="Permission denied"),
  *      @SWG\ResponseMessage(code=404, message="Account not found / player not found"),
- *      @SWG\ResponseMessage(code=406, message="Account is already banned / banned_by player group_id < 2 / banned_by player not on account")
+ *      @SWG\ResponseMessage(code=406, message="banned_by player group_id < 2 / banned_by player not on account"),
+ *      @SWG\ResponseMessage(code=409, message="Account is already banned")
  *   )
  *  )
  * )
@@ -202,7 +203,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) 
 
     $account = Account::findOrFail($id);
     if($account->ban)
-        throw new InputErrorException('This account is already banned.', 406);
+        throw new InputErrorException('This account is already banned.', 409);
 
     $player = Player::find($req->getAPIParam('banned_by'));
     if(!$player)

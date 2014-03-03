@@ -37,7 +37,7 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['ip','reason','banned_at','expires_at','banned_by']")
+ * @SWG\Model(required="['ip','reason','expires_at','banned_by']")
  */
 class IpBan extends \Illuminate\Database\Eloquent\Model {
     /**
@@ -52,6 +52,8 @@ class IpBan extends \Illuminate\Database\Eloquent\Model {
     protected $primaryKey = 'ip';
 
     public $incrementing = false;
+
+    protected $guarded = array();
 
     public function bannedBy()
     {
