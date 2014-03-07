@@ -60,7 +60,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/online', function() use($DevAAC) {
     $req = $DevAAC->request;
 
     if($req->get('embed') == 'player')
-        $players = Player::has('online')->get();
+        $players = PlayerPublic::has('online')->get();
     else
         $players = PlayerOnline::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');

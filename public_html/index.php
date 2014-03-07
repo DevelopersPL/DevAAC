@@ -12,6 +12,7 @@ if(is_file('./config.php'))
 defined('APP_ROOT') or define('APP_ROOT', '../DevAAC');
 defined('ENABLE_DEBUG') or define('ENABLE_DEBUG', false);
 defined('TFS_CONFIG') or die('Please follow instructions in public_html/config.sample.php');
+defined('TFS_ROOT') or define('TFS_ROOT', false); // directory where config.lua is located
 defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '');
 defined('ROUTES_API_PREFIX') or define('ROUTES_API_PREFIX', '/api');
 defined('CORS_ALLOW_ORIGIN') or define('CORS_ALLOW_ORIGIN', false); // origin or false

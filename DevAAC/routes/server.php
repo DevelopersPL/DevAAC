@@ -32,6 +32,7 @@
 use \DevAAC\Models\ServerConfig;
 use \DevAAC\Models\Player;
 use \DevAAC\Models\IpBan;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * @SWG\Resource(
@@ -184,4 +185,57 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAA
 
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/server",
+ *  @SWG\Api(
+ *    path="/server/info",
+ *    description="Operations on server",
+ *    @SWG\Operation(
+ *      summary="Get some information",
+ *      notes="",
+ *      method="GET",
+ *      type="array",
+ *      nickname="getServerInfo"
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
+    $result = array(
+        'players_online_count' => Capsule::table('players_online')->count(),
+        'players_online' => Capsule::table('players')->join('players_online', 'players.id', '=', 'players_online.player_id')->select('players.name')->get(),
+        'players_count' => Capsule::table('players')->count(),
+        'accounts_count' => Capsule::table('accounts')->count(),
+        'guilds_count' => Capsule::table('guilds')->count()
+
+    );
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode($result, JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/server",
+ *  @SWG\Api(
+ *    path="/server/vocations",
+ *    description="Operations on server",
+ *    @SWG\Operation(
+ *      summary="Get vocations",
+ *      notes="",
+ *      method="GET",
+ *      type="array",
+ *      nickname="getVocations"
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/server/vocations', function() use($DevAAC) {
+    $result = xml2array($DevAAC->vocations)['vocation'];
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode($result, JSON_PRETTY_PRINT));
 });

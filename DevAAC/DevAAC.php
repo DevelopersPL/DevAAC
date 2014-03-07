@@ -103,7 +103,16 @@ $DevAAC->error(function ($e) use ($DevAAC) {
 
 //////////////////////////// LOAD TFS CONFIG ////////////////////////////////////
 // you need to define TFS_CONFIG to be an array with config.lua options or a path to config.lua
-$DevAAC->tfs_config = is_file(TFS_CONFIG) ? parse_ini_file(TFS_CONFIG) : unserialize(TFS_CONFIG) or die('TFS_CONFIG is not defined properly.');
+$DevAAC->tfsConfigFile = is_file(TFS_CONFIG) ? parse_ini_file(TFS_CONFIG) : unserialize(TFS_CONFIG) or die('TFS_CONFIG is not defined properly.');
+
+/////////////////////////// VOCATION PROVIDER///////////////////////////////////
+$DevAAC->container->singleton('vocations', function ($c) {
+    if(file_exists(TFS_ROOT.'/data/XML/vocations.xml')) {
+        $xml = simplexml_load_file(TFS_ROOT.'/data/XML/vocations.xml');
+        if(property_exists($xml, 'vocation'))
+            return $xml;
+    }
+});
 
 ////////////////////////// CONNECT TO DATABASE /////////////////////////////////
 // Bootstrap Eloquent ORM
@@ -112,10 +121,10 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
 $capsule->addConnection([
     'driver'    => 'mysql',
-    'host'      => $DevAAC->tfs_config['mysqlHost'],
-    'database'  => $DevAAC->tfs_config['mysqlDatabase'],
-    'username'  => $DevAAC->tfs_config['mysqlUser'],
-    'password'  => $DevAAC->tfs_config['mysqlPass'],
+    'host'      => $DevAAC->tfsConfigFile['mysqlHost'],
+    'database'  => $DevAAC->tfsConfigFile['mysqlDatabase'],
+    'username'  => $DevAAC->tfsConfigFile['mysqlUser'],
+    'password'  => $DevAAC->tfsConfigFile['mysqlPass'],
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => '',
@@ -168,6 +177,7 @@ if(ENABLE_DEBUG)
 {
     $DevAAC->get(ROUTES_PREFIX.'/debug', function() use($DevAAC, $capsule) {
         $DevAAC->response->headers->set('Content-Type', 'text');
+        /*
         var_dump($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION));
         $date = new \DevAAC\Helpers\DateTime();
         $tmp = \DevAAC\Models\Player::find(2);
@@ -177,6 +187,11 @@ if(ENABLE_DEBUG)
         echo $date . PHP_EOL;
         echo json_encode($date) . PHP_EOL;
         echo serialize($date) . PHP_EOL;
+        echo PHP_EOL . PHP_EOL . PHP_EOL;
+        */
+        $a = (array)$DevAAC->vocations;
+        var_dump(xml2array($DevAAC->vocations)['vocation']);
+        json_encode($a['vocation'], JSON_PRETTY_PRINT);
     });
 
     $DevAAC->get(ROUTES_PREFIX.'/phpinfo', function() use($DevAAC) {
@@ -226,3 +241,20 @@ $DevAAC->get(ROUTES_API_PREFIX.'/plugins', function() use($DevAAC) {
 //////////////////////////////////////////////////////////////////////
 // all done, any code after this call will not matter to the request
 $DevAAC->run();
+
+
+////////////////////////////// MISC /////////////////////////////////
+function xml2array( $xmlObject, $out = array () )
+{
+    foreach ( (array) $xmlObject as $index => $node )
+    {
+        $out[$index] = ( is_object ( $node ) ||  is_array ( $node ) ) ? xml2array ( $node ) : $node;
+        if( is_array($out[$index]) && array_key_exists('@attributes', $out[$index]) )
+        {
+            foreach( $out[$index]['@attributes'] as $key => $value )
+                $out[$index][$key] = $value;
+            unset( $out[$index]['@attributes'] );
+        }
+    }
+    return $out;
+}
