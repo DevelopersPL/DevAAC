@@ -196,7 +196,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAA
  *    description="Operations on server",
  *    @SWG\Operation(
  *      summary="Get some information",
- *      notes="",
+ *      notes="The result of this call is cached, last refresh time is given as 'timestamp'",
  *      method="GET",
  *      type="array",
  *      nickname="getServerInfo"
@@ -205,14 +205,31 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAA
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
-    $result = array(
-        'players_online_count' => Capsule::table('players_online')->count(),
-        'players_online' => Capsule::table('players')->join('players_online', 'players.id', '=', 'players_online.player_id')->select('players.name')->get(),
-        'players_count' => Capsule::table('players')->count(),
-        'accounts_count' => Capsule::table('accounts')->count(),
-        'guilds_count' => Capsule::table('guilds')->count()
+    $result = apc_fetch('server_info');
+    if(!$result)
+    {
+        $result = array(
+            'players_online_count' => Capsule::table('players_online')->count(),
+            'players_online' => Capsule::table('players')->join('players_online', 'players.id', '=', 'players_online.player_id')->select('players.name')->get(),
+            'players_count' => Capsule::table('players')->count(),
+            'accounts_count' => Capsule::table('accounts')->count(),
+            'guilds_count' => Capsule::table('guilds')->count(),
+            'guild_wars_count' => Capsule::table('guild_wars')->count(),
+            'houses_count' => Capsule::table('houses')->count(),
 
-    );
+            // config.lua
+            'serverName' => $DevAAC->tfsConfigFile['serverName'],
+            'ownerName' => $DevAAC->tfsConfigFile['ownerName'],
+            'ownerEmail' => $DevAAC->tfsConfigFile['ownerEmail'],
+            'url' => $DevAAC->tfsConfigFile['url'],
+            'location' => $DevAAC->tfsConfigFile['location'],
+
+            // cache hint
+            'timestamp' => new \DevAAC\Helpers\DateTime()
+
+        );
+        apc_store('server_info', $result, 60);
+    }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody(json_encode($result, JSON_PRETTY_PRINT));
 });
