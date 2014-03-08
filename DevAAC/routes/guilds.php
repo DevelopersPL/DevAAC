@@ -30,6 +30,7 @@
  */
 
 use DevAAC\Models\Guild;
+use DevAAC\Models\GuildWar;
 
 /**
  * @SWG\Resource(
@@ -52,6 +53,29 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
     $guilds = Guild::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($guilds->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/wars",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get all guild wars",
+ *      notes="",
+ *      method="GET",
+ *      type="GuildWar",
+ *      nickname="getGuildWars"
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars', function() use($DevAAC) {
+    $guildwars = GuildWar::all();
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guildwars->toJson(JSON_PRETTY_PRINT));
 });
 
 /**
