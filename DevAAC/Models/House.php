@@ -66,6 +66,9 @@ class House extends \Illuminate\Database\Eloquent\Model {
 
     public function getPaidAttribute()
     {
+        if($this->attributes['paid'] === 0)
+            return 0;
+
         $date = new DateTime();
         $date->setTimestamp($this->attributes['paid']);
         return $date;
@@ -84,6 +87,9 @@ class House extends \Illuminate\Database\Eloquent\Model {
 
     public function getBidEndAttribute()
     {
+        if($this->attributes['bid_end'] === 0)
+            return 0;
+
         $date = new DateTime();
         $date->setTimestamp($this->attributes['bid_end']);
         return $date;
@@ -102,6 +108,9 @@ class House extends \Illuminate\Database\Eloquent\Model {
 
     public function getLastBidAttribute()
     {
+        if($this->attributes['last_bid'] === 0)
+            return 0;
+
         $date = new DateTime();
         $date->setTimestamp($this->attributes['last_bid']);
         return $date;

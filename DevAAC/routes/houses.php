@@ -30,6 +30,7 @@
  */
 
 use DevAAC\Models\House;
+use DevAAC\Models\Player;
 
 /**
  * @SWG\Resource(
@@ -108,4 +109,89 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
     $house = House::findOrFail($id);
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($house->lists->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api",
+ *  resourcePath="/houses",
+ *  @SWG\Api(
+ *    path="/houses/{id}/bid",
+ *    description="Operations on houses",
+ *    @SWG\Operation(
+ *      summary="Bid on house by ID",
+ *      notes="Admins can bid with any player",
+ *      method="POST",
+ *      type="House",
+ *      nickname="bidHouseByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of House to bid on",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="player_id",
+ *                      description="ID of player which bids",
+ *                      paramType="form",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="bid",
+ *                      description="the amount of bid",
+ *                      paramType="form",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=400, message="Bad request"),
+ *      @SWG\ResponseMessage(code=401, message="Not logged in"),
+ *      @SWG\ResponseMessage(code=402, message="Not enough money in player's bank"),
+ *      @SWG\ResponseMessage(code=403, message="Player not on authenticated account"),
+ *      @SWG\ResponseMessage(code=404, message="House not found / player not found"),
+ *      @SWG\ResponseMessage(code=409, message="The bid is too low"),
+ *      @SWG\ResponseMessage(code=410, message="Auction has ended"),
+ *      @SWG\ResponseMessage(code=412, message="House not on auction")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
+    // TODO: check if the bidding player owns a house already
+    // TODO: check if the bidding player has a winning bid on another house
+    if( ! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    $request = $DevAAC->request;
+    $house = House::findOrFail($id);
+
+    if($house->owner() instanceof Player)
+        throw new InputErrorException('This house is not on auction.', 412);
+
+    if($house->bid_end !== 0 && new DateTime() > $house->bid_end)
+        throw new InputErrorException('Auction has ended.', 410);
+
+    if($request->getAPIParam('bid') < $house->bid + HOUSES_BID_RAISE
+        || $request->getAPIParam('bid') < $house->bid + $house->bid * HOUSES_BID_RAISE_PERCENT)
+        throw new InputErrorException('The bid is too low! You need to offer at least '.max($house->bid + HOUSES_BID_RAISE,
+            $house->bid + $house->bid * HOUSES_BID_RAISE_PERCENT), 409);
+
+    $player = Player::findOrFail($request->getAPIParam('player_id'));
+
+    if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isAdmin())
+        throw new InputErrorException('You do not have permission to bid with this player.', 403);
+
+    if($player->balance < $request->getAPIParam('bid') + $house->rent)
+        throw new InputErrorException('You do not have enough money! You need the bid amount and '.$house->rent.' for first rent payment.', 402);
+
+    // $house->highestBidder()->associate($player); // this would break JSON output, so we use use next line instead
+    $house->highest_bidder = $player->id;
+    $house->bid = $request->getAPIParam('bid');
+    $house->last_bid = new DateTime();
+
+    if($house->bid_end === 0)
+    {
+        $house->bid_end = new DateTime();
+        $house->bid_end = $house->bid_end->add(new DateInterval(HOUSES_AUCTION_TIME));
+    }
+
+    $house->save();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($house->toJson(JSON_PRETTY_PRINT));
 });

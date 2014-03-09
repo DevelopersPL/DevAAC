@@ -39,6 +39,9 @@ REST API
 * Receive JSON
 * Send JSON with ```Content-Type: application/json``` or form input with ```Content-Type: application/x-www-form-urlencoded``` but don't mix them!
 * You can override method with X-HTTP-Method-Override header
+* Actions return the modified object
+* HTTP status codes are meaningful, most common ones: 400 (missing params/bad params), 401 (not logged in), 403 (permission denied)
+* If rate limiting is active, it will return 503 with text/plain! 429 is planned but is not supported by all web servers (e.g. nginx)
 
 Hacking
 =====

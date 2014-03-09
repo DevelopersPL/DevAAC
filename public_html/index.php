@@ -45,13 +45,22 @@ defined('ENABLE_DEBUG') or define('ENABLE_DEBUG', false);
 defined('TFS_CONFIG') or die('Please follow instructions in public_html/config.sample.php');
 defined('TFS_ROOT') or define('TFS_ROOT', false); // directory where config.lua is located
 defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '');
-defined('ROUTES_API_PREFIX') or define('ROUTES_API_PREFIX', '/api');
+defined('ROUTES_API_PREFIX') or define('ROUTES_API_PREFIX', '/api/v1');
 defined('CORS_ALLOW_ORIGIN') or define('CORS_ALLOW_ORIGIN', false); // origin or false
 
 // GAME
 defined('ACCOUNT_TYPE_ADMIN') or define('ACCOUNT_TYPE_ADMIN', 6);
+
 defined('ALLOWED_VOCATIONS') or define('ALLOWED_VOCATIONS', serialize(array(1, 2, 3, 4)));
 defined('NEW_PLAYER_LEVEL') or define('NEW_PLAYER_LEVEL', 8);
+
+defined('HOUSES_AUCTION_TIME') or define('HOUSES_AUCTION_TIME', 'P7D'); // DateInterval spec notation: http://www.php.net/manual/en/dateinterval.construct.php
+
+// both HOUSES_BID_RAISE and HOUSES_BID_RAISE_PERCENT are enforced at the same time so it is usually enough to set one of them to 0
+defined('HOUSES_BID_RAISE') or define('HOUSES_BID_RAISE', 1000); // the minimum difference between last bid,
+// e.g. if the house is currently offered at 15000 and HOUSES_BID_RAISE is 500, you need to bid at least 15500
+defined('HOUSES_BID_RAISE_PERCENT') or define('HOUSES_BID_RAISE_PERCENT', 0); // the minimum difference between last bid in %,
+// e.g. if the house is currently offered at 15000 and HOUSES_BID_RAISE_PERCENT is 20, then you need to bid at least 18000 (3000 is 20% of 15000)
 
 // PLUGINS CONFIG - DO NOT EDIT - PUT YOUR CUSTOMIZATIONS IN config.php
 defined('DISABLE_PLUGINS') or define('DISABLE_PLUGINS', false);
