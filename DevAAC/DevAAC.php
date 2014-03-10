@@ -218,7 +218,7 @@ if(is_dir('../plugins') && !DISABLE_PLUGINS) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/plugins",
  *  @SWG\Api(
  *    path="/plugins",

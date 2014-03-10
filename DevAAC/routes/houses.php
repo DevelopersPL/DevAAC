@@ -34,7 +34,7 @@ use DevAAC\Models\Player;
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/houses",
  *  @SWG\Api(
  *    path="/houses",
@@ -57,7 +57,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/houses",
  *  @SWG\Api(
  *    path="/houses/{id}",
@@ -85,7 +85,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/houses",
  *  @SWG\Api(
  *    path="/houses/{id}/lists",
@@ -113,7 +113,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/houses",
  *  @SWG\Api(
  *    path="/houses/{id}/bid",

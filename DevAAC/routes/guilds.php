@@ -34,7 +34,7 @@ use DevAAC\Models\GuildWar;
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
  *    path="/guilds",
@@ -57,7 +57,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
  *    path="/guilds/wars",
@@ -80,7 +80,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
  *    path="/guilds/{id/name}",
@@ -114,7 +114,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
  *    path="/guilds/{id/name}/invitations",

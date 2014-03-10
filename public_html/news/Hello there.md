@@ -1,9 +1,11 @@
 # This is a nice file
 
 
-* Kupa
-* Dupa
-
+* This
+* is
+* second
+* news
+* and a list
 
 
 Trolololo

@@ -36,7 +36,7 @@ use DevAAC\Models\Player;
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/my",
@@ -70,7 +70,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/my/players",
@@ -96,7 +96,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my/players', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}",
@@ -129,7 +129,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}/ban",
@@ -163,7 +163,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}/ban",
@@ -234,7 +234,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) 
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}/ban",
@@ -302,7 +302,7 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}/ban",
@@ -342,7 +342,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}/banHistory",
@@ -371,7 +371,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id/banHistory', function($id) use($De
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}",
@@ -455,7 +455,7 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts/{id}",
@@ -495,7 +495,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts",
@@ -521,7 +521,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
  *    path="/accounts",

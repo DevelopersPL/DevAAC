@@ -5,7 +5,7 @@ function PageUrl(page) {
 	return "pages/" + page + ".html";
 }
 function ApiUrl(link) {
-	return "/api/" + link;
+	return "/api/v1/" + link;
 }
 
 /*

@@ -202,7 +202,7 @@ DevAAC.config(function ($httpProvider) {
 
 DevAAC.factory('News', ['$resource',
     function($resource){
-        return $resource('/api/news', {}, {
+        return $resource(ApiUrl('news'), {}, {
             query: {method:'GET', isArray:true}
         });
     }

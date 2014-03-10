@@ -36,7 +36,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players/online",
@@ -70,7 +70,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/online', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players/{id/name}",
@@ -104,7 +104,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players/{id/name}/spells",
@@ -138,7 +138,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id/spells', function($id) use($DevAAC)
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players/{id/name}/deaths",
@@ -172,7 +172,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id/deaths', function($id) use($DevAAC)
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players",
@@ -264,7 +264,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players/{id}",
@@ -304,7 +304,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
  *    path="/players",

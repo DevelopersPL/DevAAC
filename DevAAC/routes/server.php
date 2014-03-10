@@ -36,7 +36,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/server",
  *  @SWG\Api(
  *    path="/server/config",
@@ -59,7 +59,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/config', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/server",
  *  @SWG\Api(
  *    path="/server/ipBans",
@@ -82,7 +82,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/server",
  *  @SWG\Api(
  *    path="/server/ipBans",
@@ -151,7 +151,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/server",
  *  @SWG\Api(
  *    path="/server/ipBans/{ip}",
@@ -189,7 +189,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAA
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/server",
  *  @SWG\Api(
  *    path="/server/info",
@@ -236,7 +236,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
 
 /**
  * @SWG\Resource(
- *  basePath="/api",
+ *  basePath="/api/v1",
  *  resourcePath="/server",
  *  @SWG\Api(
  *    path="/server/vocations",
