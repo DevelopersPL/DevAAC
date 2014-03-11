@@ -160,8 +160,8 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     $request = $DevAAC->request;
     $house = House::findOrFail($id);
 
-    if($house->owner() instanceof Player)
-        throw new InputErrorException('This house is not on auction.', 412);
+    if($house->owner()->first() instanceof Player)
+        throw new InputErrorException('This house is not on auction, '.$house->owner()->first()->name.' owns it.', 412);
 
     if($house->bid_end !== 0 && new DateTime() > $house->bid_end)
         throw new InputErrorException('Auction has ended.', 410);
