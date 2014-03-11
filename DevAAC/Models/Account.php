@@ -111,4 +111,14 @@ class Account extends \Illuminate\Database\Eloquent\Model {
     {
         return $this->hasMany('DevAAC\Models\AccountBanHistory');
     }
+
+    public function houses()
+    {
+        return $this->hasManyThrough('DevAAC\Models\House', 'DevAAC\Models\Player', 'account_id', 'owner');
+    }
+
+    public function houseBids()
+    {
+        return $this->hasManyThrough('DevAAC\Models\House', 'DevAAC\Models\Player', 'account_id', 'highest_bidder');
+    }
 }

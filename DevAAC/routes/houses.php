@@ -144,6 +144,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
  *      @SWG\ResponseMessage(code=402, message="Not enough money in player's bank"),
  *      @SWG\ResponseMessage(code=403, message="Player not on authenticated account"),
  *      @SWG\ResponseMessage(code=404, message="House not found / player not found"),
+ *      @SWG\ResponseMessage(code=405, message="Exceeded limit of houses per player/acount"),
  *      @SWG\ResponseMessage(code=409, message="The bid is too low"),
  *      @SWG\ResponseMessage(code=410, message="Auction has ended"),
  *      @SWG\ResponseMessage(code=412, message="House not on auction")
@@ -152,8 +153,6 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
  * )
  */
 $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
-    // TODO: check if the bidding account owns a house already
-    // TODO: check if the bidding account has a winning bid on another house
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
@@ -176,11 +175,14 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isAdmin())
         throw new InputErrorException('You do not have permission to bid with this player.', 403);
 
-    if( count($player->houses()->get()) + count($player->houseBids()->get()) > HOUSES_PER_PLAYER )
-        throw new InputErrorException('You already own or participate in an auction for a maximum number of houses ('.HOUSES_PER_PLAYER.')!', 402);
+    if( count($player->houses()->get()->toArray()) + count($player->houseBids()->get()->toArray()) >= HOUSES_PER_PLAYER )
+        throw new InputErrorException('Your player already owns or participates in an auction for a maximum number of houses ('.HOUSES_PER_PLAYER.')!', 405);
+
+    if( count($player->account->houses()->get()->toArray()) + count($player->account->houseBids()->get()->toArray()) >= HOUSES_PER_ACCOUNT )
+        throw new InputErrorException('Your account already owns or participates in an auction for a maximum number of houses ('.HOUSES_PER_ACCOUNT.')!', 405);
 
     if($player->balance < $request->getAPIParam('bid') + $house->rent)
-        throw new InputErrorException('You do not have enough money! You need the bid amount and '.$house->rent.' for first rent payment.', 402);
+        throw new InputErrorException('You do not have enough money! You need the bid amount plus '.$house->rent.' for first rent payment.', 402);
 
     $house->highest_bidder = $player->id; // this would break JSON output: $house->highestBidder()->associate($player);
     $house->bid = $request->getAPIParam('bid');
