@@ -181,6 +181,16 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         return $this->hasOne('DevAAC\Models\PlayerOnline', 'player_id');
     }
 
+    public function houses()
+    {
+        return $this->hasMany('DevAAC\Models\House', 'owner');
+    }
+
+    public function houseBids()
+    {
+        return $this->hasMany('DevAAC\Models\House', 'highest_bidder');
+    }
+
     public function setLevelAttribute($level)
     {
         // http://tibia.wikia.com/wiki/Formula

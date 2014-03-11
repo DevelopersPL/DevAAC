@@ -152,8 +152,8 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
  * )
  */
 $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
-    // TODO: check if the bidding player owns a house already
-    // TODO: check if the bidding player has a winning bid on another house
+    // TODO: check if the bidding account owns a house already
+    // TODO: check if the bidding account has a winning bid on another house
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
@@ -176,11 +176,13 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isAdmin())
         throw new InputErrorException('You do not have permission to bid with this player.', 403);
 
+    if( count($player->houses()->get()) + count($player->houseBids()->get()) > HOUSES_PER_PLAYER )
+        throw new InputErrorException('You already own or participate in an auction for a maximum number of houses ('.HOUSES_PER_PLAYER.')!', 402);
+
     if($player->balance < $request->getAPIParam('bid') + $house->rent)
         throw new InputErrorException('You do not have enough money! You need the bid amount and '.$house->rent.' for first rent payment.', 402);
 
-    // $house->highestBidder()->associate($player); // this would break JSON output, so we use use next line instead
-    $house->highest_bidder = $player->id;
+    $house->highest_bidder = $player->id; // this would break JSON output: $house->highestBidder()->associate($player);
     $house->bid = $request->getAPIParam('bid');
     $house->last_bid = new DateTime();
 
