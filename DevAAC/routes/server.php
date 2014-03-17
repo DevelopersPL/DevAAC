@@ -218,7 +218,12 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'houses_count' => Capsule::table('houses')->count(),
 
             // config.lua
+            'worldType' => $DevAAC->tfsConfigFile['worldType'],
+            'ip' => $DevAAC->tfsConfigFile['ip'],
+            'loginProtocolPort' => $DevAAC->tfsConfigFile['loginProtocolPort'],
+            'statusProtocolPort' => $DevAAC->tfsConfigFile['statusProtocolPort'],
             'serverName' => $DevAAC->tfsConfigFile['serverName'],
+            'statusTimeout' => $DevAAC->tfsConfigFile['statusTimeout'],
             'ownerName' => $DevAAC->tfsConfigFile['ownerName'],
             'ownerEmail' => $DevAAC->tfsConfigFile['ownerEmail'],
             'url' => $DevAAC->tfsConfigFile['url'],
