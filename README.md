@@ -64,7 +64,7 @@ Authors
 =====
 * [Daniel Speichert](https://github.com/DSpeichert)
 * [Wojciech Guziak](https://github.com/mrwogu)
-* with contributions from [Znote](https://github.com/Znote)
+* [Znote](https://github.com/Znote)
 
 Contributions are always welcome, please submit pull requests!
 We are looking for back-end plugins and front-end functionality of themes.
