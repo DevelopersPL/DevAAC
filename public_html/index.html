@@ -59,8 +59,8 @@
                     <li class="dropdown">
                         <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">My account</a></li>
-                            <li><a href="#">My characters</a></li>
+                            <li><a href="#/account">My account</a></li>
+                            <li><a href="#/account">My characters</a></li>
                             <li class="divider"></li>
                             <li><a ng-click="Logout()" href="javascript://">Logout</a></li>
                         </ul>
@@ -86,7 +86,7 @@
 
         <div class="row">
             <div class="col-lg-8" id="view" ng-view></div>
-
+            
             <div class="col-lg-4" ng-controller="WidgetController">
                 <div class="well">
                     <h4>Character Search</h4>
@@ -132,7 +132,6 @@
                 </div>
             </div>
         </footer>
-
     </div>
     <!-- /.container -->
 
