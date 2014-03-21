@@ -72,7 +72,9 @@ DevAAC.controller('ProfileController',
 
 // NEWS CONTROLLER
 DevAAC.controller('NewsController',
-    function($scope, $location, $routeParams, News) {
+    function($scope, $location, $routeParams, News, StatusMessage) {
+        $scope.errorMessage = StatusMessage.error();
+        $scope.successMessage = StatusMessage.success();
         $scope.newsA = News.query(function(result){
             $scope.news = result[0];
             $scope.news['date'] = moment($scope.news['date']).format('LLLL');
@@ -114,7 +116,7 @@ DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
 });
 
-DevAAC.controller('NavigationController', function ($scope, $http, $window, Account, WindowSession) {
+DevAAC.controller('NavigationController', function ($scope, $http, $window, Account, WindowSession, $location) {
     $scope.message = '';
     $scope.account = false;
     $scope.login = {
@@ -184,11 +186,11 @@ DevAAC.controller('NavigationController', function ($scope, $http, $window, Acco
         // Look into factories.js for "Account".
         Account.authenticate(token)
         .success(function(data, status) {
-        	console.log('Login passed');
         	$scope.checked = true;
             $scope.account = data;
             WindowSession.registerToken(Account.getToken());
             $scope.Always();
+            $location.path('/account');
         })
         .error(function(data, status) {
         	console.log('Login error');
@@ -253,4 +255,24 @@ DevAAC.controller('RulesController',
 	function($scope
 ) {
 	console.log("Rules controller initialized.");
+});
+
+// ACCOUNT CONTROLLER
+DevAAC.controller('AccountController',
+    function($scope, $location, Account, StatusMessage
+) {
+    $scope.errorMessage = "";
+    $scope.successMessage = "";
+    $scope.account = Account.getAccount();
+    
+    console.log("Account controller initialized.");
+
+    // If you are not logged in, throw you to home. 
+    if (!$scope.account) {
+        StatusMessage.setError('You need to login first.');
+        $location.path('/home');
+    } else {
+        console.log("You are logged in. :)");
+    }
+    
 });

@@ -19,6 +19,11 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
         controller: 'RegisterController'
     });
 
+    $routeProvider.when('/account', {
+        templateUrl: PageUrl('account'),
+        controller: 'AccountController'
+    });
+
     $routeProvider.when('/rules', {
         templateUrl: PageUrl('rules'),
         controller: 'RulesController'
