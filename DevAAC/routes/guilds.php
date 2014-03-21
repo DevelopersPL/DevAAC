@@ -60,6 +60,54 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
  *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
+ *    path="/guilds",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Create a guild",
+ *      notes="",
+ *      method="POST",
+ *      type="Guild",
+ *      nickname="createGuilds",
+ *      @SWG\Parameter( name="guild",
+ *                      description="Guild object",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="Guild"),
+ *      @SWG\ResponseMessage(code=400, message="Input parameter error"),
+ *      @SWG\ResponseMessage(code=401, message="Authentication required"),
+ *      @SWG\ResponseMessage(code=409, message="Guild with this name already exists")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
+    if( ! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    $req = $DevAAC->request;
+
+    $guild = Guild::where('name', $req->getAPIParam('name'))->first();
+    if($guild)
+        throw new InputErrorException('Guild with this name already exists.', 409);
+
+    $guild = new Guild(
+        array(
+            'name' => $req->getAPIParam('name'),
+            'vocation' => $req->getAPIParam('vocation'),
+            'sex' => $req->getAPIParam('sex'),
+            'level' => NEW_PLAYER_LEVEL
+        )
+    );
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guild->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
  *    path="/guilds/wars",
  *    description="Operations on guilds",
  *    @SWG\Operation(

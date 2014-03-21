@@ -216,6 +216,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'guilds_count' => Capsule::table('guilds')->count(),
             'guild_wars_count' => Capsule::table('guild_wars')->count(),
             'houses_count' => Capsule::table('houses')->count(),
+            'allowed_vocations' => unserialize(ALLOWED_VOCATIONS),
 
             // config.lua
             'worldType' => $DevAAC->tfsConfigFile['worldType'],
