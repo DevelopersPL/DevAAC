@@ -89,7 +89,7 @@
             
             <div class="col-lg-4" ng-controller="WidgetController">
                 <div class="well">
-                    <h4>Character Search</h4>
+                    <h4>Player Search</h4>
                     <form ng-submit="PlayerSearch()">
                         <div class="input-group">
                             <input type="text" class="form-control" ng-model="search" required>
@@ -100,6 +100,7 @@
                             </span>
                         </div>
                     </form>
+                    <p class="bg-danger">{{searchMessage}}</p>
                     <!-- /input-group -->
                 </div>
                 <!-- /well -->
@@ -109,7 +110,7 @@
                         <div class="col-lg-12">
                             <ul class="list-unstyled">
                                 <li ng-repeat="player in playersWidget">
-                                    <a href="#/players/{{player.id}}">{{player.name}}</a>
+                                    <a href="#/players/{{player.name}}">{{player.name}}</a>
                                 </li>
                             </ul>
                         </div>

@@ -7,7 +7,9 @@ function PageUrl(page) {
 function ApiUrl(link) {
 	return "http://devots.dondaniello.com/api/v1/" + link;
 }
-
+function isInt(value) { 
+    return !isNaN(parseInt(value,10)) && (parseFloat(value,10) == parseInt(value,10)); 
+}
 /*
     CUSTOM FUNCTIONS
 */

@@ -18,11 +18,7 @@
             </div>
             <div class="form-group">
                 <label>Vocation</label>
-                <select class="form-control" ng-model="newPlayer.vocation" required>
-                    <option value="4">Knight</option>
-                    <option value="3">Paladin</option>
-                    <option value="2">Druid</option>
-                    <option value="1">Sorcerer</option>
+                <select class="form-control" ng-model="newPlayer.vocation" ng-options="v.id as v.name for v in available_vocations" required>
                 </select>
             </div>
             <div class="form-group">

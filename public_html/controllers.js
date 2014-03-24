@@ -1,9 +1,10 @@
 // WIDGET CONTROLLER
 DevAAC.controller('WidgetController',
-	function($scope, $location, Highscores, Cache
+	function($scope, $location, Highscores, Cache, Player
         ) {
        $scope.playersWidget = {};
        $scope.search = "";
+       $scope.searchMessage = "";
 
        console.log("Widget controller initialized.");
 
@@ -15,19 +16,30 @@ DevAAC.controller('WidgetController',
 
        $scope.PlayerSearch = function() {
           console.log("Search button clicked.", $scope.search);
-          var player = Cache.findPlayerName($scope.search);
+          var player = Cache.findPlayer($scope.search);
           if (player != false) {
-             $location.path('/players/'+player.id);
+            $scope.searchMessage = "";
+            $location.path('/players/'+player.name);
          } else {
-			// Todo: Wait for player search API.
-			console.log("Player not found in cache, API for player search not done.");
+            console.log("Player not found in cache, searching database for it.");
+            Player.get($scope.search)
+            .success(function(data, status) {
+                console.log("Player found");
+                $scope.searchMessage = "";
+                Cache.setPlayer(data);
+                $location.path('/players/'+data.name);
+            })
+            .error(function(data, status) {
+                console.log("Player not found");
+                $scope.searchMessage = "Failed to find player.";
+            });
 		}
 	}
 });
 
 // PROFILE CONTROLLER
 DevAAC.controller('ProfileController',
-	function($scope, $location, $routeParams, Player, Cache
+	function($scope, $location, $routeParams, $interval, Player, Cache, Server
         ) {
        $scope.player = {
           name: "Loading...",
@@ -40,12 +52,29 @@ DevAAC.controller('ProfileController',
           accountStatus: "N/A"
       };
 
+    $scope.WaitForVocations = function(playerInfo) {
+        var status = Server.status().vocations;
+        if (!status) {
+            console.log("Vocations not loaded yet, waiting for it to complete.");
+            var statusCheck = $interval(function() {
+                status = Server.status().vocations;
+                if (status) {
+                    console.log("Vocations loaded, ready to proceed.");
+                    $interval.cancel(statusCheck);
+                    $scope.SetPlayerData(playerInfo);
+                }
+            }, 100);
+        } else {
+            $scope.SetPlayerData(playerInfo);
+        }
+    }
 	// Update view with player data
 	$scope.SetPlayerData = function(playerInfo) {
 		console.log(playerInfo);
-		$scope.player.name = playerInfo.name;
+		// Make sure we have server info /vocations before showing the list.
+        $scope.player.name = playerInfo.name;
 		$scope.player.sex = playerInfo.sex ? 'male' : 'female';
-		$scope.player.profession = playerInfo.vocation;
+		$scope.player.profession = Server.getVocation(playerInfo.vocation).name;
 		$scope.player.level = playerInfo.level;
 		$scope.player.residence = playerInfo.town_id;
 		$scope.player.seen = moment.unix(playerInfo.lastlogin).format('LLLL') + " → " + moment.unix(playerInfo.lastlogout).format('LLLL');
@@ -55,18 +84,18 @@ DevAAC.controller('ProfileController',
 	console.log("Profile controller initialized.");
 	
 	// Check Cache for player
-	$scope.data = Cache.findPlayerId($routeParams.id);
+	$scope.data = Cache.findPlayer($routeParams.id);
 	if ($scope.data == false) {
 		console.log("Player not in cache, fetching from API.");
 		// Since player not found in cache, fetch it from API
 		Player.get($routeParams.id)
 		.success(function(data, status) {
-			$scope.SetPlayerData(data);
+			$scope.WaitForVocations(data);
 			Cache.setPlayer(data);
 		});
 	} else {
 		console.log("Player found in cache.");
-		$scope.SetPlayerData($scope.data);
+		$scope.WaitForVocations($scope.data);
 	}
 });
 
@@ -116,7 +145,7 @@ DevAAC.controller('globalFooter', function($scope) {
     $scope.footerYear = moment().format('YYYY');
 });
 
-DevAAC.controller('NavigationController', function ($scope, $http, $window, Account, WindowSession, $location) {
+DevAAC.controller('NavigationController', function ($scope, $http, $window, Account, WindowSession, $location, Server) {
     $scope.message = '';
     $scope.account = false;
     $scope.login = {
@@ -128,6 +157,10 @@ DevAAC.controller('NavigationController', function ($scope, $http, $window, Acco
     $scope.checked = false;
 
     console.log("NavigationController controller is initialized.");
+
+    Server.info();
+    Server.config();
+    Server.vocations();
 
     $scope.Always = function() {
     	$('#loading-login-btn').button('reset');
@@ -202,6 +235,7 @@ DevAAC.controller('NavigationController', function ($scope, $http, $window, Acco
     $scope.Logout = function () {
         $scope.Always();
         WindowSession.removeToken();
+        $location.path('/home');
     };
 });
 
@@ -259,7 +293,7 @@ DevAAC.controller('RulesController',
 
 // ACCOUNT CONTROLLER
 DevAAC.controller('AccountController',
-    function($scope, $interval, $location, Account, StatusMessage
+    function($scope, $interval, $location, Account, StatusMessage, Server
         ) {
         $scope.page = 1;
         $scope.creatingCharacter = 0;
@@ -268,11 +302,12 @@ DevAAC.controller('AccountController',
         $scope.noticeMessage = "";
         $scope.account = Account.getAccount();
         $scope.players = [];
+        $scope.available_vocations = [];
         $scope.newPlayer = {
             name: '',
             vocation: 1,
             sex: 1
-        }
+        };
 
         console.log("Account controller initialized.");
 
@@ -292,8 +327,18 @@ DevAAC.controller('AccountController',
         });
     };
     $scope.startPlayerCreation = function() {
+        // Fetch available vocations (only when we havent done so already)
+        if ($scope.available_vocations.length < 1) {
+            var vocationIds = Server.getAllowedVocations();
+            for (var i = 0; i < vocationIds.length; i++) {
+                $scope.available_vocations.push({id:vocationIds[i], name:Server.getVocation(vocationIds[i]).name});
+            }
+            console.log("Available vocations:",$scope.available_vocations);
+        }
+        // Display create character
         $scope.creatingCharacter = 1;
     };
+
     $scope.stopPlayerCreation = function() {
         $scope.creatingCharacter = 0;
         $scope.newPlayer = {
