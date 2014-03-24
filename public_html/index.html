@@ -118,8 +118,20 @@
                 </div>
                 <!-- /well -->
                 <div class="well">
-                    <h4>Empty widget</h4>
-                    <p>This is a sample widget. :)</p>
+                    <h4>Server Info</h4>
+                    <div ng-if="!infoPageStatus">
+                        <h2>Loading...</h2>
+                    </div>
+                    <div ng-if="infoPageStatus">
+                        <ul>
+                            <li><b>IP:</b> {{servInfo.ip}}</li>
+                            <li><b>Port:</b> {{servInfo.port}}</li>
+                            <li><b>Online:</b> {{servInfo.online}}</li>
+                            <li><b>Type:</b> {{servInfo.worldType}}</li>
+                            <li><b>Accounts:</b> {{servInfo.accounts}}</li>
+                            <li><b>Players:</b> {{servInfo.players}}</li>
+                        </ul>
+                    </div>
                 </div>
                 <!-- /well -->
             </div>

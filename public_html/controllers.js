@@ -1,10 +1,19 @@
 // WIDGET CONTROLLER
 DevAAC.controller('WidgetController',
-	function($scope, $location, Highscores, Cache, Player
+	function($scope, $location, $interval, Highscores, Cache, Player, Server
         ) {
        $scope.playersWidget = {};
        $scope.search = "";
        $scope.searchMessage = "";
+       $scope.servInfo = {
+            ip: "n/a",
+            port: "n/a",
+            online: "n/a",
+            worldType: "n/a",
+            accounts: "n/a",
+            players: "n/a"
+       };
+       $scope.infoPageStatus = false;
 
        console.log("Widget controller initialized.");
 
@@ -13,6 +22,35 @@ DevAAC.controller('WidgetController',
           $scope.playersWidget = data;
           Cache.setPlayers(data);
       });
+
+       $scope.ServerInfo = function() {
+            var info = Server.getInfo();
+            $scope.servInfo = {
+                ip: info.ip,
+                port: info.loginProtocolPort,
+                online: info.players_online_count,
+                worldType: info.worldType,
+                accounts: info.accounts_count,
+                players: info.players_count
+           };
+           $scope.infoPageStatus = true;
+           console.log($scope.servInfo);
+       }
+
+       // Server info widget / widgets based on server status
+       var status = Server.status();
+       if (!status.vocations || !status.info || !status.config) {
+            var WaitForServer = $interval(function() {
+                status = Server.status();
+                if (status.vocations && status.info && status.config) {
+                    $interval.cancel(WaitForServer);
+                    $scope.ServerInfo();
+                }
+           }, 100);
+       } else {
+            // Load server info widget
+            $scope.ServerInfo();
+       }
 
        $scope.PlayerSearch = function() {
           console.log("Search button clicked.", $scope.search);

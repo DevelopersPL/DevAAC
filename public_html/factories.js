@@ -56,6 +56,9 @@ DevAAC.factory("Server", function($http) {
 				if (id == _vocations[i].id) return _vocations[i];
 			}
 		},
+		getInfo: function() {
+			return _info;
+		},
 		getAllowedVocations: function() {
 			return _info.allowed_vocations;
 		},
