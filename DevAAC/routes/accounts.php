@@ -120,7 +120,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my/players', function() use($DevAAC) {
 $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     $account = AccountPublic::findOrFail($id);
 
-    if($DevAAC->auth_account && ($DevAAC->auth_account->id == $account->id || $DevAAC->auth_account->isAdmin()))
+    if($DevAAC->auth_account && ($DevAAC->auth_account->id == $account->id || $DevAAC->auth_account->isGod()))
         $account = Account::findOrFail($id);
 
     $DevAAC->response->headers->set('Content-Type', 'application/json');
@@ -198,7 +198,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
 $DevAAC->post(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
     $req = $DevAAC->request;
 
-    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You are not an admin.', 403);
 
     $account = Account::findOrFail($id);
@@ -266,7 +266,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) 
 $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
     $req = $DevAAC->request;
 
-    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You are not an admin.', 403);
 
     $account = Account::findOrFail($id);
@@ -326,7 +326,7 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
  * )
  */
 $DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id/ban', function($id) use($DevAAC) {
-    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You are not an admin', 403);
 
     $account = Account::findOrFail($id);
@@ -407,10 +407,10 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($account->id != !$DevAAC->auth_account->id or !$DevAAC->auth_account->isAdmin())
+    if($account->id != !$DevAAC->auth_account->id or !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to change this account.', 403);
 
-    if( !$DevAAC->auth_account->isAdmin() )
+    if( !$DevAAC->auth_account->isGod() )
     {
         if($req->getAPIParam('name')) {
             if( !filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
@@ -484,7 +484,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isAdmin())
+    if($account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to delete this account.', 403);
 
     $account->delete();
@@ -511,7 +511,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
-    if($DevAAC->auth_account && $DevAAC->auth_account->isAdmin())
+    if($DevAAC->auth_account && $DevAAC->auth_account->isGod())
         $accounts = Account::all();
     else
         $accounts = AccountPublic::all();

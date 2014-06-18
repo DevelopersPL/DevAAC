@@ -172,7 +172,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
 
     $player = Player::findOrFail($request->getAPIParam('player_id'));
 
-    if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isAdmin())
+    if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to bid with this player.', 403);
 
     if( count($player->houses()->get()->toArray()) + count($player->houseBids()->get()->toArray()) >= HOUSES_PER_PLAYER )

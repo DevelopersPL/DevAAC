@@ -113,7 +113,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
 $DevAAC->post(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
     $req = $DevAAC->request;
 
-    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You are not an admin.', 403);
 
     $ipban = IpBan::find(ip2long($req->getAPIParam('ip')));
@@ -174,7 +174,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/server/ipBans', function() use($DevAAC) {
  * )
  */
 $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAAC) {
-    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+    if(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You are not an admin', 403);
 
     $ipban = IpBan::find(ip2long($ip));

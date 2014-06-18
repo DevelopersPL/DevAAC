@@ -229,7 +229,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
                 $players->orderBy($rule, 'asc');
 
             // check if has permission to sort by this field
-            if(!in_array($rule, $visible) && ( !$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin() ) )
+            if(!in_array($rule, $visible) && ( !$DevAAC->auth_account || !$DevAAC->auth_account->isGod() ) )
                 throw new InputErrorException('You cannot sort by '.$rule, 400);
         }
     }
@@ -241,19 +241,19 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
         foreach($fields as $field)
         {
             // check if has permission to select this field
-            if(!in_array($field, $visible) && ( !$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin() ) )
+            if(!in_array($field, $visible) && ( !$DevAAC->auth_account || !$DevAAC->auth_account->isGod() ) )
                 throw new InputErrorException('You cannot select '.$field, 400);
         }
         $players->select($fields);
     }
-    elseif(!$DevAAC->auth_account || !$DevAAC->auth_account->isAdmin())
+    elseif(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
         $players->select($visible);
 
     if(intval($req->get('offset')))
         $players->skip($req->get('offset'));
 
     $limit = intval($req->get('limit'));
-    if($limit && ($limit <= 100 or ( $DevAAC->auth_account && $DevAAC->auth_account->isAdmin() ) ) )
+    if($limit && ($limit <= 100 or ( $DevAAC->auth_account && $DevAAC->auth_account->isGod() ) ) )
         $players->take($limit);
     else
         $players->take(100);
@@ -293,7 +293,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isAdmin())
+    if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to delete this player.', 403);
 
     $player->delete();

@@ -97,9 +97,24 @@ class Account extends \Illuminate\Database\Eloquent\Model {
         return $this->password === sha1($pass);
     }
 
-    public function isAdmin()
+    public function isGod()
     {
-        return $this->type >= ACCOUNT_TYPE_ADMIN;
+        return $this->type >= ACCOUNT_TYPE_GOD;
+    }
+
+    public function isGameMaster()
+    {
+        return $this->type >= ACCOUNT_TYPE_GAMEMASTER;
+    }
+
+    public function isSeniorTutor()
+    {
+        return $this->type >= ACCOUNT_TYPE_SENIORTUTOR;
+    }
+
+    public function isTutor()
+    {
+        return $this->type >= ACCOUNT_TYPE_TUTOR;
     }
 
     public function ban()

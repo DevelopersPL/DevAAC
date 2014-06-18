@@ -81,6 +81,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
  * )
  */
 $DevAAC->post(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
+    // TODO
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
