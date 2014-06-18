@@ -5,7 +5,8 @@ function PageUrl(page) {
 	return "pages/" + page + ".html";
 }
 function ApiUrl(link) {
-	return "http://devots.dondaniello.com/api/v1/" + link;
+    // window.location.origin is better (includes port) but is not supported in IE
+	return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
 }
 function isInt(value) { 
     return !isNaN(parseInt(value,10)) && (parseFloat(value,10) == parseInt(value,10)); 
@@ -83,7 +84,7 @@ var Cookie = {
         if (value === false || value.length < 1) return false;
         else return value;
     }
-}
+};
 
 // Initiate DevAAC
 var DevAAC = angular.module('app', ['ngRoute', 'ngResource']);

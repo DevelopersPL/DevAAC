@@ -108,11 +108,18 @@
                     <h4>Top 5 players</h4>
                     <div class="row">
                         <div class="col-lg-12">
-                            <ul class="list-unstyled">
-                                <li ng-repeat="player in playersWidget">
-                                    <a href="#/players/{{player.name}}">{{player.name}}</a>
-                                </li>
-                            </ul>
+                            <table class="table table-striped">
+                                <thead>
+                                    <th>Name</th>
+                                    <th>Level</th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="player in playersWidget">
+                                        <td><a href="#/players/{{player.name}}">{{player.name}}</a></td>
+                                        <td>{{player.level}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
