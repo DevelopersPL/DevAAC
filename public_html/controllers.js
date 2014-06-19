@@ -35,7 +35,7 @@ DevAAC.controller('WidgetController',
            };
            $scope.infoPageStatus = true;
            console.log($scope.servInfo);
-       }
+       };
 
        // Server info widget / widgets based on server status
        var status = Server.status();
@@ -105,7 +105,7 @@ DevAAC.controller('ProfileController',
         } else {
             $scope.SetPlayerData(playerInfo);
         }
-    }
+    };
 	// Update view with player data
 	$scope.SetPlayerData = function(playerInfo) {
 		console.log(playerInfo);
@@ -117,7 +117,7 @@ DevAAC.controller('ProfileController',
 		$scope.player.residence = playerInfo.town_id;
 		$scope.player.seen = moment.unix(playerInfo.lastlogin).format('LLLL') + " → " + moment.unix(playerInfo.lastlogout).format('LLLL');
 		$scope.player.onlineTime = moment.duration(playerInfo.onlinetime, 'seconds').humanize();
-	}
+	};
 
 	console.log("Profile controller initialized.");
 	
@@ -153,13 +153,13 @@ DevAAC.controller('NewsController',
                 $scope.news = $scope.newsA[index + 1];
                 $scope.news['date'] = moment($scope.news['date']).format('LLLL');
             }
-        }
+        };
 
         $scope.nextAvailable = function() {
             index = $scope.newsA.indexOf($scope.news);
             if(index >= 0 && index < $scope.newsA.length - 1)
                 return true;
-        }
+        };
 
         $scope.previous = function() {
             index = $scope.newsA.indexOf($scope.news);
@@ -167,13 +167,13 @@ DevAAC.controller('NewsController',
                 $scope.news = $scope.newsA[index - 1];
                 $scope.news['date'] = moment($scope.news['date']).format('LLLL');
             }
-        }
+        };
 
         $scope.previousAvailable = function() {
             index = $scope.newsA.indexOf($scope.news);
             if(index > 0 && index <= $scope.newsA.length - 1)
                 return true;
-        }
+        };
 
         console.log("News controller initialized.");
     });
@@ -226,7 +226,7 @@ DevAAC.controller('NavigationController', function ($scope, $http, $window, Acco
     	}
     	// No point to check user if we are still waiting for API response
     	if (!$scope.waiting) return $scope.checkUser();
-    }
+    };
     /* This will check if user is online
     // If online it will check if it got the account data
     // If he don't got it, fetch it.
@@ -246,7 +246,7 @@ DevAAC.controller('NavigationController', function ($scope, $http, $window, Acco
     		}
     	}
     	return $scope.online;
-    }
+    };
 
     $scope.Login = function () {
         $('#loading-login-btn').button('loading');
@@ -399,7 +399,11 @@ DevAAC.controller('AccountController',
         $scope.page = 2;
     };
 
-    // If you are not logged in, throw you to home. 
+    $scope.nameForVocation = function(id) {
+        return Server.getVocation(id).name;
+    };
+
+    // If you are not logged in, throw you to home.
     // Yeah, I really need to find a better way to authenticate the user. This async authentication is a mess.
     // Gotta learn to properly use $q promise and resolve.
     if (!$scope.account) {
@@ -421,4 +425,15 @@ DevAAC.controller('AccountController',
         console.log("You are already logged in. :)");
         $scope.showAccountInformation();
     }
+});
+
+// ACCOUNT CONTROLLER
+DevAAC.controller('AccountController', function($scope, OnlinePlayers, Server) {
+    OnlinePlayers.get().success(function(data, status) {
+        $scope.players = data;
+    });
+
+    $scope.nameForVocation = function(id) {
+        return Server.getVocation(id).name;
+    };
 });

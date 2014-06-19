@@ -51,8 +51,8 @@
         <tbody>
             <tr ng-repeat="player in players">
                 <td><a href="#/players/{{ player.id }}">{{ player.name }}</a></td>
+                <td>{{ nameForVocation(player.vocation) }}</td>
                 <td>{{ player.level }}</td>
-                <td>{{ player.vocation }}</td>
             </tr>
         </tbody>
     </table>

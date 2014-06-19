@@ -182,6 +182,19 @@ DevAAC.factory("Player", function($http, $location) {
 	}
 });
 
+DevAAC.factory('OnlinePlayers', function($http) {
+    return {
+        get: function() {
+            return $http({
+                url: ApiUrl('players/online'),
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                params : { embed: 'player' }
+            })
+        }
+    }
+});
+
 // Status message
 DevAAC.factory("StatusMessage", function() {
 	var _status = {

@@ -29,6 +29,11 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
         controller: 'RulesController'
     });
 
+    $routeProvider.when('/players/online', {
+        templateUrl: PageUrl('online'),
+        controller: 'AccountController'
+    });
+
 	$routeProvider.when('/players/:id', {
 		templateUrl: PageUrl('profile'),
 		controller: 'ProfileController'
