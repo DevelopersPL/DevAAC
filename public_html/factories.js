@@ -162,45 +162,20 @@ DevAAC.factory("Highscores", function($http, $location) {
 	}
 });
 
-// Player API
-DevAAC.factory("Player", function($http, $location) {
-	return {
-		get: function(player_id_or_name) {
-			return $http({
-				url: ApiUrl('players/'+player_id_or_name),
-				method: 'GET',
-				headers: { 'Content-Type': 'application/json' }
-				//data: JSON.stringify({year: yearString})
-			})
-			.success(function (data, status) {
-				console.log(data, status);
-			})
-			.error(function (data, status) {
-				console.log(data, status);
-			});
-		}
-	}
-});
-
-DevAAC.factory('OnlinePlayers', function($http) {
-    return {
-        get: function() {
-            return $http({
-                url: ApiUrl('players/online'),
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-                params : { embed: 'player' }
-            })
-        }
+DevAAC.factory('Player', ['$resource',
+    function($resource) {
+        return $resource(ApiUrl('players/:id'), {}, {
+            queryOnline: {method: 'GET', params: {id: 'online', embed: 'player'}, isArray: true}
+        });
     }
-});
+]);
 
 // Status message
 DevAAC.factory("StatusMessage", function() {
 	var _status = {
 		success: '',
 		error: '',
-		notice: '',
+		notice: ''
 	};
 	return {
 		success: function() {
@@ -262,7 +237,7 @@ DevAAC.factory("Account", function($http, $location) {
 			return $http({
 				url: ApiUrl('accounts/my'),
 				method: 'GET',
-				headers: { 'Authorization': "Basic " + token },
+				headers: { 'Authorization': "Basic " + token }
 			})
 			.success(function (data, status) {
 				accToken = token;
@@ -301,7 +276,7 @@ DevAAC.factory("Account", function($http, $location) {
 			else return $http({
 				url: ApiUrl('accounts/my/players'),
 				method: 'GET',
-				headers: { 'Authorization': "Basic " + accToken },
+				headers: { 'Authorization': "Basic " + accToken }
 			})
 			.success(function (data, status) {
 				console.log(data, status);
@@ -356,8 +331,18 @@ DevAAC.config(function ($httpProvider) {
 
 DevAAC.factory('News', ['$resource',
     function($resource){
-        return $resource(ApiUrl('news'), {}, {
-            query: {method:'GET', isArray:true}
-        });
+        return $resource(ApiUrl('news'));
+    }
+]);
+
+DevAAC.factory('Guild', ['$resource',
+    function($resource){
+        return $resource(ApiUrl('guilds/:guildId'));
+    }
+]);
+
+DevAAC.factory('House', ['$resource',
+    function($resource){
+        return $resource(ApiUrl('houses/:guildId'));
     }
 ]);

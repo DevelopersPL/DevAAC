@@ -31,13 +31,23 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
 
     $routeProvider.when('/players/online', {
         templateUrl: PageUrl('online'),
-        controller: 'AccountController'
+        controller: 'OnlineController'
     });
 
 	$routeProvider.when('/players/:id', {
 		templateUrl: PageUrl('profile'),
 		controller: 'ProfileController'
 	});
+
+    $routeProvider.when('/guilds', {
+        templateUrl: PageUrl('guilds'),
+        controller: 'GuildsController'
+    });
+
+    $routeProvider.when('/houses', {
+        templateUrl: PageUrl('houses'),
+        controller: 'HousesController'
+    });
 
 	$routeProvider.when('/404', {
 		templateUrl: PageUrl('404')

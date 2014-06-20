@@ -427,13 +427,22 @@ DevAAC.controller('AccountController',
     }
 });
 
-// ACCOUNT CONTROLLER
-DevAAC.controller('AccountController', function($scope, OnlinePlayers, Server) {
-    OnlinePlayers.get().success(function(data, status) {
-        $scope.players = data;
-    });
+DevAAC.controller('OnlineController', function($scope, Player, Server) {
+    $scope.players = Player.queryOnline();
 
     $scope.nameForVocation = function(id) {
         return Server.getVocation(id).name;
     };
+});
+
+DevAAC.controller('GuildsController', function($scope, Guild, Player) {
+    $scope.guilds = Guild.query();
+
+    $scope.player = function(id) {
+        return Player.get({id: id});
+    };
+});
+
+DevAAC.controller('HousesController', function($scope, House) {
+    $scope.houses = House.query();
 });

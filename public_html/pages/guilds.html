@@ -1,0 +1,24 @@
+<div>
+    <h1 class="page-header">Guilds</h1>
+
+    <table class="table" ng-show="guilds.length">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td>Owner</td>
+                <td>Founded</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="guild in guilds">
+                <td>{{ guild.name }}</td>
+                <td><a href="#/players/{{ guild.ownerid }}">{{ guild.ownerid}}</a></td>
+                <td>{{ guild.creationdata | date: fullDate }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p ng-show="!guilds.length">
+        There are no guilds yet!
+    </p>
+</div>
