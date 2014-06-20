@@ -60,7 +60,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/online', function() use($DevAAC) {
     $req = $DevAAC->request;
 
     if($req->get('embed') == 'player')
-        $players = PlayerPublic::has('online')->get();
+        $players = Player::has('online')->get();
     else
         $players = PlayerOnline::all();
     $DevAAC->response->headers->set('Content-Type', 'application/json');
@@ -92,9 +92,9 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/online', function() use($DevAAC) {
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
     try {
-        $player = PlayerPublic::findOrFail($id);
+        $player = Player::findOrFail($id);
     } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        $player = PlayerPublic::where('name', $id)->first();
+        $player = Player::where('name', $id)->first();
         if(!$player)
             throw $e;
     }
@@ -212,7 +212,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
     $players = Capsule::table('players');
 
     // for field validation - it's not the best way ;/
-    $tmp = new PlayerPublic();
+    $tmp = new Player();
     $visible = $tmp->getVisibleFields();
 
     // support ?sort=level,-skill_club

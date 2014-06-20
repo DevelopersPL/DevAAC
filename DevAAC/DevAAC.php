@@ -258,3 +258,14 @@ function xml2array( $xmlObject, $out = array () )
     }
     return $out;
 }
+
+// http://shiplu.mokadd.im/95/convert-little-endian-to-big-endian-in-php-or-vice-versa/
+function chbo($num) {
+    $data = dechex($num);
+    if (strlen($data) <= 2)
+        return $num;
+
+    $u = unpack("H*", strrev(pack("H*", $data)));
+    $f = hexdec($u[1]);
+    return $f;
+}

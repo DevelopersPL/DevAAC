@@ -44,13 +44,24 @@ use DevAAC\Models\GuildWar;
  *      notes="",
  *      method="GET",
  *      type="Guild",
- *      nickname="getGuilds"
+ *      nickname="getGuilds",
+ *      @SWG\Parameter( name="embed",
+ *                      description="Pass owner to embed player object",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string list separated by comma")
  *   )
  *  )
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/guilds', function() use($DevAAC) {
-    $guilds = Guild::all();
+    $req = $DevAAC->request;
+
+    if($req->get('embed') == 'owner')
+        $guilds = Guild::with('owner')->get();
+    else
+        $guilds = Guild::all();
+
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($guilds->toJson(JSON_PRETTY_PRINT));
 });
