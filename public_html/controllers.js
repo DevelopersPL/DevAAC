@@ -446,3 +446,9 @@ DevAAC.controller('GuildsController', function($scope, Guild, Player) {
 DevAAC.controller('HousesController', function($scope, House) {
     $scope.houses = House.query();
 });
+
+DevAAC.controller('HeaderController', function($scope, Server) {
+    Server.info().success(function(i) {
+        $scope.name = i.serverName;
+    });
+});
