@@ -118,7 +118,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         'manamax' => 0,
         'manaspent' => 0,
         'soul' => 0,
-        'town_id' => 0,
+        'town_id' => NEW_PLAYER_TOWN_ID,
         'posx' => 0,
         'posy' => 0,
         'posz' => 0,

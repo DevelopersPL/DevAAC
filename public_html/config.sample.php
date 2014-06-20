@@ -18,5 +18,6 @@
 // define('ALLOWED_VOCATIONS', serialize(array(0))); // if you want to everyone to start with no vocation (RL style)
 // define('ALLOWED_VOCATIONS', serialize(array(1, 2, 3, 4))); // default
 // define('NEW_PLAYER_LEVEL', 8);
+// define('NEW_PLAYER_TOWN_ID', 1);
 
 // IF YOU WANT TO CHANGE SOMETHING ELSE, BE SMART AND FOLLOW THE PATTERN
