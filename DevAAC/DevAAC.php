@@ -252,7 +252,7 @@ function xml2array( $xmlObject, $out = array () )
         if( is_array($out[$index]) && array_key_exists('@attributes', $out[$index]) )
         {
             foreach( $out[$index]['@attributes'] as $key => $value )
-                $out[$index][$key] = $value;
+                $out[$index][$key] = is_numeric($value) ? floatval($value) : $value;
             unset( $out[$index]['@attributes'] );
         }
     }
