@@ -407,12 +407,12 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($account->id != !$DevAAC->auth_account->id or !$DevAAC->auth_account->isGod())
+    if($account->id != $DevAAC->auth_account->id or !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to change this account.', 403);
 
     if( !$DevAAC->auth_account->isGod() )
     {
-        if($req->getAPIParam('name')) {
+        if($req->getAPIParam('name', false)) {
             if( !filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
                 array("options" => array("regexp" => "/^[a-zA-Z]{2,12}$/"))) )
                 throw new InputErrorException('Account name must have 2-12 characters, only letters.', 400);
@@ -420,17 +420,17 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
             $account->name = $req->getAPIParam('name');
         }
 
-        if($req->getAPIParam('type'))
+        if($req->getAPIParam('type', false))
             $account->type = $req->getAPIParam('type');
 
-        if($req->getAPIParam('premdays'))
+        if($req->getAPIParam('premdays', false))
             $account->premdays = $req->getAPIParam('premdays');
 
-        if($req->getAPIParam('lastday'))
+        if($req->getAPIParam('lastday', false))
             $account->lastday = $req->getAPIParam('lastday');
     }
 
-    if($req->getAPIParam('password'))
+    if($req->getAPIParam('password', false))
     {
         if( !filter_var($req->getAPIParam('password'), FILTER_VALIDATE_REGEXP,
             array("options" => array("regexp" => "/^(.{2,20}|.{40})$/"))) )
@@ -439,7 +439,7 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
         $account->password = $req->getAPIParam('password');
     }
 
-    if($req->getAPIParam('email'))
+    if($req->getAPIParam('email', false))
     {
         if( !filter_var($req->getAPIParam('email'), FILTER_VALIDATE_EMAIL) or !getmxrr(explode('@', $req->getAPIParam('email'))[1], $trash_) )
             throw new InputErrorException('Email address is not valid.', 400);
@@ -484,7 +484,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
+    if($account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to delete this account.', 403);
 
     $account->delete();
