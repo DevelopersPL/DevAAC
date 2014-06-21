@@ -1,60 +1,59 @@
-<div ng-if="page == 1">
-    <h1 class="page-header">Loading...</h1>
-</div>
-<div ng-if="page == 2">
-    <h1 class="page-header">Your account</h1>
-    <p>
-        <b>Email:</b> {{account.email}}<br>
-        <b>Premium account: </b> {{(account.premdays > 0) ? 'Yes' : 'No'}}
-    </p>
-    <!-- Creating player -->
-    <div ng-if="creatingCharacter == 1">
-        <hr>
-        <h2>Create player:</h2>
-        <form ng-submit="createPlayer()">
-            <div class="form-group">
-                <label>Player name</label>
-                <input type="text" class="form-control" ng-model="newPlayer.name" required placeholder="Enter player name">
-            </div>
-            <div class="form-group">
-                <label>Vocation</label>
-                <select class="form-control" ng-model="newPlayer.vocation" ng-options="v.id as v.name for v in available_vocations" required>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Gender</label>
-                <select class="form-control" ng-model="newPlayer.sex" required>
-                    <option value="0">Female (girl)</option>
-                    <option value="1">Male (boy)</option>
-                </select>
-            </div>
-            <button type="submit" id="loading-register-btn" data-loading-text="Creating player..." class="btn btn-info">Create</button>
-            <button type="button" class="btn btn-danger" ng-click="stopPlayerCreation()" class="display:block; float:right;">Close</button>
-        </form>
-    </div>
-    <div ng-if="creatingCharacter == 2">
-        <hr>
-        <h3 class="bg-danger">{{errorMessage}}</h3>
-        <h3 class="bg-success">{{successMessage}}</h3>
-    </div>
+<h1 class="page-header">Your account</h1>
+<p>
+    <b>Email:</b> {{account.email}}<br>
+    <b>Premium account: </b> {{(account.premdays > 0) ? 'Yes' : 'No'}}
+</p>
 
+<!-- Creating player -->
+<div ng-show="creatingPlayer == 1">
     <hr>
-    <h2>Player list:</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Vocation</td>
-                <td>Level</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="player in players">
-                <td><a href="#/players/{{ player.id }}">{{ player.name }}</a></td>
-                <td>{{ vocation(player.vocation).name }}</td>
-                <td>{{ player.level }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <button class="btn btn-info" ng-click="startPlayerCreation()">Create player</button>
+    <h2>Create player:</h2>
+    <form ng-submit="createPlayer()">
+        <div class="form-group">
+            <label>Player name</label>
+            <input type="text" class="form-control" ng-model="newPlayer.name" required placeholder="Enter player name">
+        </div>
+        <div class="form-group">
+            <label>Vocation</label>
+            <select class="form-control" ng-model="newPlayer.vocation" ng-options="v.id as v.name for v in available_vocations" required>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <select class="form-control" ng-model="newPlayer.sex" required>
+                <option value="0">Female (girl)</option>
+                <option value="1">Male (boy)</option>
+            </select>
+        </div>
+        <button type="submit" id="loading-register-btn" data-loading-text="Creating player..." class="btn btn-info">Create</button>
+        <button type="button" class="btn btn-danger" ng-click="creatingPlayer = 0" class="display:block; float:right;">Close</button>
+    </form>
 </div>
+
+<div ng-if="creatingPlayer == 2">
+    <hr>
+    <div ng-if="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+    <div ng-if="successMessage" class="alert alert-success">{{successMessage}}</div>
+</div>
+
+<button ng-show="creatingPlayer != 1" class="btn btn-info" ng-click="creatingPlayer = 1">Create player</button>
+<hr>
+<h2>Player list:</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>Vocation</td>
+            <td>Level</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="player in players">
+            <td><a href="#/players/{{ player.id }}">{{ player.name }}</a></td>
+            <td>{{ vocation(player.vocation).name }}</td>
+            <td>{{ player.level }}</td>
+            <td><button ng-click="remove(player.id)" type="button" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></button></td>
+        </tr>
+    </tbody>
+</table>

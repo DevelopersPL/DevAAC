@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
+<html lang="en" ng-app="DevAAC">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -31,11 +31,10 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-resource.min.js"></script>
-
     <!-- Showdown -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 </head>
-<body ng-app="DevAAC">
+<body>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div ng-controller="HeaderController" class="navbar-header">
@@ -45,7 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a ng-show="name" class="navbar-brand" href="#/">{{ name }}</a>
+                <a ng-show="name" class="navbar-brand ng-hidden" href="#/">{{ name }}</a>
                 <a ng-hide="name" class="navbar-brand" href="#/">DevAAC</a>
             </div>
 
@@ -56,10 +55,8 @@
                     <li><a href="#/players/online">Who is online?</a></li>
                     <li><a href="#/guilds">Guilds</a></li>
                     <li><a href="#/houses">Houses</a></li>
-                    <li><a href="#/rules">Rules</a></li>
-                    <li><a href="#/home">Contact</a></li>
                 </ul>
-                <ul ng-if="checkCookie()" class="nav navbar-nav navbar-right">
+                <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
@@ -69,12 +66,12 @@
                         </ul>
                     </li>
                 </ul>
-                <form ng-if="!checkCookie()" ng-submit="Login()" class="navbar-form navbar-right">
+                <form ng-if="!isLoggedIn()" ng-submit="Login()" class="navbar-form navbar-right">
                     <div class="form-group">
-                        <input ng-model="login.username" name="username" required class="form-control" placeholder="Login" type="text">
+                        <input ng-model="form.name" class="form-control" placeholder="Account name" type="text" required>
                     </div>
                     <div class="form-group">
-                        <input ng-model="login.password" name="password" required class="form-control" placeholder="Password" type="password" >
+                        <input ng-model="form.password" class="form-control" placeholder="Password" type="password" required>
                     </div>
                     <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Sign in</button>
                     <a class="btn btn-info" href="#/account/register">Sign up</a>
@@ -88,14 +85,15 @@
     <div class="container">
 
         <div class="row">
+            <div class="col-md-8" ng-show="loadingView">TODO: LOADING</div>
+
             <div class="col-md-8" id="view" ng-view></div>
             
             <div class="col-md-4" ng-controller="WidgetController">
-                <div ng-show="highExperience.length" class="well">
-                    <h4>Player Search</h4>
+                <div ng-show="highExperience.length">
                     <form ng-submit="PlayerSearch()">
                         <div class="input-group">
-                            <input type="text" class="form-control" ng-model="search" required>
+                            <input type="text" class="form-control" ng-model="search" required placeholder="Find Player...">
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-default" type="button">
                                     <span class="glyphicon glyphicon-search"></span>
@@ -157,7 +155,7 @@
     <!-- /.container -->
 
     <!-- Initiate Angular app, custom functions and config -->
-    <script src="app.js"></script>
+    <script src="DevAAC.js"></script>
     <script src="sha1.js"></script>
     <!-- Add URL routing logic -->
     <script src="routes.js"></script>

@@ -1,26 +1,27 @@
 <h1 class="page-header">Register new account</h1>
-<p class="bg-danger">{{errorMessage}}</p>
-<p class="bg-success">{{successMessage}}</p>
+
+<div ng-if="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+
 <form ng-submit="registerAccount()">
     <div class="form-group">
-        <label for="InputEmail1">Account name</label>
-        <input type="text" class="form-control" ng-model="form.accountName" required placeholder="Enter account name">
+        <label>Account name</label>
+        <input type="text" class="form-control" ng-model="form.name" required placeholder="Enter account name">
     </div>
     <div class="form-group">
-        <label for="InputEmail1">Email address</label>
+        <label>Email address</label>
         <input type="email" class="form-control" ng-model="form.email" required placeholder="Enter email">
     </div>
     <div class="form-group">
-        <label for="InputPassword1">Password</label>
+        <label>Password</label>
         <input type="password" class="form-control" ng-model="form.password" required placeholder="Password">
     </div>
     <div class="form-group">
-        <label for="InputPassword2">Password again</label>
+        <label>Password again</label>
         <input type="password" class="form-control" ng-model="form.passwordAgain" required placeholder="Password again">
     </div>
     <div class="checkbox">
         <label>
-            <input type="checkbox" required> I agree <a href="#/rules">server rules</a>
+            <input type="checkbox" required> I read and understand <a href="#/about#rules">server rules</a>
         </label>
     </div>
     <button type="submit" id="loading-register-btn" data-loading-text="Registering account..." class="btn btn-info">Register</button>

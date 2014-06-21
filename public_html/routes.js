@@ -1,13 +1,13 @@
-/*
-    ROUTES
-    (Routing all pages and hooking them to their controller)
-*/
 DevAAC.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider.when('/', {
 		templateUrl: PageUrl('news'),
 		controller: 'NewsController'
 	});
+
+    $routeProvider.when('/about', {
+        templateUrl: PageUrl('about')
+    });
 
     $routeProvider.when('/account/register', {
         templateUrl: PageUrl('register'),
@@ -18,8 +18,14 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
         templateUrl: PageUrl('account'),
         controller: 'AccountController',
         resolve: {
+            account: function(Account) {
+                return Account.factory.my().$promise;
+            },
             vocations: function(Server) {
                 return Server.vocations().$promise;
+            },
+            info: function(Server) {
+                return Server.info().$promise;
             }
         }
     });
@@ -54,19 +60,7 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
         controller: 'HousesController'
     });
 
-    $routeProvider.when('/about', {
-        templateUrl: PageUrl('about')
-    });
-
-    $routeProvider.when('/rules', {
-        templateUrl: PageUrl('rules')
-    });
-
-    $routeProvider.when('/404', {
-        templateUrl: PageUrl('404')
-    });
-
 	$routeProvider.otherwise({
-		redirectTo : '/404'
+        templateUrl: PageUrl('404')
 	});
 }]);
