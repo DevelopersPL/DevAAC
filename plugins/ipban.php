@@ -48,6 +48,7 @@ if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
 // http://docs.slimframework.com/#How-to-Use-Hooks
 $DevAAC->hook('slim.before', function () use ($DevAAC) {
     $req = $DevAAC->request;
+    $apc = false;
 
     if(extension_loaded('apc') && ini_get('apc.enabled'))
     {
