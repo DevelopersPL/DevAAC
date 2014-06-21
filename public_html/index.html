@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
     <style type="text/css">
         body {
-            margin-top: 100px; /* 100px is double the height of the navbar - I made it a big larger for some more space - keep it at 50px at least if you want to use the fixed top nav */
+            margin-top: 70px;
         }
         footer {
             margin: 50px 0;
@@ -64,7 +64,6 @@
                         <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="#/account">My account</a></li>
-                            <li><a href="#/account">My characters</a></li>
                             <li class="divider"></li>
                             <li><a ng-click="Logout()" href="javascript://">Logout</a></li>
                         </ul>
@@ -89,10 +88,10 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-lg-8" id="view" ng-view></div>
+            <div class="col-md-8" id="view" ng-view></div>
             
-            <div class="col-lg-4" ng-controller="WidgetController">
-                <div class="well">
+            <div class="col-md-4" ng-controller="WidgetController">
+                <div ng-show="highExperience.length" class="well">
                     <h4>Player Search</h4>
                     <form ng-submit="PlayerSearch()">
                         <div class="input-group">
@@ -107,18 +106,18 @@
                     <p class="bg-danger">{{searchMessage}}</p>
                     <!-- /input-group -->
                 </div>
-                <!-- /well -->
-                <div class="well">
+
+                <div ng-show="highExperience.length" class="well">
                     <h4>Top 5 players</h4>
                     <div class="row">
-                        <div class="col-lg-12">
+                        <div class="col-md-12">
                             <table class="table table-striped">
                                 <thead>
                                     <th>Name</th>
                                     <th>Level</th>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="player in playersWidget">
+                                    <tr ng-repeat="player in highExperience">
                                         <td><a href="#/players/{{player.name}}">{{player.name}}</a></td>
                                         <td>{{player.level}}</td>
                                     </tr>
@@ -127,32 +126,30 @@
                         </div>
                     </div>
                 </div>
-                <!-- /well -->
+
                 <div class="well">
                     <h4>Server Info</h4>
-                    <div ng-if="!infoPageStatus">
+                    <div ng-show="!info.$resolved">
                         <h2>Loading...</h2>
                     </div>
-                    <div ng-if="infoPageStatus">
-                        <ul>
-                            <li><b>IP:</b> {{servInfo.ip}}</li>
-                            <li><b>Port:</b> {{servInfo.port}}</li>
-                            <li><b>Online:</b> {{servInfo.online}}</li>
-                            <li><b>Type:</b> {{servInfo.worldType}}</li>
-                            <li><b>Accounts:</b> {{servInfo.accounts}}</li>
-                            <li><b>Players:</b> {{servInfo.players}}</li>
-                        </ul>
+                    <div ng-if="info.ip">
+                        <table class="table">
+                            <tr><td>IP:</td><td>{{info.ip}}</td></tr>
+                            <tr><td>Port:</td><td>{{info.loginProtocolPort}}</td></tr>
+                            <tr><td>Type:</td><td>{{info.worldType}}</td></tr>
+                            <tr><td>Accounts:</td><td>{{info.accounts_count}}</td></tr>
+                            <tr><td>Players:</td><td>{{info.players_count}}</td></tr>
+                        </table>
                     </div>
                 </div>
-                <!-- /well -->
             </div>
         </div>
 
         <hr>
-        <footer ng-controller="globalFooter">
+        <footer ng-controller="FooterController">
             <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; developers.pl {{footerYear}}</p>
+                <div class="col-md-12">
+                    <p><a href="https://github.com/DevelopersPL/DevAAC" target="_blank">DevAAC</a> &copy; {{ year }} by developers.pl</p>
                 </div>
             </div>
         </footer>
@@ -166,9 +163,6 @@
     <script src="routes.js"></script>
     <!-- Classes, Models, Objects you use in controllers -->
     <script src="factories.js"></script>
-    <!-- Controllers, self explanatory. 
-    Avoid mixing it with stuff that should be in factories. -->
     <script src="controllers.js"></script>
-    
 </body>
 </html>

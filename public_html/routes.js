@@ -2,14 +2,9 @@
     ROUTES
     (Routing all pages and hooking them to their controller)
 */
-DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+DevAAC.config(['$routeProvider', function($routeProvider) {
 	
 	$routeProvider.when('/', {
-		templateUrl: PageUrl('news'),
-		controller: 'NewsController'
-	});
-
-	$routeProvider.when('/home', {
 		templateUrl: PageUrl('news'),
 		controller: 'NewsController'
 	});
@@ -21,22 +16,32 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
 
     $routeProvider.when('/account', {
         templateUrl: PageUrl('account'),
-        controller: 'AccountController'
-    });
-
-    $routeProvider.when('/rules', {
-        templateUrl: PageUrl('rules'),
-        controller: 'RulesController'
+        controller: 'AccountController',
+        resolve: {
+            vocations: function(Server) {
+                return Server.vocations().$promise;
+            }
+        }
     });
 
     $routeProvider.when('/players/online', {
         templateUrl: PageUrl('online'),
-        controller: 'OnlineController'
+        controller: 'OnlineController',
+        resolve: {
+            vocations: function(Server) {
+                return Server.vocations().$promise;
+            }
+        }
     });
 
 	$routeProvider.when('/players/:id', {
-		templateUrl: PageUrl('profile'),
-		controller: 'ProfileController'
+		templateUrl: PageUrl('player'),
+		controller: 'PlayerController',
+        resolve: {
+            vocations: function(Server) {
+                return Server.vocations().$promise;
+            }
+        }
 	});
 
     $routeProvider.when('/guilds', {
@@ -49,40 +54,19 @@ DevAAC.config(['$routeProvider', '$locationProvider', function($routeProvider, $
         controller: 'HousesController'
     });
 
-	$routeProvider.when('/404', {
-		templateUrl: PageUrl('404')
-	});
-
     $routeProvider.when('/about', {
         templateUrl: PageUrl('about')
+    });
+
+    $routeProvider.when('/rules', {
+        templateUrl: PageUrl('rules')
+    });
+
+    $routeProvider.when('/404', {
+        templateUrl: PageUrl('404')
     });
 
 	$routeProvider.otherwise({
 		redirectTo : '/404'
 	});
 }]);
-
-DevAAC.directive("markdown", function ($compile, $http) {
-    var converter = new Showdown.converter();
-    return {
-        restrict: 'E',
-        replace: true,
-        link: function (scope, element, attrs) {
-            if ("src" in attrs) {
-                $http.get(attrs.src).then(function(data) {
-                    element.html(converter.makeHtml(data.data));
-                });
-            } else {
-                element.html(converter.makeHtml(element.text()));
-            }
-        }
-    };
-});
-
-DevAAC.filter('markdown', function($sce) {
-    var converter = new Showdown.converter();
-    return function(input) {
-        if(input)
-            return $sce.trustAsHtml(converter.makeHtml(input))
-    };
-});

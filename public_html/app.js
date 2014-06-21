@@ -1,6 +1,3 @@
-/*
-	CONFIG
-*/
 function PageUrl(page) {
 	return "pages/" + page + ".html";
 }
@@ -8,12 +5,7 @@ function ApiUrl(link) {
     // window.location.origin is better (includes port) but is not supported in IE
 	return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
 }
-function isInt(value) { 
-    return !isNaN(parseInt(value,10)) && (parseFloat(value,10) == parseInt(value,10)); 
-}
-/*
-    CUSTOM FUNCTIONS
-*/
+
 function base64_encode (data) {
     // From: http://phpjs.org/functions
     // +   original by: Tyler Akins (http://rumkin.com)
@@ -91,7 +83,55 @@ var DevAAC = angular.module('app', ['ngRoute', 'ngResource']);
 
 // Add authentication headers to all xhr requests after login.
 DevAAC.run(function($http, Account) {
-    if (Account.getToken() !== false) {
+    if (Account.getToken() !== false)
         $http.defaults.headers.common.Authentication = 'Basic '+Account.getToken();
-    }
+});
+
+// Add auth header to all $http request (example above)
+DevAAC.factory('authInterceptor', function ($rootScope, $q, $window) {
+    return {
+        request: function (config) {
+            config.headers = config.headers || {};
+            if ($window.sessionStorage.token) {
+                config.headers.Authorization = 'Basic ' + $window.sessionStorage.token;
+            }
+            return config;
+        },
+        response: function (response) {
+            if (response.status === 401) {
+                console.log('User is not logged in');
+                // TODO: Add $rootscope.isAuthenticated globally.
+            }
+            return response || $q.when(response);
+        }
+    };
+});
+
+DevAAC.config(function ($httpProvider) {
+    $httpProvider.interceptors.push('authInterceptor');
+});
+
+DevAAC.directive('markdown', function ($compile, $http) {
+    var converter = new Showdown.converter();
+    return {
+        restrict: 'E',
+        replace: true,
+        link: function (scope, element, attrs) {
+            if ("src" in attrs) {
+                $http.get(attrs.src).then(function(data) {
+                    element.html(converter.makeHtml(data.data));
+                });
+            } else {
+                element.html(converter.makeHtml(element.text()));
+            }
+        }
+    };
+});
+
+DevAAC.filter('markdown', function($sce) {
+    var converter = new Showdown.converter();
+    return function(input) {
+        if(input)
+            return $sce.trustAsHtml(converter.makeHtml(input))
+    };
 });

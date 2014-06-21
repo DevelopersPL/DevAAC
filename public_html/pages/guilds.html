@@ -5,14 +5,14 @@
         <thead>
             <tr>
                 <td>Name</td>
-                <td>Owner</td>
+                <td>Leader</td>
                 <td>Founded</td>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="guild in guilds">
                 <td>{{ guild.name }}</td>
-                <td><a href="#/players/{{ guild.ownerid }}">{{ guild.ownerid}}</a></td>
+                <td><a href="#/players/{{ guild.ownerid }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}})</td>
                 <td>{{ guild.creationdata | date: fullDate }}</td>
             </tr>
         </tbody>

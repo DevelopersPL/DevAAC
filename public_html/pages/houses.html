@@ -1,7 +1,7 @@
 <div>
     <h1 class="page-header">Houses</h1>
 
-    <table class="table" ng-show="houses.length">
+    <table class="table" ng-show="houses.length && loaded">
         <thead>
             <tr>
                 <td>Name</td>
@@ -16,13 +16,17 @@
                 <td>{{ house.name }}</td>
                 <td>{{ house.town_id }}</td>
                 <td>{{ house.size }}</td>
-                <td>{{ house.rent }}</td>
+                <td>{{ house.rent | currency }}</td>
                 <td>{{ house.owner }}</td>
             </tr>
         </tbody>
     </table>
 
-    <p ng-show="!houses.length">
+    <p ng-show="!houses.length && loaded">
         There are no houses on this server :(
+    </p>
+
+    <p ng-hide="loaded">
+        Loading...
     </p>
 </div>
