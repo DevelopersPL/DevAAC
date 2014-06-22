@@ -37,17 +37,17 @@ DevAAC.factory('Account', ['$http', '$resource', '$cacheFactory',
         var token;
 
         return {
+            generateToken: function(username, password) {
+                var p = new jsSHA(password, 'TEXT');
+                return btoa(username + ':' + p.getHash('SHA-1', 'HEX'));
+            },
             register: function(account) {
-                var p = new jsSHA(account.password, 'TEXT');
-                token = btoa(account.name + ':' + p.getHash('SHA-1', 'HEX'));
-
                 return this.factory.save(account, function (data, status) {
-                    Cookie.set('DevAACToken', token, 7);
+                    Cookie.set('DevAACToken', this.generateToken(account.name, account.password), 7);
                 });
             },
             authenticate: function(account, password) {
-                var p = new jsSHA(password, 'TEXT');
-                token = btoa(account + ':' + p.getHash('SHA-1', 'HEX'));
+                token = this.generateToken(account, password);
                 return $http({
                     url: ApiUrl('accounts/my'),
                     method: 'GET',
@@ -64,7 +64,8 @@ DevAAC.factory('Account', ['$http', '$resource', '$cacheFactory',
             factory: $resource(ApiUrl('accounts/:id'), {}, {
                 my: { params: {id: 'my'}, cache: true },
                 get: { cache: true },
-                query: { isArray: true, cache: true }
+                query: { isArray: true, cache: true },
+                update: { method: 'PUT' }
             })
         }
     }

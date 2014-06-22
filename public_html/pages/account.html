@@ -4,9 +4,15 @@
     <b>Premium account: </b> {{(account.premdays > 0) ? 'Yes' : 'No'}}
 </p>
 
-<!-- Creating player -->
-<div ng-show="creatingPlayer == 1">
-    <hr>
+<hr>
+
+<div ng-if="errorMessage || successMessage">
+    <div ng-if="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
+    <div ng-if="successMessage" class="alert alert-success">{{successMessage}}</div>
+</div>
+
+<!-- creating player -->
+<div ng-show="creatingPlayer">
     <h2>Create player:</h2>
     <form ng-submit="createPlayer()">
         <div class="form-group">
@@ -26,18 +32,32 @@
             </select>
         </div>
         <button type="submit" id="loading-register-btn" data-loading-text="Creating player..." class="btn btn-info">Create</button>
-        <button type="button" class="btn btn-danger" ng-click="creatingPlayer = 0" class="display:block; float:right;">Close</button>
+        <button type="button" class="btn btn-default" ng-click="creatingPlayer = 0" class="display:block; float:right;">Close</button>
     </form>
-</div>
-
-<div ng-if="creatingPlayer == 2">
     <hr>
-    <div ng-if="errorMessage" class="alert alert-danger">{{errorMessage}}</div>
-    <div ng-if="successMessage" class="alert alert-success">{{successMessage}}</div>
 </div>
 
-<button ng-show="creatingPlayer != 1" class="btn btn-info" ng-click="creatingPlayer = 1">Create player</button>
-<hr>
+<!-- changing password -->
+<div ng-show="changingPassword">
+    <h2>Change password:</h2>
+    <form class="form-horizontal" ng-submit="changePassword()">
+        <div class="form-group col-sm-6">
+            <label>New Password</label>
+            <input type="password" class="form-control" ng-model="pwd.password" required placeholder="New Password">
+        </div>
+        <div class="form-group col-sm-6">
+            <label>Confirm New Password</label>
+            <input type="password" class="form-control" ng-model="pwd.passwordAgain" required placeholder="Confirm New Password">
+        </div>
+        <button type="submit" id="change-password-btn" data-loading-text="Changing password..." class="btn btn-warning">Change password</button>
+        <button type="button" class="btn btn-default" ng-click="changingPassword = false" class="display:block; float:right;">Close</button>
+    </form>
+    <hr>
+</div>
+
+<button ng-show="!creatingPlayer" class="btn btn-info" ng-click="creatingPlayer = true">Create player</button>
+<button ng-show="!changingPassword" class="btn btn-info" ng-click="changingPassword = true">Change Password</button>
+
 <h2>Player list:</h2>
 <table class="table">
     <thead>

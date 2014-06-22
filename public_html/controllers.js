@@ -136,9 +136,9 @@ DevAAC.controller('RegisterController', ['$scope', '$location', 'Account',
     }
 ]);
 
-DevAAC.controller('AccountController', ['$scope', '$location', 'Player', 'vocations', 'account', 'info',
-    function($scope, $location, Player, vocations, account, info) {
-        $scope.creatingPlayer = 0;
+DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Player', 'vocations', 'account', 'info',
+    function($scope, $location, Account, Player, vocations, account, info) {
+        $scope.creatingPlayer = false;
         $scope.errorMessage = '';
         $scope.successMessage = '';
         $scope.account = account;
@@ -149,6 +149,10 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Player', 'vocati
             vocation: 1,
             sex: 1
         };
+        $scope.pwd = {
+            password : '',
+            passwordAgain : ''
+        };
 
         $scope.vocation = function(id) {
             return _.findWhere(vocations, {id: id});
@@ -158,13 +162,15 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Player', 'vocati
             $scope.available_vocations.push({id: info.allowed_vocations[i], name: $scope.vocation(info.allowed_vocations[i]).name});
 
         $scope.createPlayer = function() {
-            Player.save($scope.newPlayer, function(data, status) {
+            Player.save($scope.newPlayer, function(data) {
                 $scope.players.push(data);
                 $scope.successMessage = 'Player has been created!';
-                $scope.creatingPlayer = 2;
-            }, function(data, status) {
-                $scope.errorMessage = 'Failed to created player. ' + data.message;
-                $scope.creatingPlayer = 2;
+                $scope.errorMessage = '';
+                $scope.creatingPlayer = false;
+            }, function(error) {
+                $scope.successMessage = '';
+                $scope.errorMessage = 'Failed to created player. ' + error.data.message;
+                $scope.creatingPlayer = false;
             });
         };
 
@@ -172,10 +178,28 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Player', 'vocati
             Player.delete({id: id}, function(data, status) {
                 $scope.players = _.filter($scope.players, function(p) {return p.id != id});
                 $scope.successMessage = 'Player has been deleted!';
-                $scope.creatingPlayer = 2;
-            }, function(data, status) {
-                $scope.errorMessage = 'Failed to delete player. ' + data.message;
-                $scope.creatingPlayer = 2;
+                $scope.errorMessage = '';
+                $scope.creatingPlayer = false;
+            }, function(error) {
+                $scope.successMessage = '';
+                $scope.errorMessage = 'Failed to delete player. ' + error.data.message;
+                $scope.creatingPlayer = false;
+            });
+        };
+
+        $scope.changePassword = function() {
+            if ($scope.pwd.password !== $scope.pwd.passwordAgain)
+                return $scope.errorMessage = "Passwords don't match!";
+
+            Account.factory.update({id: $scope.account.id}, $scope.pwd, function(data) {
+                $scope.successMessage = 'Password has been updated!';
+                $scope.errorMessage = '';
+                $scope.changingPassword = false;
+                Cookie.set('DevAACToken', Account.generateToken($scope.account.name, $scope.pwd.password), 7);
+            }, function(error) {
+                $scope.successMessage = '';
+                $scope.errorMessage = 'Failed to change password. ' + error.data.message;
+                $scope.changingPassword = false;
             });
         }
     }
