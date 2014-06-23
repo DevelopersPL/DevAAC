@@ -244,6 +244,8 @@ DevAAC.controller('HousesController', ['$scope', 'House', 'Player',
             $scope.loaded = true;
         });
 
+        $scope.order = 'name';
+        $scope.orderReverse = false;
         $scope.players = [];
 
         $scope.player = function(id) {

@@ -1,22 +1,41 @@
 <div>
     <h1 class="page-header">Houses</h1>
 
+    <div>
+        Sort by
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="name"> Name
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="town"> Town
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="size"> Size
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="rent"> Rent
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="orderReverse" type="checkbox"> Reverse order
+        </label>
+    </div>
+
     <table class="table" ng-show="houses.length && loaded">
         <thead>
             <tr>
-                <td>Name</td>
-                <td>Town</td>
-                <td>Size</td>
-                <td>Rent</td>
-                <td>Owner</td>
+                <th>Name</th>
+                <th>Town</th>
+                <th>Size</th>
+                <th>Rent</th>
+                <th>Owner</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="house in houses">
+            <tr ng-repeat="house in houses | orderBy: order : orderReverse">
                 <td>{{ house.name }}</td>
                 <td>{{ house.town_id }}</td>
                 <td>{{ house.size }}</td>
-                <td>{{ house.rent | currency }}</td>
+                <td>{{ house.rent | number }} gp</td>
                 <td><a href="#/players/{{ player(house.owner).name }}">{{ player(house.owner).name }}</a> <span ng-if="player(house.owner)">({{player(house.owner).level}})</span></td>
             </tr>
         </tbody>

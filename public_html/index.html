@@ -106,7 +106,7 @@
                 </div>
 
                 <div ng-show="highExperience.length" class="well">
-                    <h4>Top 5 players</h4>
+                    <h4>Top 5 players by level</h4>
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-striped">
@@ -116,7 +116,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="player in highExperience">
-                                        <td><a href="#/players/{{player.name}}">{{player.name}}</a></td>
+                                        <td>{{$index+1}}. <a href="#/players/{{player.name}}">{{player.name}}</a></td>
                                         <td>{{player.level}}</td>
                                     </tr>
                                 </tbody>
@@ -126,17 +126,16 @@
                 </div>
 
                 <div class="well">
-                    <h4>Server Info</h4>
+                    <h4>Server Information</h4>
                     <div ng-show="!info.$resolved">
                         <h2>Loading...</h2>
                     </div>
                     <div ng-if="info.ip">
-                        <table class="table">
-                            <tr><td>IP:</td><td>{{info.ip}}</td></tr>
-                            <tr><td>Port:</td><td>{{info.loginProtocolPort}}</td></tr>
-                            <tr><td>Type:</td><td>{{info.worldType}}</td></tr>
-                            <tr><td>Accounts:</td><td>{{info.accounts_count}}</td></tr>
-                            <tr><td>Players:</td><td>{{info.players_count}}</td></tr>
+                        <table class="table table-striped">
+                            <tr><td>IP</td><td>{{info.ip}}</td></tr>
+                            <tr><td>Port</td><td>{{info.loginProtocolPort}}</td></tr>
+                            <tr><td>World Type:</td><td>{{info.worldType | uppercase}}</td></tr>
+                            <tr><td colspan="2" class="text-center"><a class="btn btn-success" href="http://static.otland.net/ipchanger.exe"><i class="glyphicon glyphicon-download"></i> Download IP Changer</a></td></tr>
                         </table>
                     </div>
                 </div>
