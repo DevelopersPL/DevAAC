@@ -1,5 +1,9 @@
 <p ng-if="errorMessage" class="bg-danger">{{errorMessage}}</p>
 
+<blockquote ng-if="info.motd">
+    <p>{{info.motd}}</p>
+</blockquote>
+
 <span class="pull-right">
     <span class="glyphicon glyphicon-time"></span> {{news.date}}
 </span>
