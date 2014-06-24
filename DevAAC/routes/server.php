@@ -223,12 +223,14 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'ip' => $DevAAC->tfsConfigFile['ip'],
             'loginProtocolPort' => $DevAAC->tfsConfigFile['loginProtocolPort'],
             'statusProtocolPort' => $DevAAC->tfsConfigFile['statusProtocolPort'],
+            'maxPlayers' => $DevAAC->tfsConfigFile['maxPlayers'],
             'serverName' => $DevAAC->tfsConfigFile['serverName'],
             'statusTimeout' => $DevAAC->tfsConfigFile['statusTimeout'],
             'ownerName' => $DevAAC->tfsConfigFile['ownerName'],
             'ownerEmail' => $DevAAC->tfsConfigFile['ownerEmail'],
             'url' => $DevAAC->tfsConfigFile['url'],
             'location' => $DevAAC->tfsConfigFile['location'],
+            'motd' => $DevAAC->tfsConfigFile['motd'],
 
             // cache hint
             'timestamp' => new \DevAAC\Helpers\DateTime()
