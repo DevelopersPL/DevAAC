@@ -42,10 +42,15 @@ DevAAC.controller('NavigationController', ['$scope', '$location', 'Account',
     }
 ]);
 
-DevAAC.controller('WidgetController', ['$scope', '$location', 'Player', 'Server',
-	function($scope, $location, Player, Server) {
-        $scope.highExperience = Player.highExperience();
+DevAAC.controller('MainController', ['$scope', 'Server',
+    function($scope, Server) {
         $scope.info = Server.info();
+    }
+]);
+
+DevAAC.controller('WidgetController', ['$scope', '$location', 'Player',
+	function($scope, $location, Player) {
+        $scope.highExperience = Player.highExperience();
 
         $scope.PlayerSearch = function() {
             Player.get({id: $scope.search}, function(value, responseHeaders) {

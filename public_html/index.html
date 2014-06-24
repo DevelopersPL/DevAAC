@@ -14,11 +14,22 @@
     <style type="text/css">
         body {
             margin-top: 70px;
+            background-color: #333;
+            background-image: url(//i.imgur.com/rLcxYfc.png);
+            background-position-x: center;
+            background-repeat: no-repeat;
+        }
+        .page-header {
+            margin-top: 0;
         }
         footer {
             margin: 50px 0;
         }
     </style>
+    <!-- AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-resource.min.js"></script>
     <!-- jQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Bootstrap JS -->
@@ -27,14 +38,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
     <!-- Underscore.js -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
-    <!-- AngularJS -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-resource.min.js"></script>
     <!-- Showdown -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
 </head>
-<body>
+<body ng-controller="MainController">
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div ng-controller="HeaderController" class="navbar-header">
@@ -85,11 +92,11 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-md-8" ng-show="loadingView">TODO: LOADING</div>
+            <div class="col-sm-9" ng-show="loadingView">TODO: LOADING</div>
 
-            <div class="col-md-8" id="view" ng-view></div>
+            <div class="col-sm-9 well well-lg" id="view" ng-view></div>
             
-            <div class="col-md-4" ng-controller="WidgetController">
+            <div class="col-sm-3" ng-controller="WidgetController">
                 <div ng-show="highExperience.length">
                     <form ng-submit="PlayerSearch()">
                         <div class="input-group">
@@ -105,7 +112,7 @@
                     <!-- /input-group -->
                 </div>
 
-                <div ng-show="highExperience.length" class="well">
+                <div ng-show="highExperience.length" class="well well-sm">
                     <h4>Top 5 players by level</h4>
                     <div class="row">
                         <div class="col-md-12">
@@ -125,7 +132,7 @@
                     </div>
                 </div>
 
-                <div class="well">
+                <div class="well well-sm">
                     <h4>Server Information</h4>
                     <div ng-show="!info.$resolved">
                         <h2>Loading...</h2>
@@ -142,11 +149,10 @@
             </div>
         </div>
 
-        <hr>
         <footer ng-controller="FooterController">
             <div class="row">
-                <div class="col-md-12">
-                    <p><a href="https://github.com/DevelopersPL/DevAAC" target="_blank">DevAAC</a> &copy; {{ year }} by developers.pl</p>
+                <div class="col-sm-12 well well-sm">
+                    <p>{{ info.serverName }} <span ng-if="info.serverOwner">by {{ info.serverOwner }}</span> | <a href="https://github.com/DevelopersPL/DevAAC" target="_blank">DevAAC</a> &copy; {{ year }} by developers.pl</p>
                 </div>
             </div>
         </footer>

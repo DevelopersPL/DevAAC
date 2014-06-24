@@ -1,17 +1,15 @@
-<p class="bg-danger">{{errorMessage}}</p>
-<!-- blog entry -->
-<h1><a href="#">{{news.title}}</a></h1>
-<hr>
-<p>
-    <span class="glyphicon glyphicon-time"></span> Posted on {{news.date}}
-</p>
-<hr>
+<p ng-if="errorMessage" class="bg-danger">{{errorMessage}}</p>
+
+<span class="pull-right">
+    <span class="glyphicon glyphicon-time"></span> {{news.date}}
+</span>
+<h1 class="page-header">{{news.title}}</h1>
+
 <div ng-bind-html="news.content | markdown"></div>
 <hr>
+
 <!-- pager -->
 <ul class="pager">
-    <li ng-show="previousAvailable()" class="previous"><a href="" ng-click="previous()">&larr; Previous</a>
-    </li>
-    <li ng-show="nextAvailable()" class="next"><a href="" ng-click="next()">Next &rarr;</a>
-    </li>
+    <li ng-show="previousAvailable()" class="previous"><a href="" ng-click="previous()">&larr; Previous</a></li>
+    <li ng-show="nextAvailable()" class="next"><a href="" ng-click="next()">Next &rarr;</a></li>
 </ul>
