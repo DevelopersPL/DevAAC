@@ -58,7 +58,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
                     <li><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
-                    <li><a href="#/guilds">Guilds</a></li>
+                    <li><a href="#/guilds"><i class="glyphicon glyphicon-link"></i> Guilds</a></li>
                     <li><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
@@ -78,8 +78,8 @@
                     <div class="form-group">
                         <input ng-model="form.password" class="form-control" placeholder="Password" type="password" required>
                     </div>
-                    <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Sign in</button>
-                    <a class="btn btn-info" href="#/account/register">Sign up</a>
+                    <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Log in</button>
+                    <a class="btn btn-info" href="#/account/register">Register</a>
                 </form>
             </div>
             <!-- /.navbar-collapse -->
@@ -115,7 +115,7 @@
                 </div>
 
                 <div ng-show="highExperience.length" class="well well-sm">
-                    <h4>Top 5 players by level</h4>
+                    <h4 class="text-center">Top 5 players by level</h4>
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-striped">
@@ -135,7 +135,7 @@
                 </div>
 
                 <div class="well well-sm">
-                    <h4>Server Information</h4>
+                    <h4 class="text-center">Server Information</h4>
                     <div ng-show="!info.$resolved">
                         <h2>Loading...</h2>
                     </div>
@@ -144,7 +144,7 @@
                             <tr><td>IP</td><td>{{info.ip}}</td></tr>
                             <tr><td>Port</td><td>{{info.loginProtocolPort}}</td></tr>
                             <tr><td>World Type:</td><td>{{info.worldType | uppercase}}</td></tr>
-                            <tr><td colspan="2" class="text-center"><a class="btn btn-success" href="http://static.otland.net/ipchanger.exe"><i class="glyphicon glyphicon-download"></i> Download IP Changer</a></td></tr>
+                            <tr><td colspan="2" class="text-center"><a class="btn btn-success" href="http://static.otland.net/ipchanger.exe"><i class="glyphicon glyphicon-download-alt"></i> Download IP Changer</a></td></tr>
                         </table>
                     </div>
                 </div>

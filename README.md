@@ -2,7 +2,7 @@ DevAAC by developers.pl for [TFS 1.0](https://github.com/otland/forgottenserver)
 =====
 Quick facts:
 
-* This AAC is built as a SPA (Single Page Application) on the front-end and a RESTful API on the back-end.
+* This AAC (Automatic Account Creator) is built as a SPA (Single Page Application) on the front-end and a RESTful API on the back-end.
 * It is supposed to be easily extensible via plugins (check ```plugins/example.php```.
 * The core of this AAC does not modify TFS' database schema. News are loaded as static markdown files from ```public_html/news```.
 * The REST API is planned to be utilized by many external projects like OT server lists and OT Client.

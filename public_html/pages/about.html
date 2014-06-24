@@ -1,7 +1,31 @@
-<h1 class="page-header">Server rules</h1>
+<h1 class="page-header">About this server</h1>
+
+<h2><i class="glyphicon glyphicon-book"></i> Server rules</h2>
 <p>The golden rule: Have fun.</p>
 <p>If you get pwn3d, don't hate the game.</p>
 <p>No <a href='http://en.wikipedia.org/wiki/Cheating' target="_blank">cheating</a> allowed.</p>
 <p>No <a href='http://en.wikipedia.org/wiki/Internet_bot' target="_blank">botting</a> allowed.</p>
-<p>The staff can delete, ban, do whatever they want with your account and your <br>
-    submitted information. (Including exposing and logging your IP).</p>
+<p>The staff can delete, ban, do whatever they want with your account and your submitted information (including logging your IP and sharing personal information with authorities).</p>
+
+<h2><i class="glyphicon glyphicon-stats"></i> Statistics</h2>
+<table class="table table-striped">
+    <tr><td>Players online</td><td>{{info.players_online_count}}</td></tr>
+    <tr><td># of Players</td><td>{{info.players_count}}</td></tr>
+    <tr><td># of Accounts</td><td>{{info.accounts_count}}</td></tr>
+    <tr><td># of Players per Account</td><td>{{info.players_count / info.accounts_count | number: 2}}</td></tr>
+    <tr><td># of Guilds</td><td>{{info.guilds_count}}</td></tr>
+    <tr><td># of Players per Guild</td><td>{{info.players_count / info.guilds_count | number: 2}}</td></tr>
+    <tr><td># of Houses</td><td>{{info.houses_count}}</td></tr>
+    <tr><td># of Players per House</td><td>{{info.players_count / info.houses_count | number: 2}}</td></tr>
+</table>
+
+<h2><i class="glyphicon glyphicon-info-sign"></i> Extended server information</h2>
+<table class="table table-striped">
+    <tr><td>Server Name</td><td>{{info.serverName}}</td></tr>
+    <tr><td>IP</td><td>{{info.ip}}</td></tr>
+    <tr><td>Port</td><td>{{info.loginProtocolPort}}</td></tr>
+    <tr><td>World Type:</td><td>{{info.worldType | uppercase}}</td></tr>
+    <tr><td>Server Owner:</td><td>{{info.ownerName}}</td></tr>
+    <tr><td>Owner Email:</td><td>{{info.ownerEmail}}</td></tr>
+    <tr><td>Server Location:</td><td>{{info.location}}</td></tr>
+</table>
