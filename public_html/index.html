@@ -15,9 +15,7 @@
         body {
             margin-top: 70px;
             background-color: #333;
-            background-image: url(//i.imgur.com/rLcxYfc.png);
-            background-position-x: center;
-            background-repeat: no-repeat;
+            background-image: url(//i.imgur.com/4XIP7Ak.jpg);
         }
         .page-header {
             margin-top: 0;
@@ -58,16 +56,16 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div ng-controller="NavigationController" class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/about">About</a></li>
-                    <li><a href="#/players/online">Who is online?</a></li>
+                    <li><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
+                    <li><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
                     <li><a href="#/guilds">Guilds</a></li>
-                    <li><a href="#/houses">Houses</a></li>
+                    <li><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#/account">My account</a></li>
+                            <li><a href="#/account"><i class="glyphicon glyphicon-cog"></i> My account</a></li>
                             <li class="divider"></li>
                             <li><a ng-click="Logout()" href="javascript://">Logout</a></li>
                         </ul>
@@ -97,6 +95,10 @@
             <div class="col-sm-9 well well-lg" id="view" ng-view></div>
             
             <div class="col-sm-3" ng-controller="WidgetController">
+                <div class="well well-sm">
+                    <a href="#/players/online"><h3 class="text-center"><i class="glyphicon glyphicon-user"></i> {{info.players_online_count}} / {{info.maxPlayers}} online</h3></a>
+                </div>
+
                 <div ng-show="highExperience.length">
                     <form ng-submit="PlayerSearch()">
                         <div class="input-group">
