@@ -231,6 +231,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'url' => $DevAAC->tfsConfigFile['url'],
             'location' => $DevAAC->tfsConfigFile['location'],
             'motd' => $DevAAC->tfsConfigFile['motd'],
+            'houseRentPeriod' => $DevAAC->tfsConfigFile['houseRentPeriod'],
 
             // cache hint
             'timestamp' => new \DevAAC\Helpers\DateTime()
