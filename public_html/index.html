@@ -157,7 +157,7 @@
         <footer ng-controller="FooterController">
             <div class="row">
                 <div class="col-sm-12 well well-sm">
-                    <p>{{ info.serverName }} <span ng-if="info.serverOwner">by {{ info.serverOwner }}</span> | <a href="https://github.com/DevelopersPL/DevAAC" target="_blank">DevAAC</a> &copy; {{ year }} by developers.pl</p>
+                    <p>{{ info.serverName }} <span ng-if="info.ownerName">by <a href="{{info.url}}">{{ info.ownerName }}</a></span> | <a href="https://github.com/DevelopersPL/DevAAC" target="_blank">DevAAC</a> &copy; {{ year }} by developers.pl</p>
                 </div>
             </div>
         </footer>
