@@ -6,7 +6,8 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
 	});
 
     $routeProvider.when('/about', {
-        templateUrl: PageUrl('about')
+        templateUrl: PageUrl('about'),
+        controller: 'AboutController'
     });
 
     $routeProvider.when('/account/register', {

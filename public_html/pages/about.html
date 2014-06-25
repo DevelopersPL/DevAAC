@@ -29,3 +29,81 @@
     <tr><td>Owner Email:</td><td>{{info.ownerEmail}}</td></tr>
     <tr><td>Server Location:</td><td>{{info.location}}</td></tr>
 </table>
+
+<h2><i class="glyphicon glyphicon-dashboard"></i> Vocation Balance</h2>
+<table class="table table-striped text-center table-complex">
+<thead>
+    <th>Vocation</th>
+    <th colspan="2">Configuration</th>
+</thead>
+<tbody>
+    <tr ng-repeat="vocation in vocations">
+        <td>{{vocation.name}}</td>
+        <td>
+            <table class="table table-bordered table-condensed table-condensed">
+                <thead>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                </thead>
+                <tbody>
+                    <tr><td>Promoted from</td><td>{{(vocations | filter: {id: vocation.fromvoc})[0].name}}</td></tr>
+                    <tr><td>Attack Speed</td><td>{{vocation.attackspeed}}</td></tr>
+                    <tr><td>Base Speed</td><td>{{vocation.basespeed}}</td></tr>
+                    <tr><td>Max Soul</td><td>{{vocation.soulmax}}</td></tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered table-condensed table-condensed">
+                <thead>
+                <th>Type</th>
+                <th>Regeneration Speed</th>
+                </thead>
+                <tbody>
+                <tr><td>HP</td><td>{{vocation.gainhpamount}} HP / {{vocation.gainhpticks}} seconds</td></tr>
+                <tr><td>Mana</td><td>{{vocation.gainmanaamount}} MP / {{vocation.gainmanaticks}} seconds</td></tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered table-condensed table-condensed">
+                <thead>
+                <th>Type</th>
+                <th>Increase per level</th>
+                </thead>
+                <tbody>
+                <tr><td>HP</td><td>{{vocation.gainhp}} / level</td></tr>
+                <tr><td>Mana</td><td>{{vocation.gainmana}} / level</td></tr>
+                <tr><td>Cap</td><td>{{vocation.gaincap}} / level</td></tr>
+                </tbody>
+            </table>
+        </td>
+        <td>
+            <table class="table table-bordered table-condensed table-condensed">
+                <thead>
+                    <th>Attack/Defense</th>
+                    <th>Multiplier in hits/defense</th>
+                </thead>
+                <tbody>
+                    <tr><td>Melee Damage</td><td>{{vocation.formula.meleeDamage}}x</td></tr>
+                    <tr><td>Distance Damage</td><td>{{vocation.formula.distDamage}}x</td></tr>
+                    <tr><td>Defense</td><td>{{vocation.formula.defense}}x</td></tr>
+                    <tr><td>Armor</td><td>{{vocation.formula.armor}}x</td></tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered table-condensed table-responsive">
+                <thead>
+                    <th>Skill</th>
+                    <th>Multiplier in advances</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 0}"><td>Fist</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 1}"><td>Club</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 2}"><td>Sword</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 3}"><td>Axe</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 4}"><td>Distance</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 5}"><td>Shield</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr ng-repeat="skill in vocation.skill | filter: {id: 6}"><td>Fishing</td><td>{{skill.multiplier}}x</td></tr>
+                    <tr><td>Magic</td><td>{{vocation.manamultiplier}}x</td></tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>

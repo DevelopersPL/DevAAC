@@ -210,6 +210,12 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Playe
     }
 ]);
 
+DevAAC.controller('AboutController', ['$scope', 'Server',
+    function($scope, Server) {
+        $scope.vocations = Server.vocations();
+    }
+]);
+
 DevAAC.controller('PlayerController', ['$scope', '$location', '$routeParams', 'Player', 'Server', 'vocations',
     function($scope, $location, $routeParams, Player, Server, vocations) {
         Player.get({id: $routeParams.id}, function(playerInfo) {
