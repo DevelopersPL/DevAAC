@@ -336,6 +336,11 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
         array("options" => array("regexp" => "/^[a-zA-Z ]{5,20}$/"))) )
         throw new InputErrorException('Player name must have 5-20 characters, only letters and space.', 400);
 
+    if (filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
+          array('options' => array('regexp' => '/[Tutor|GM|God|CM|Admin]/i')))
+          && !$DevAAC->auth_account->isGameMaster())
+        throw new InputErrorException('Player name must not include GM/CM/God/Admin words.', 400);
+
     if( !in_array($req->getAPIParam('vocation'), unserialize(ALLOWED_VOCATIONS)) )
         throw new InputErrorException('Vocation is out of bounds.', 400);
 
