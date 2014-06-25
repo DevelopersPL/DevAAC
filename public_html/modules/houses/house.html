@@ -1,0 +1,14 @@
+<div>
+    <h1 class="page-header">House: <span ng-hide="house">Loading...</span>{{house.name}}</h1>
+    <div ng-show="house">
+        <ul>
+            <li>Size: {{house.size}}</li>
+            <li>Beds: {{house.beds}}</li>
+            <li ng-show="house.owner == 0">Owner: None</li>
+            <li ng-hide="house.owner == 0"><a href="#/players/{{player.name}}">{{player.name}}</a></li>
+            <li>Rent: {{house.rent}}</li>
+            <li>Town: {{house.town_id}}</li>
+        </ul>
+    </div>
+    <a href="#/houses">Go back</a>
+</div>
