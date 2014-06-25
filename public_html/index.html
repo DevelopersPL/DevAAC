@@ -96,7 +96,13 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-sm-9" ng-show="loadingView">TODO: LOADING</div>
+            <div class="col-sm-12" ng-show="loadingView">
+                <div class="progress progress-striped active">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                        L O A D I N G
+                    </div>
+                </div>
+            </div>
 
             <div class="col-sm-9 well well-lg" id="view" ng-view></div>
             
