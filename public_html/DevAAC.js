@@ -5,9 +5,7 @@ function PageUrl(module) {
 }
 function ApiUrl(link) {
     // window.location.origin is better (includes port) but is not supported in IE
-    var dev = true;
-    if (dev) return 'http://devots.dondaniello.com/' + '/api/v1/' + link;
-    else return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
+    return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
 }
 
 var Cookie = {
