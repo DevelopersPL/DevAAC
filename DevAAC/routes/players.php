@@ -293,7 +293,7 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/players/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($player->account->id != !$DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
+    if($player->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to delete this player.', 403);
 
     $player->delete();
