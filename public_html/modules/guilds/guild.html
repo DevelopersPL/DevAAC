@@ -1,0 +1,31 @@
+<div ng-if="!guild"><h1 class="page-header">Loading...</h1></div>
+<div ng-if="guild">
+    <h1 class="page-header">Guild: {{guild.name}}</h1>
+    <p>{{guild.motd}}</p>
+    <table class="table table-striped" ng-show="guilds.length">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Vocation</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="player in players">
+                <td>player.Rank</td>
+                <td>player.Name</td>
+                <td>player.Level</td>
+                <td>player.Vocation</td>
+                <td>player.Status</td>
+                <!--
+                <td>{{ guild.name }}</td>
+                <td><a href="#/players/{{ guild.ownerid }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}})</td>
+                <td>{{ guild.creationdata | date: fullDate }}</td>
+                -->
+            </tr>
+        </tbody>
+    </table>
+    <p>Guild was created: {{guild.created}}</p>
+</div>
