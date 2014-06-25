@@ -175,5 +175,44 @@
     <!-- Classes, Models, Objects you use in controllers -->
     <script src="factories.js"></script>
     <script src="controllers.js"></script>
+
+    <!-- Installed Modules. 
+            - TODO: Autogenerate it so people don't have to manually add them 
+    -->
+    <script src="modules/header/header.js"></script>
+    <script src="modules/navigation/navigation.js"></script>
+    <script src="modules/footer/footer.js"></script>
+    <script src="modules/main/main.js"></script>
+    <script src="modules/widget/widget.js"></script>
+
+    <script src="modules/news/news.js"></script>
+    <script src="modules/account/account.js"></script>
+    <script src="modules/guilds/guilds.js"></script>
+    <script src="modules/houses/houses.js"></script>
+    <script src="modules/players/players.js"></script>
+    <script src="modules/about/about.js"></script>
+    <script src="modules/404/404.js"></script>
+
+
+    <!-- Autoloading Angular Modules PHP sample
+    <?php
+    $directory = 'modules';
+    $angularStructure = array();
+    $iterator = new DirectoryIterator($directory);
+    foreach($iterator as $entity) {
+        $iterator = new DirectoryIterator($entity->getPathname());
+        foreach($iterator as $entity) {
+            if($entity->isFile()) {
+                $file_extension = pathinfo($entity->getFilename(), PATHINFO_EXTENSION);
+                if ($file_extension == 'js') {
+                    $angularStructure[] = $entity->getPathname();
+                    echo "<script src='".$entity->getPathname()."'></script>";
+                }
+            }
+        }
+    }
+    // Verify that it works.
+    echo '<h1>Autoloaded modules:</h1> <br> <pre>', print_r($angularStructure), '</pre>';
+    ?>-->
 </body>
 </html>

@@ -1,9 +1,13 @@
-function PageUrl(page) {
-	return 'pages/' + page + '.html';
+function PageUrl(module) {
+    module = module.split('/');
+    if (module.length == 1) return 'modules/' + module[0] + '/' + module[0] + '.html';
+    else return 'modules/' + module[0] + '/' + module[1] + '.html';
 }
 function ApiUrl(link) {
     // window.location.origin is better (includes port) but is not supported in IE
-	return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
+    var dev = true;
+    if (dev) return 'http://devots.dondaniello.com/' + '/api/v1/' + link;
+    else return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
 }
 
 var Cookie = {
