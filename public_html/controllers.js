@@ -14,6 +14,10 @@ DevAAC.controller('NavigationController', ['$scope', '$location', 'Account',
             password: ''
         };
 
+        $scope.isActive = function(route) {
+            return route === $location.path();
+        }
+
         $scope.isLoggedIn = function() {
             return Cookie.get('DevAACToken');
         };
@@ -256,8 +260,8 @@ DevAAC.controller('HousesController', ['$scope', 'House', 'Player',
             $scope.loaded = true;
         });
 
-        $scope.order = 'name';
-        $scope.orderReverse = false;
+        $scope.order = 'size';
+        $scope.orderReverse = true;
         $scope.players = [];
 
         $scope.player = function(id) {

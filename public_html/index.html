@@ -59,10 +59,10 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div ng-controller="NavigationController" class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
-                    <li><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
-                    <li><a href="#/guilds"><i class="glyphicon glyphicon-link"></i> Guilds</a></li>
-                    <li><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
+                    <li ng-class="{active:isActive('/about')}"><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
+                    <li ng-class="{active:isActive('/players/online')}"><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
+                    <li ng-class="{active:isActive('/guilds')}"><a href="#/guilds"><i class="glyphicon glyphicon-link"></i> Guilds</a></li>
+                    <li ng-class="{active:isActive('/houses')}"><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
                     <li class="dropdown">
