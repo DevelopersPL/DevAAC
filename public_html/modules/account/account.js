@@ -125,3 +125,43 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Playe
         }
     }
 ]);
+
+// Module Factories(s)
+DevAAC.factory('Account', ['$http', '$resource', '$cacheFactory',
+    function($http, $resource, $cacheFactory) {
+        var token;
+
+        return {
+            generateToken: function(username, password) {
+                var p = new jsSHA(password, 'TEXT');
+                return btoa(username + ':' + p.getHash('SHA-1', 'HEX'));
+            },
+            register: function(account) {
+                return this.factory.save(account, function (data, status) {
+                    Cookie.set('DevAACToken', this.generateToken(account.name, account.password), 7);
+                });
+            },
+            authenticate: function(account, password) {
+                token = this.generateToken(account, password);
+                return $http({
+                    url: ApiUrl('accounts/my'),
+                    method: 'GET',
+                    headers: { Authorization: 'Basic ' + token }
+                })
+                .success(function (data, status) {
+                    Cookie.set('DevAACToken', token, 7);
+                });
+            },
+            logout: function() {
+                Cookie.set('DevAACToken', '', 1);
+                $cacheFactory.get('$http').removeAll();
+            },
+            factory: $resource(ApiUrl('accounts/:id'), {}, {
+                my: { params: {id: 'my'}, cache: true },
+                get: { cache: true },
+                query: { isArray: true, cache: true },
+                update: { method: 'PUT' }
+            })
+        }
+    }
+]);

@@ -28,3 +28,13 @@ DevAAC.controller('HousesController', ['$scope', 'House', 'Player',
         }
     }
 ]);
+
+// Module Factories(s)
+DevAAC.factory('House', ['$resource',
+    function($resource){
+        return $resource(ApiUrl('houses/:guildId'), {}, {
+            get: { cache: true },
+            query: { isArray: true, cache: true }
+        });
+    }
+]);

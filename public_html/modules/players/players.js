@@ -49,3 +49,15 @@ DevAAC.controller('OnlineController', ['$scope', 'Player', 'Server', 'vocations'
         };
     }
 ]);
+
+// Module Factories(s)
+DevAAC.factory('Player', ['$resource',
+    function($resource) {
+        return $resource(ApiUrl('players/:id'), {}, {
+            get: { cache: true },
+            queryOnline: { params: {id: 'online', embed: 'player'}, isArray: true, cache: true },
+            highExperience: { params: {sort: '-experience', limit: 5}, isArray: true, cache: true },
+            my: { url: ApiUrl('accounts/my/players'), isArray: true, cache: true }
+        });
+    }
+]);

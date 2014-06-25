@@ -12,3 +12,13 @@ DevAAC.controller('GuildsController', ['$scope', 'Guild',
         $scope.guilds = Guild.query({embed: 'owner'});
     }
 ]);
+
+// Module Factories(s)
+DevAAC.factory('Guild', ['$resource',
+    function($resource){
+        return $resource(ApiUrl('guilds/:guildId'), {}, {
+            get: { cache: true },
+            query: { isArray: true, cache: true }
+        });
+    }
+]);

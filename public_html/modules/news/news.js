@@ -45,3 +45,13 @@ DevAAC.controller('NewsController', ['$scope', 'News', 'StatusMessage',
         };
     }
 ]);
+
+// Module Factories(s)
+DevAAC.factory('News', ['$resource',
+    function($resource){
+        return $resource(ApiUrl('news'), {}, {
+            get: { cache: true },
+            query: { isArray: true, cache: true }
+        });
+    }
+]);
