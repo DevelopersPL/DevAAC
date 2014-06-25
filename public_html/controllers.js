@@ -1,1 +1,0 @@
-// This is now modular, check the relevant controllers in the respective moduleName.js file in modules/module folder.
