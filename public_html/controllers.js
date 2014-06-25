@@ -213,6 +213,7 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Playe
 DevAAC.controller('AboutController', ['$scope', 'Server',
     function($scope, Server) {
         $scope.vocations = Server.vocations();
+        $scope.config = Server.config();
     }
 ]);
 

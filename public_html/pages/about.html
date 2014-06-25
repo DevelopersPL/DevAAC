@@ -9,7 +9,8 @@
 
 <h2><i class="glyphicon glyphicon-stats"></i> Statistics</h2>
 <table class="table table-striped">
-    <tr><td>Players online</td><td>{{info.players_online_count}}</td></tr>
+    <tr><td>Players Online</td><td>{{info.players_online_count}}</td></tr>
+    <tr><td>Record of Players Online</td><td>{{(config | filter: {config: 'players_record'})[0].value}}</td></tr>
     <tr><td># of Players</td><td>{{info.players_count}}</td></tr>
     <tr><td># of Accounts</td><td>{{info.accounts_count}}</td></tr>
     <tr><td># of Players per Account</td><td>{{info.players_count / info.accounts_count | number: 2}}</td></tr>
@@ -17,6 +18,7 @@
     <tr><td># of Players per Guild</td><td>{{info.players_count / info.guilds_count | number: 2}}</td></tr>
     <tr><td># of Houses</td><td>{{info.houses_count}}</td></tr>
     <tr><td># of Players per House</td><td>{{info.players_count / info.houses_count | number: 2}}</td></tr>
+    <tr><td># of MOTDs</td><td>{{(config | filter: {config: 'motd_num'})[0].value}}</td></tr>
 </table>
 
 <h2><i class="glyphicon glyphicon-info-sign"></i> Extended server information</h2>
