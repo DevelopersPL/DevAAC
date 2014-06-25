@@ -91,3 +91,10 @@ DevAAC.filter('markdown', function($sce) {
             return $sce.trustAsHtml(converter.makeHtml(input))
     };
 });
+
+DevAAC.filter('capitalize', function () {
+    "use strict";
+    return function (input) {
+        return input.charAt(0).toUpperCase() + input.slice(1);
+    };
+});
