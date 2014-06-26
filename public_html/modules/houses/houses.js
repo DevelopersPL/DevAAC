@@ -13,14 +13,30 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
 // Module Controller(s)
 DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams', '$location',
     function($scope, House, Player, $routeParams, $location) {
+        $scope.isloggedin = false;
+
+        $scope.players = Player.my({}, function(players) {
+            $scope.isloggedin = true;
+
+        }, function(response) {
+            
+            if (response.status === 404) {
+                $scope.player = {
+                    name: '[Deleted Player]'
+                }
+            }
+        });
         House.get({houseId: $routeParams.id}, function(house) {
             $scope.house = house;
+            // Fetch house owner
             if (house.owner > 0) {
                 $scope.player = {
                     name: 'Loading...'
                 }
+
                 Player.get({id:house.owner}, function(player) {
                     $scope.player.name = player.name;
+
                 }, function(response) {
                     if (response.status === 404) {
                         $scope.player = {
@@ -29,6 +45,13 @@ DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams
                     }
                 });
             }
+            // Fetch higher bidder
+            if (house.highest_bidder > 0) {
+                Player.get({id:house.highest_bidder}, function(player) {
+                    $scope.house.bidder_name = player.name;
+                });
+            }
+
         }, function (response) {
             if (response.status === 404) {
                 $location.path('/houses');

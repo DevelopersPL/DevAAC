@@ -2,13 +2,35 @@
     <h1 class="page-header">House: <span ng-hide="house">Loading...</span>{{house.name}}</h1>
     <div ng-show="house">
         <ul>
-            <li>Size: {{house.size}}</li>
+            <li>Size: {{house.size}} sqm</li>
             <li>Beds: {{house.beds}}</li>
             <li ng-show="house.owner == 0">Owner: None</li>
             <li ng-hide="house.owner == 0"><a href="#/players/{{player.name}}">{{player.name}}</a></li>
             <li>Rent: {{house.rent}}</li>
             <li>Town: {{house.town_id}}</li>
         </ul>
+
+        <div ng-if="house.owner == 0">
+            <h3>This house is available for auction.</h3>
+            <p>
+                <b>Current bid:</b> {{house.bid}} gp<br>
+                <b>By:</b> 
+                <span ng-show="house.highest_bidder == 0">None</span>
+                <span ng-hide="house.highest_bidder == 0"><a href="#/players/{{house.bidder_name}}">{{house.bidder_name}}</a></span>
+                <br>
+            </p>
+
+            <!-- Bidding -->
+            <div ng-show="isloggedin">
+                Select player: 
+                <select>
+                    <option ng-repeat="player in players" id="{{player.id}}">{{player.name}} [{{player.balance}}]</option>
+                </select>
+                Bid this ammount: <input type="text" placeholder="1000"> gp. 
+                <button class="btn btn-success disabled">Create bid</button>
+            </div>
+            <div ng-hide="isloggedin"><p>You need to be logged in to bid on houses.</p></div>
+        </div>
     </div>
     <a href="#/houses">Go back</a>
 </div>
