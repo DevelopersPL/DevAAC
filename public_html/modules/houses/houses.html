@@ -33,7 +33,7 @@
         </thead>
         <tbody>
             <tr ng-repeat="house in houses | orderBy: order : orderReverse">
-                <td>{{ house.name }}</td>
+                <td><a href="#/houses/{{house.id}}">{{ house.name }}</a></td>
                 <td>{{ house.town_id }}</td>
                 <td>{{ house.size }}</td>
                 <td>{{ house.rent | number }} gp</td>
