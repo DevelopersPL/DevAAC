@@ -125,8 +125,8 @@ $capsule->addConnection([
     'database'  => $DevAAC->tfsConfigFile['mysqlDatabase'],
     'username'  => $DevAAC->tfsConfigFile['mysqlUser'],
     'password'  => $DevAAC->tfsConfigFile['mysqlPass'],
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
+    'charset'   => 'latin1',
+    'collation' => 'latin1_swedish_ci',
     'prefix'    => '',
 ]);
 if (strpos($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION), 'mysqlnd') === false)

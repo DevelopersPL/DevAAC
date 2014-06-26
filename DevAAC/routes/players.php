@@ -183,6 +183,11 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id/deaths', function($id) use($DevAAC)
  *      method="GET",
  *      type="array[Player]",
  *      nickname="getPlayers",
+ *      @SWG\Parameter( name="q",
+ *                      description="Part of the name of players to search for",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string"),
  *      @SWG\Parameter( name="sort",
  *                      description="The field or fields (separated by comma) to sort by ascending, specify -field to sort descending, e.g.: ?sort=level,-skill_fist",
  *                      paramType="query",
@@ -214,6 +219,12 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
     // for field validation - it's not the best way ;/
     $tmp = new Player();
     $visible = $tmp->getVisibleFields();
+
+    // support ?q=partialname
+    if($req->get('q'))
+    {
+        $players->where('name', 'LIKE', '%'.$req->get('q').'%');
+    }
 
     // support ?sort=level,-skill_club
     if($req->get('sort'))
