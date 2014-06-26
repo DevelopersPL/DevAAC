@@ -35,7 +35,7 @@ namespace DevAAC\Models;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['player_id','guild_id', 'rank_id', 'nick']")
+ * @SWG\Model(required="['player_id','guild_id','rank_id','nick']")
  */
 class GuildMembership extends \Illuminate\Database\Eloquent\Model {
     /**
@@ -45,9 +45,11 @@ class GuildMembership extends \Illuminate\Database\Eloquent\Model {
      * @SWG\Property(name="nick", type="string")
      */
 
+    protected $table = 'guild_membership';
+
     public $timestamps = false;
 
-    protected $primaryKey = null;
+    protected $primaryKey = 'player_id';
 
     public $incrementing = false;
 
