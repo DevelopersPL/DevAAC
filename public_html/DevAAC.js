@@ -29,7 +29,7 @@ var Cookie = {
 };
 
 // Initiate DevAAC
-var DevAAC = angular.module('DevAAC', ['ngRoute', 'ngResource']);
+var DevAAC = angular.module('DevAAC', ['ngRoute', 'ngResource', 'ui.bootstrap']);
 
 DevAAC.run(['$rootScope', '$location', 'StatusMessage', function($rootScope, $location, StatusMessage) {
     $rootScope.$on('$routeChangeStart', function(e, curr, prev) {

@@ -12,3 +12,7 @@ Do not CASCADE DELETE.
 Do not CASCADE DELETE.
 
 * Rename ```creationdata``` column to ```created_at``` in ```guilds``` table.
+
+* Change collation from default/unspecified to utf8_unicode_ci/latin2. Not useful for Tibia Client but OTClient supports ISO/latin2.
+
+* Put bug reports into database.

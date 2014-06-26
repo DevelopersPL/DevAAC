@@ -29,6 +29,8 @@
         footer {
             margin: 50px 0;
         }
+        /* Angular UI */
+        .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
     </style>
     <!-- AngularJS -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
@@ -38,6 +40,8 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <!-- Bootstrap UI -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
     <!-- Moment.js -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
     <!-- Underscore.js -->
@@ -112,9 +116,14 @@
                 </div>
 
                 <div ng-show="highExperience.length">
-                    <form ng-submit="PlayerSearch()">
+                    <form ng-submit="goToPlayer()">
                         <div class="input-group">
-                            <input type="text" class="form-control" ng-model="search" required placeholder="Find Player...">
+                            <div class="input-group-addon">
+                                <i ng-hide="searchLoading" class="glyphicon glyphicon-hand-right"></i>
+                                <i ng-show="searchLoading" class="glyphicon glyphicon-refresh"></i>
+                            </div>
+                            <input type="text" class="form-control" ng-model="search" required placeholder="Find Player..."
+                                   typeahead="player.name for player in findPlayers($viewValue)" typeahead-on-select="goToPlayer($label)" typeahead-loading="searchLoading">
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-default" type="button">
                                     <span class="glyphicon glyphicon-search"></span>
@@ -122,8 +131,8 @@
                             </span>
                         </div>
                     </form>
-                    <p class="bg-danger">{{searchMessage}}</p>
-                    <!-- /input-group -->
+                    <br />
+                    <div ng-if="searchError" class="alert alert-danger alert-dismissable">{{searchError}}</div>
                 </div>
 
                 <div ng-show="highExperience.length" class="well well-sm">
