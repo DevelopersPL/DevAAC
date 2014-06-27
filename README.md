@@ -31,7 +31,7 @@ Installation (dev release)
 * [Get composer](https://getcomposer.org/download) ```curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin```
 * Clone this repo: ```git clone https://github.com/DevelopersPL/DevAAC.git```
 * Install dependencies: ```composer.phar install```
-* Set up your web server to serve DevAAC/public_html as document root
+* Set up your web server to serve DevAAC/public_html as document root and [required rewrites](https://github.com/DevelopersPL/DevAAC/wiki)
 * Rename ```config.sample.php``` to ```config.php``` and follow instructions
 
 REST API
