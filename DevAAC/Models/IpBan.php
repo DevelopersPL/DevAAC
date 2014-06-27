@@ -68,12 +68,12 @@ class IpBan extends \Illuminate\Database\Eloquent\Model {
 
     public function getIpAttribute()
     {
-        return long2ip((float)$this->attributes['ip']);
+        return long2ip(chbo($this->attributes['ip']));
     }
 
     public function setIpAttribute($ip)
     {
-        $this->attributes['ip'] = ip2long($ip);
+        $this->attributes['ip'] = chbo(ip2long($ip));
     }
 
     public function getBannedAtAttribute()
