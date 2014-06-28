@@ -12,7 +12,7 @@
         <tbody>
             <tr ng-repeat="guild in guilds">
                 <td><a href="#/guilds/{{ guild.name }}">{{ guild.name }}</a></td>
-                <td><a href="#/players/{{ guild.ownerid }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}})</td>
+                <td><a href="#/players/{{ guild.owner.name }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}})</td>
                 <td>{{ guild.creationdata | date: fullDate }}</td>
             </tr>
         </tbody>

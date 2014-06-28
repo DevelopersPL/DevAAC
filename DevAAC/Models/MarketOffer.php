@@ -35,40 +35,46 @@ namespace DevAAC\Models;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['player_id','guild_id','rank_id','nick']")
+ * @SWG\Model(required="['id','player_id','sale','itemtype','amount','created','anonymous','price']")
  */
-class GuildMembership extends \Illuminate\Database\Eloquent\Model {
+class MarketOffer extends \Illuminate\Database\Eloquent\Model {
     /**
+     * @SWG\Property(name="id", type="integer")
      * @SWG\Property(name="player_id", type="integer")
-     * @SWG\Property(name="guild_id", type="integer")
-     * @SWG\Property(name="rank_id", type="integer")
-     * @SWG\Property(name="nick", type="string")
+     * @SWG\Property(name="sale", type="boolean")
+     * @SWG\Property(name="itemtype", type="integer")
+     * @SWG\Property(name="amount", type="integer")
+     * @SWG\Property(name="created", type="DateTime::ISO8601")
+     * @SWG\Property(name="anonymous", type="boolean")
+     * @SWG\Property(name="price", type="integer")
      */
 
-    protected $table = 'guild_membership';
+    protected $table = 'market_history';
 
     public $timestamps = false;
 
-    protected $primaryKey = 'player_id';
-
     public $incrementing = false;
-
-    protected $attributes = array(
-        'nick' => ''
-    );
 
     public function player()
     {
         return $this->belongsTo('DevAAC\Models\Player');
     }
 
-    public function guild()
+    public function getCreatedAttribute()
     {
-        return $this->belongsTo('DevAAC\Models\Guild');
+        $date = new DateTime();
+        $date->setTimestamp($this->attributes['created']);
+        return $date;
     }
 
-    public function rank()
+    public function setCreatedAttribute($d)
     {
-        return $this->belongsTo('DevAAC\Models\GuildRank');
+        if($d instanceof \DateTime)
+            $this->attributes['created'] = $d->getTimestamp();
+        elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['created'] = $dt->getTimestamp();
+        } else // it is a UNIX timestamp
+            $this->attributes['created'] = $d;
     }
 }

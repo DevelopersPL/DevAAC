@@ -31,67 +31,34 @@
 
 namespace DevAAC\Models;
 
-use DevAAC\Helpers\DateTime;
-
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['ip','reason','expires_at','banned_by']")
+ * @SWG\Model(required="['id','player_id','sale','itemtype','amount','price','expires_at','inserted','state']")
  */
-class IpBan extends \Illuminate\Database\Eloquent\Model {
+class MarketHistory extends \Illuminate\Database\Eloquent\Model {
     /**
-     * @SWG\Property(name="ip", type="string")
-     * @SWG\Property(name="reason", type="string")
-     * @SWG\Property(name="banned_at", type="DateTime::ISO8601")
+     * @SWG\Property(name="id", type="integer")
+     * @SWG\Property(name="player_id", type="integer")
+     * @SWG\Property(name="sale", type="boolean")
+     * @SWG\Property(name="itemtype", type="integer")
+     * @SWG\Property(name="amount", type="integer")
+     * @SWG\Property(name="price", type="integer")
      * @SWG\Property(name="expires_at", type="DateTime::ISO8601")
-     * @SWG\Property(name="banned_by", type="integer")
+     * @SWG\Property(name="inserted", type="DateTime::ISO8601")
+     * @SWG\Property(name="state", type="integer")
      */
-    public $timestamps = false;
 
-    protected $primaryKey = 'ip';
+    protected $table = 'market_history';
+
+    public $timestamps = false;
 
     public $incrementing = false;
 
-    protected $guarded = array();
-
-    // See this: https://github.com/laravel/framework/issues/3762
-    public function getKey()
+    public function player()
     {
-        return $this->attributes['ip'];
-    }
-
-    public function bannedBy()
-    {
-        return $this->belongsTo('DevAAC\Models\Player', 'banned_by');
-    }
-
-    public function getIpAttribute()
-    {
-        return long2ip(chbo($this->attributes['ip']));
-    }
-
-    public function setIpAttribute($ip)
-    {
-        $this->attributes['ip'] = chbo(ip2long($ip));
-    }
-
-    public function getBannedAtAttribute()
-    {
-        $date = new DateTime();
-        $date->setTimestamp($this->attributes['banned_at']);
-        return $date;
-    }
-
-    public function setBannedAtAttribute($d)
-    {
-        if($d instanceof \DateTime)
-            $this->attributes['banned_at'] = $d->getTimestamp();
-        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
-            $dt = new DateTime($d);
-            $this->attributes['banned_at'] = $dt->getTimestamp();
-        } else // it is a UNIX timestamp
-            $this->attributes['banned_at'] = $d;
+        return $this->belongsTo('DevAAC\Models\Player');
     }
 
     public function getExpiresAtAttribute()
@@ -110,5 +77,23 @@ class IpBan extends \Illuminate\Database\Eloquent\Model {
             $this->attributes['expires_at'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['expires_at'] = $d;
+    }
+
+    public function getInsertedAttribute()
+    {
+        $date = new DateTime();
+        $date->setTimestamp($this->attributes['inserted']);
+        return $date;
+    }
+
+    public function setInsertedAttribute($d)
+    {
+        if($d instanceof \DateTime)
+            $this->attributes['inserted'] = $d->getTimestamp();
+        elseif((int) $d != (string) $d) { // it's not a UNIX timestamp
+            $dt = new DateTime($d);
+            $this->attributes['inserted'] = $dt->getTimestamp();
+        } else // it is a UNIX timestamp
+            $this->attributes['inserted'] = $d;
     }
 }

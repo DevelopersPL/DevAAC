@@ -72,13 +72,23 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses', function() use($DevAAC) {
  *                      paramType="path",
  *                      required=true,
  *                      type="integer"),
+ *      @SWG\Parameter( name="embed",
+ *                      description="Pass lists to embed an array of list objects",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string list separated by comma"),
  *      @SWG\ResponseMessage(code=404, message="House not found")
  *    )
  *  )
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
     $house = House::findOrFail($id);
+
+    if ($req->get('embed') == 'lists')
+        $house->lists;
+
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($house->toJson(JSON_PRETTY_PRINT));
 });
@@ -144,7 +154,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
  *      @SWG\ResponseMessage(code=402, message="Not enough money in player's bank"),
  *      @SWG\ResponseMessage(code=403, message="Player not on authenticated account"),
  *      @SWG\ResponseMessage(code=404, message="House not found / player not found"),
- *      @SWG\ResponseMessage(code=405, message="Exceeded limit of houses per player/acount"),
+ *      @SWG\ResponseMessage(code=405, message="Exceeded limit of houses per player/account"),
  *      @SWG\ResponseMessage(code=409, message="The bid is too low"),
  *      @SWG\ResponseMessage(code=410, message="Auction has ended"),
  *      @SWG\ResponseMessage(code=412, message="House not on auction")
@@ -184,9 +194,15 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     if($player->balance < $request->getAPIParam('bid') + $house->rent)
         throw new InputErrorException('You do not have enough money! You need the bid amount plus '.$house->rent.' for first rent payment.', 402);
 
-    $house->highest_bidder = $player->id; // this would break JSON output: $house->highestBidder()->associate($player);
-    $house->bid = $request->getAPIParam('bid');
-    $house->last_bid = new DateTime();
+    if ($request->getAPIParam('bid') > $house->last_bid)
+    { // this is a winning bid, it is over previous winner's limit
+        $house->highest_bidder = $player->id; // this would break JSON output: $house->highestBidder()->associate($player);
+        $house->bid = $house->last_bid + 1;
+        $house->last_bid = $request->getAPIParam('bid');
+    } elseif ($request->getAPIParam('bid') < $house->last_bid)
+    { // this raises previous bid
+        $house->bid = $request->getAPIParam('bid') + 1;
+    }
 
     if($house->bid_end === 0)
     {

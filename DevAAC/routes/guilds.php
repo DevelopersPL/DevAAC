@@ -31,6 +31,7 @@
 
 use DevAAC\Models\Guild;
 use DevAAC\Models\GuildWar;
+use DevAAC\Models\GuildMembership;
 
 /**
  * @SWG\Resource(
@@ -155,12 +156,19 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars', function() use($DevAAC) {
  *                      paramType="path",
  *                      required=true,
  *                      type="integer/string"),
+ *      @SWG\Parameter( name="embed",
+ *                      description="Pass a combination of owner, members, invitations and/or ranks to embed",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string list separated by comma"),
  *      @SWG\ResponseMessage(code=404, message="Guild not found")
  *    )
  *  )
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+
     try {
         $guild = Guild::findOrFail($id);
     } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -168,6 +176,21 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id', function($id) use($DevAAC) {
         if(!$guild)
             throw $e;
     }
+
+    $embedded = explode(',', $req->get('embed'));
+
+    if (in_array('owner', $embedded))
+        $guild->owner;
+
+    if (in_array('members', $embedded))
+        $guild->members;
+
+    if (in_array('invitations', $embedded))
+        $guild->invitations;
+
+    if (in_array('ranks', $embedded))
+        $guild->ranks;
+
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($guild->toJson(JSON_PRETTY_PRINT));
 });
@@ -204,4 +227,118 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/invitations', function($id) use($Dev
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($guild->invitations->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id/name}/members",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get guild members by guild ID or name",
+ *      method="GET",
+ *      type="Player",
+ *      nickname="getGuildMembersByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Guild which members needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer/string"),
+ *      @SWG\ResponseMessage(code=404, message="Guild not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/members', function($id) use($DevAAC) {
+    try {
+        $guild = Guild::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $guild = Guild::where('name', $id)->first();
+        if(!$guild)
+            throw $e;
+    }
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guild->members->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id}/memberships",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get guild memberships by guild ID",
+ *      method="GET",
+ *      type="GuildMembership",
+ *      nickname="getGuildMembershipsByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Guild which memberships needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="embed",
+ *                      description="Pass a combination of player, rank and/or guild to embed",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string list separated by comma"),
+ *      @SWG\ResponseMessage(code=404, message="Guild not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/memberships', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+    $memberships = GuildMembership::where('guild_id', $id);
+
+    $embedded = explode(',', $req->get('embed'));
+
+    if (in_array('player', $embedded))
+        $memberships->with('player');
+
+    if (in_array('rank', $embedded))
+        $memberships->with('rank');
+
+    if (in_array('guild', $embedded))
+        $memberships->with('guild');
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($memberships->get()->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id/name}/ranks",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get guild ranks by guild ID or name",
+ *      method="GET",
+ *      type="array[GuildRank]",
+ *      nickname="getGuildRanksByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Guild which ranks needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer/string"),
+ *      @SWG\ResponseMessage(code=404, message="Guild not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/ranks', function($id) use($DevAAC) {
+    try {
+        $guild = Guild::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $guild = Guild::where('name', $id)->first();
+        if(!$guild)
+            throw $e;
+    }
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guild->ranks->toJson(JSON_PRETTY_PRINT));
 });

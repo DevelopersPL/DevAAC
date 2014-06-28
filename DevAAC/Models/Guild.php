@@ -37,7 +37,7 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['name','ownerid', 'creationdata', 'motd']")
+ * @SWG\Model(required="['name','ownerid','creationdata','motd']")
  */
 class Guild extends \Illuminate\Database\Eloquent\Model {
     /**
@@ -81,11 +81,21 @@ class Guild extends \Illuminate\Database\Eloquent\Model {
 
     public function members()
     {
-        return $this->hasManyThrough('DevAAC\Models\Player', 'DevAAC\Models\GuildMembership');
+        return $this->hasManyThrough('DevAAC\Models\Player', 'DevAAC\Models\GuildMembership', 'guild_id', 'id');
+    }
+
+    public function memberships()
+    {
+        return $this->hasMany('DevAAC\Models\GuildMembership');
     }
 
     public function invitations()
     {
         return $this->hasMany('DevAAC\Models\GuildInvite');
+    }
+
+    public function ranks()
+    {
+        return $this->hasMany('DevAAC\Models\GuildRank');
     }
 }

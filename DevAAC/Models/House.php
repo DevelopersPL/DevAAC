@@ -37,7 +37,7 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['id','owner','paid','warnings','name','rent','town_id','bid','bind_end','last_bid','highest_bidder','size','beds']")
+ * @SWG\Model(required="['id','owner','paid','warnings','name','rent','town_id','bid','bid_end','highest_bidder','size','beds']")
  */
 class House extends \Illuminate\Database\Eloquent\Model {
     /**
@@ -50,7 +50,7 @@ class House extends \Illuminate\Database\Eloquent\Model {
      * @SWG\Property(name="town_id", type="integer")
      * @SWG\Property(name="bid", type="integer")
      * @SWG\Property(name="bid_end", type="DateTime::ISO8601")
-     * @SWG\Property(name="last_bid", type="DateTime::ISO8601")
+     * @SWG\Property(name="last_bid", type="integer")
      * @SWG\Property(name="highest_bidder", type="integer")
      * @SWG\Property(name="size", type="integer")
      * @SWG\Property(name="beds", type="integer")
@@ -58,6 +58,8 @@ class House extends \Illuminate\Database\Eloquent\Model {
     public $timestamps = false;
 
     protected $guarded = array('id');
+
+    protected $hidden = array('last_bid');
 
     public function owner()
     {
@@ -104,27 +106,6 @@ class House extends \Illuminate\Database\Eloquent\Model {
             $this->attributes['bid_end'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
             $this->attributes['bid_end'] = $d;
-    }
-
-    public function getLastBidAttribute()
-    {
-        if($this->attributes['last_bid'] === 0)
-            return 0;
-
-        $date = new DateTime();
-        $date->setTimestamp($this->attributes['last_bid']);
-        return $date;
-    }
-
-    public function setLastBidAttribute($d)
-    {
-        if($d instanceof \DateTime)
-            $this->attributes['last_bid'] = $d->getTimestamp();
-        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
-            $dt = new DateTime($d);
-            $this->attributes['last_bid'] = $dt->getTimestamp();
-        } else // it is a UNIX timestamp
-            $this->attributes['last_bid'] = $d;
     }
 
     public function highestBidder()
