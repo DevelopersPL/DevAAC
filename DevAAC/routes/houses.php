@@ -185,10 +185,10 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     if($player->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to bid with this player.', 403);
 
-    if( count($player->houses()->get()->toArray()) + count($player->houseBids()->get()->toArray()) >= HOUSES_PER_PLAYER )
+    if( $house->highest_bidder != $player->id && count($player->houses()->get()->toArray()) + count($player->houseBids()->get()->toArray()) >= HOUSES_PER_PLAYER )
         throw new InputErrorException('Your player already owns or participates in an auction for a maximum number of houses ('.HOUSES_PER_PLAYER.')!', 405);
 
-    if( count($player->account->houses()->get()->toArray()) + count($player->account->houseBids()->get()->toArray()) >= HOUSES_PER_ACCOUNT )
+    if( $house->highest_bidder != $player->id && count($player->account->houses()->get()->toArray()) + count($player->account->houseBids()->get()->toArray()) >= HOUSES_PER_ACCOUNT )
         throw new InputErrorException('Your account already owns or participates in an auction for a maximum number of houses ('.HOUSES_PER_ACCOUNT.')!', 405);
 
     if($player->balance < $request->getAPIParam('bid') + $house->rent)

@@ -205,8 +205,10 @@ $DevAAC->delete(ROUTES_API_PREFIX.'/server/ipBans/:ip', function($ip) use($DevAA
  * )
  */
 $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
-    $result = apc_fetch('server_info');
-    if(!$result)
+    if(HAS_APC)
+        $result = apc_fetch('server_info');
+
+    if(!HAS_APC || !$result)
     {
         $result = array(
             'players_online_count' => Capsule::table('players_online')->count(),
@@ -237,7 +239,9 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'timestamp' => new \DevAAC\Helpers\DateTime()
 
         );
-        apc_store('server_info', $result, 60);
+
+        if(HAS_APC)
+            apc_store('server_info', $result, 60);
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody(json_encode($result, JSON_PRETTY_PRINT));

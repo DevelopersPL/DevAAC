@@ -175,6 +175,149 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players/:id/deaths', function($id) use($DevAAC)
  *  basePath="/api/v1",
  *  resourcePath="/players",
  *  @SWG\Api(
+ *    path="/players/{id/name}/namelock",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Get player's namelock by ID or name",
+ *      method="GET",
+ *      type="PlayerNamelock",
+ *      nickname="getPlayerNamelockByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Player whose namelock needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer/string"),
+ *      @SWG\ResponseMessage(code=404, message="Player not found")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/players/:id/namelock', function($id) use($DevAAC) {
+    try {
+        $player = Player::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $player = Player::where('name', $id)->first();
+        if(!$player)
+            throw $e;
+    }
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($player->namelock->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/players",
+ *  @SWG\Api(
+ *    path="/players/{id}/namelock",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Delete player's namelock by ID",
+ *      notes="GameMaster or higher only",
+ *      method="DELETE",
+ *      type="null",
+ *      nickname="deletePlayerByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Player that needs to have namelock deleted",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=401, message="Authentication required"),
+ *      @SWG\ResponseMessage(code=404, message="Player not found"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=412, message="No namelock on the player")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->delete(ROUTES_API_PREFIX.'/players/:id/namelock', function($id) use($DevAAC) {
+    $player = Player::findOrFail($id);
+
+    if(! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    if($player->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGameMaster())
+        throw new InputErrorException("You do not have permission to delete this player's namelock.", 403);
+
+    $namelock = $player->namelock;
+    if(!$namelock)
+        throw new InputErrorException('There is no namelock on this player.', 412);
+
+    $namelock->delete();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/players",
+ *  @SWG\Api(
+ *    path="/players/{id/name}/namelock/resolve",
+ *    description="Operations on players",
+ *    @SWG\Operation(
+ *      summary="Resolve player's namelock by ID or name",
+ *      notes="Only authenticated account - owner of the player or God",
+ *      method="POST",
+ *      type="null",
+ *      nickname="resolvePlayerNamelockByID",
+ *      @SWG\Parameter( name="id/name",
+ *                      description="ID or name of Player whose namelock needs to be resolved",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer/string"),
+ *      @SWG\Parameter( name="name",
+ *                      description="New name to change player's name to",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="string"),
+ *      @SWG\ResponseMessage(code=400, message="Input parameter error"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied"),
+ *      @SWG\ResponseMessage(code=404, message="Player not found"),
+ *      @SWG\ResponseMessage(code=412, message="No namelock on the player")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/players/:id/namelock/resolve', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    try {
+        $player = Player::findOrFail($id);
+    } catch(Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        $player = Player::where('name', $id)->first();
+        if(!$player)
+            throw $e;
+    }
+
+    if($player->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
+        throw new InputErrorException("You do not have permission to resolve this player's namelock.", 403);
+
+    $namelock = $player->namelock;
+    if(!$namelock)
+        throw new InputErrorException('There is no namelock on this player.', 412);
+
+    if( !filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
+        array('options' => array('regexp' => '/^[a-zA-Z ]{5,20}$/'))) )
+        throw new InputErrorException('Player name must have 5-20 characters, only letters and space.', 400);
+
+    $player->name = ucwords(strtolower($req->getAPIParam('name')));
+    $player->save();
+    $namelock->delete();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/players",
+ *  @SWG\Api(
  *    path="/players",
  *    description="Operations on players",
  *    @SWG\Operation(
@@ -364,7 +507,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
 
     $player = new Player(
         array(
-            'name' => $req->getAPIParam('name'),
+            'name' => ucwords(strtolower($req->getAPIParam('name'))),
             'vocation' => $req->getAPIParam('vocation'),
             'sex' => $req->getAPIParam('sex'),
             'level' => NEW_PLAYER_LEVEL
