@@ -74,6 +74,7 @@ defined('ENABLED_PLUGINS') or define('ENABLED_PLUGINS', serialize(array('ratelim
 
 // DO NOT EDIT
 define('PUBLIC_HTML_PATH', realpath('.'));
+define('HAS_APC', extension_loaded('apc') && ini_get('apc.enabled'));
 
 // IF YOU INSTALL PUBLIC_HTML IN A SUBDIRECTORY, FOR EXAMPLE: http://example.com/ots/aac/index.php
 // THEN YOU NEED TO SET APP_ROOT ACCORDINGLY. IN THIS CASE TO '../../../DevAAC'
