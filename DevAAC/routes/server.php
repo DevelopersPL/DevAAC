@@ -220,6 +220,9 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'houses_count' => Capsule::table('houses')->count(),
             'allowed_vocations' => unserialize(ALLOWED_VOCATIONS),
 
+            'houses_bid_raise' => HOUSES_BID_RAISE,
+            'houses_bid_raise_percent' => HOUSES_BID_RAISE_PERCENT,
+
             // config.lua
             'worldType' => $DevAAC->tfsConfigFile['worldType'],
             'ip' => $DevAAC->tfsConfigFile['ip'],
