@@ -49,6 +49,10 @@ class GuildRank extends \Illuminate\Database\Eloquent\Model {
 
     protected $guarded = array('id');
 
+    protected $attributes = array(
+        'level' => 1
+    );
+
     public function guild()
     {
         return $this->belongsTo('DevAAC\Models\Guild');

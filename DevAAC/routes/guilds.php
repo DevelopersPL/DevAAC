@@ -32,6 +32,7 @@
 use DevAAC\Models\Guild;
 use DevAAC\Models\GuildWar;
 use DevAAC\Models\GuildMembership;
+use DevAAC\Models\GuildRank;
 
 /**
  * @SWG\Resource(
@@ -319,7 +320,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/memberships', function($id) use($Dev
  *    @SWG\Operation(
  *      summary="Get guild ranks by guild ID or name",
  *      method="GET",
- *      type="array[GuildRank]",
+ *      type="GuildRank",
  *      nickname="getGuildRanksByID",
  *      @SWG\Parameter( name="id/name",
  *                      description="ID or name of Guild which ranks needs to be fetched",
@@ -341,4 +342,170 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/:id/ranks', function($id) use($DevAAC) {
     }
     $DevAAC->response->headers->set('Content-Type', 'application/json');
     $DevAAC->response->setBody($guild->ranks->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id/name}/ranks",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Create guild rank by guild ID",
+ *      method="POST",
+ *      type="GuildRank",
+ *      nickname="createGuildRankByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Guild to create rank for",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="name",
+ *                      description="Name of rank to create",
+ *                      paramType="form",
+ *                      required=true,
+ *                      type="string"),
+ *      @SWG\Parameter( name="level",
+ *                      description="Level of rank to create",
+ *                      paramType="form",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=400, message="Input parameter error"),
+ *      @SWG\ResponseMessage(code=401, message="Authentication required"),
+ *      @SWG\ResponseMessage(code=404, message="Guild not found"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/guilds/:id/ranks', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    $guild = Guild::findOrFail($id);
+
+    if($guild->owner->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
+        throw new InputErrorException('You do not have permission to manage this guild.', 403);
+
+    $rank = new GuildRank(
+        array(
+            'name' => $req->getAPIParam('name'),
+            'level' => $req->getAPIParam('level')
+        )
+    );
+
+    $guild->ranks()->save($rank);
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($rank->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id/name}/ranks/{rid}",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Update guild rank by guild ID, rank ID",
+ *      method="PUT",
+ *      type="GuildRank",
+ *      nickname="updateGuildRankByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Guild",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="rid",
+ *                      description="ID of Guild Rank to edit",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="name",
+ *                      description="Name of rank to set",
+ *                      paramType="form",
+ *                      required=false,
+ *                      type="string"),
+ *      @SWG\Parameter( name="level",
+ *                      description="Level of rank to set",
+ *                      paramType="form",
+ *                      required=false,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=400, message="Input parameter error"),
+ *      @SWG\ResponseMessage(code=401, message="Authentication required"),
+ *      @SWG\ResponseMessage(code=404, message="Guild/Rank not found"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->put(ROUTES_API_PREFIX.'/guilds/:id/ranks/:rid', function($id, $rid) use($DevAAC) {
+    $req = $DevAAC->request;
+
+    if(! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    $rank = GuildRank::findOrFail($rid);
+
+    if($rank->guild->owner->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
+        throw new InputErrorException('You do not have permission to manage this guild.', 403);
+
+    if($req->getAPIParam('name', false))
+        $rank->name = $req->getAPIParam('name');
+
+    if($req->getAPIParam('level', false))
+        $rank->level = $req->getAPIParam('level');
+
+    $rank->save();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($rank->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
+ *    path="/guilds/{id/name}/ranks/{rid}",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Delete guild rank by guild ID, rank ID",
+ *      method="DELETE",
+ *      type="GuildRank",
+ *      nickname="deleteGuildRankByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of Guild",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="rid",
+ *                      description="ID of Guild Rank to delete",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\ResponseMessage(code=401, message="Authentication required"),
+ *      @SWG\ResponseMessage(code=404, message="Guild/Rank not found"),
+ *      @SWG\ResponseMessage(code=403, message="Permission denied")
+ *    )
+ *  )
+ * )
+ */
+$DevAAC->delete(ROUTES_API_PREFIX.'/guilds/:id/ranks/:rid', function($id, $rid) use($DevAAC) {
+    if(! $DevAAC->auth_account )
+        throw new InputErrorException('You are not logged in.', 401);
+
+    $rank = GuildRank::findOrFail($rid);
+
+    if($rank->guild->owner->account->id != $DevAAC->auth_account->id && !$DevAAC->auth_account->isGod())
+        throw new InputErrorException('You do not have permission to manage this guild.', 403);
+
+    $rank->delete();
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
 });
