@@ -14,6 +14,10 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
 DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams', '$location',
     function($scope, House, Player, $routeParams, $location) {
         $scope.isloggedin = false;
+        $scope.statusmsg = {
+            type: 'danger',
+            msg: ''
+        }
 
         $scope.players = Player.my({}, function(players) {
             $scope.isloggedin = true;
@@ -26,7 +30,22 @@ DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams
                 }
             }
         });
-        House.get({houseId: $routeParams.id}, function(house) {
+        House.get({id: $routeParams.id}, function(house) {
+            $scope.getHouseData(house);
+
+        }, function (response) {
+            if (response.status === 404) {
+                $location.path('/houses');
+            }
+        });
+        
+        $scope.bidForm = {
+            player: false,
+            bid: 1000,
+            balance: 0,
+            canbid : false
+        };
+        $scope.getHouseData = function(house) {
             $scope.house = house;
             // Fetch house owner
             if (house.owner > 0) {
@@ -51,12 +70,46 @@ DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams
                     $scope.house.bidder_name = player.name;
                 });
             }
-
-        }, function (response) {
-            if (response.status === 404) {
-                $location.path('/houses');
+        }
+        $scope.createBid = function() {
+            //console.log("Create Bid", $scope.bidForm);
+            // Find player
+            for (var i = 0; i < $scope.players.length; i++) {
+                if ($scope.players[i].name == $scope.bidForm.player) {
+                    var bid = {
+                        id: $scope.house.id,
+                        player_id: $scope.players[i].id,
+                        bid: $scope.bidForm.bid
+                    };
+                    var house = House.get({id: bid.id});
+                    house.$bid({id: bid.id, player_id: bid.player_id, bid: bid.bid}, function(house) {
+                        $scope.statusmsg.type = 'success';
+                        $scope.statusmsg.msg = 'You now have the highest pledge on this house!';
+                        $scope.getHouseData(house);
+                    }, function(response) {
+                        $scope.statusmsg.type = 'danger';
+                        $scope.statusmsg.msg = response.data.message;
+                    });
+                }
             }
-        });
+        }
+        $scope.checkbalance = function(playername) {
+            // Required balance to bid
+            var requiredBalance = $scope.house.bid + $scope.house.rent;
+            // Find player
+            for (var i = 0; i < $scope.players.length; i++) {
+                if ($scope.players[i].name == playername) {
+
+                    $scope.bidForm.balance = $scope.players[i].balance;
+                    if (requiredBalance < $scope.players[i].balance) {
+                        $scope.bidForm.canbid = true;
+                        $scope.bidForm.bid = $scope.house.bid + 100;
+                    } else $scope.bidForm.canbid = false;
+                    //console.log($scope.bidForm);
+                    break;
+                }
+            }
+        }
     }
 ]);
 
@@ -85,9 +138,10 @@ DevAAC.controller('HousesController', ['$scope', 'House', 'Player',
 // Module Factories(s)
 DevAAC.factory('House', ['$resource',
     function($resource){
-        return $resource(ApiUrl('houses/:houseId'), {}, {
+        return $resource(ApiUrl('houses/:id'), {}, {
             get: { cache: true },
-            query: { isArray: true, cache: true }
+            query: { isArray: true, cache: true },
+            bid: { url: ApiUrl('houses/:id/bid'), method: 'POST' }
         });
     }
 ]);

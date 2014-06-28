@@ -1,5 +1,6 @@
 <div>
     <h1 class="page-header">House: <span ng-hide="house">Loading...</span>{{house.name}}</h1>
+    <div ng-if="statusmsg.msg.length > 0" class="alert alert-{{statusmsg.type}}">{{statusmsg.msg}}</div>
     <div ng-show="house">
         <ul>
             <li>Size: {{house.size}} sqm</li>
@@ -13,7 +14,7 @@
         <div ng-if="house.owner == 0">
             <h3>This house is available for auction.</h3>
             <p>
-                <b>Current bid:</b> {{house.bid}} gp<br>
+                <b>Current bid:</b> {{house.rent}} gp rent + {{house.bid}} gp bid ({{house.rent + house.bid}}gp total)<br>
                 <b>By:</b> 
                 <span ng-show="house.highest_bidder == 0">None</span>
                 <span ng-hide="house.highest_bidder == 0"><a href="#/players/{{house.bidder_name}}">{{house.bidder_name}}</a></span>
@@ -23,11 +24,13 @@
             <!-- Bidding -->
             <div ng-show="isloggedin">
                 Select player: 
-                <select>
-                    <option ng-repeat="player in players" id="{{player.id}}">{{player.name}} [{{player.balance}}]</option>
-                </select>
-                Bid this ammount: <input type="text" placeholder="1000"> gp. 
-                <button class="btn btn-success disabled">Create bid</button>
+                <select ng-model="bidForm.player" ng-change="checkbalance(bidForm.player)">
+                    <option ng-repeat="player in players" id="{{player.id}}">{{player.name}}</option>
+                </select> Total balance: {{bidForm.balance}} gp Available for bidding: {{bidForm.balance - house.rent}} gp<br>
+                Bid this ammount: <input ng-model="bidForm.bid" type="text" placeholder="1000"> gp. <br>
+
+                <button class="btn btn-success" ng-if="bidForm.canbid" ng-click="createBid()">Create bid</button>
+                <button class="btn btn-success disabled" ng-if="!bidForm.canbid">Create bid</button>
             </div>
             <div ng-hide="isloggedin"><p>You need to be logged in to bid on houses.</p></div>
         </div>
