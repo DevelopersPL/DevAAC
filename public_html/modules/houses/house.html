@@ -2,38 +2,111 @@
     <h1 class="page-header">House: <span ng-hide="house">Loading...</span>{{house.name}}</h1>
     <div ng-if="statusmsg.msg.length > 0" class="alert alert-{{statusmsg.type}}">{{statusmsg.msg}}</div>
     <div ng-show="house">
-        <ul>
-            <li>Size: {{house.size}} sqm</li>
-            <li>Beds: {{house.beds}}</li>
-            <li ng-show="house.owner == 0">Owner: None</li>
-            <li ng-hide="house.owner == 0"><a href="#/players/{{player.name}}">{{player.name}}</a></li>
-            <li>Rent: {{house.rent}}</li>
-            <li>Town: {{house.town_id}}</li>
-        </ul>
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Size</div>
+                    <div class="panel-body">
+                        {{house.size}} sqm
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Beds</div>
+                    <div class="panel-body">
+                        {{house.beds}} beds
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">{{ info.houseRentPeriod == 'never' ? 'Price' : 'Rent' }}</div>
+                    <div class="panel-body">
+                        {{house.rent | number}} gp
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Town</div>
+                    <div class="panel-body">
+                        {{house.town_id}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="house.owner != 0">
+            <h3>This house is owned by <a href="#/players/{{owner.name}}">{{owner.name}}</a></h3>
+        </div>
 
         <div ng-if="house.owner == 0">
-            <h3>This house is available for auction.</h3>
-            <p>
-                <b>Current bid:</b> {{house.rent}} gp rent + {{house.bid}} gp bid ({{house.rent + house.bid}}gp total)<br>
-                <b>By:</b> 
-                <span ng-show="house.highest_bidder == 0">None</span>
-                <span ng-hide="house.highest_bidder == 0"><a href="#/players/{{house.bidder_name}}">{{house.bidder_name}}</a></span>
-                <br>
-            </p>
+            <div class="panel" ng-class="{'panel-success': house.highest_bidder == 0, 'panel-warning': house.highest_bidder != 0}">
+                <div class="panel-heading">
+                    <h3 ng-if="house.highest_bidder == 0">This house is available for auction</h3>
+                    <h3 ng-if="house.highest_bidder != 0">Auction is in progress! Ends {{ ends }}.</h3>
+                </div>
 
-            <!-- Bidding -->
-            <div ng-show="isloggedin">
-                Select player: 
-                <select ng-model="bidForm.player" ng-change="checkbalance(bidForm.player)">
-                    <option ng-repeat="player in players" id="{{player.id}}">{{player.name}}</option>
-                </select> Total balance: {{bidForm.balance}} gp Available for bidding: {{bidForm.balance - house.rent}} gp<br>
-                Bid this ammount: <input ng-model="bidForm.bid" type="text" placeholder="1000"> gp. <br>
+                <div class="panel-body">
+                    <div ng-if="house.highest_bidder != 0">
+                        <div class="alert alert-warning">
+                            <b>Highest bid: {{house.bid | number}} gp by by: <a href="#/players/{{highest_bidder.name}}">{{highest_bidder.name}}</a></b>
+                        </div>
+                    </div>
 
-                <button class="btn btn-success" ng-if="bidForm.canbid" ng-click="createBid()">Create bid</button>
-                <button class="btn btn-success disabled" ng-if="!bidForm.canbid">Create bid</button>
+                    <div ng-show="isLoggedIn">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="player" class="col-sm-2 control-label">Select player</label>
+                                <div class="col-sm-4">
+                                    <select class="form-control" id="player" ng-model="bidForm.player" ng-change="checkBalance(bidForm.player)">
+                                        <option ng-repeat="player in players" id="{{player.id}}">{{player.name}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="balance" class="col-sm-2 control-label">Balance:</label>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="balance" value="{{bidForm.balance | number}}" readonly>
+                                        <span class="input-group-addon">gp</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback" ng-class="{'has-success': bidForm.bid + house.rent <= bidForm.balance , 'has-error': bidForm.bid + house.rent > bidForm.balance }">
+                                <label for="bid" class="col-sm-2 control-label">Bid amount</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input ng-model="bidForm.bid" type="number" class="form-control" id="bid">
+                                        <span class="input-group-addon">gp</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">+</span>
+                                        <input type="text" class="form-control" value="{{house.rent | number}} gp" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">=</span>
+                                        <input type="text" class="form-control" value="{{bidForm.bid + house.rent | number}} gp" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="submit" class="btn btn-success" ng-if="bidForm.canBid" ng-click="createBid()">Bid {{bidForm.bid | number}} gp</button>
+                                    <button type="submit" class="btn btn-success disabled" ng-if="!bidForm.canBid">Not enough money</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div ng-hide="isLoggedIn"><p>You need to be logged in to bid on this house.</p></div>
+                </div>
             </div>
-            <div ng-hide="isloggedin"><p>You need to be logged in to bid on houses.</p></div>
         </div>
     </div>
-    <a href="#/houses">Go back</a>
 </div>

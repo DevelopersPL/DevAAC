@@ -1,7 +1,7 @@
 <div>
     <h1 class="page-header">Guilds <small>there are {{ guilds.length }} on this server</small></h1>
 
-    <table class="table table-striped" ng-show="guilds.length">
+    <table class="table table-striped" ng-show="guilds.length && loaded">
         <thead>
             <tr>
                 <th>Name</th>
@@ -18,7 +18,11 @@
         </tbody>
     </table>
 
-    <p ng-show="!guilds.length">
+    <p ng-show="!guilds.length && loaded">
         There are no guilds yet!
+    </p>
+
+    <p ng-hide="loaded">
+        Loading...
     </p>
 </div>

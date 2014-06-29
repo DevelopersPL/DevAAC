@@ -6,73 +6,70 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
     });
     $routeProvider.when('/houses/:id', {
         templateUrl: PageUrl('houses/house'),
-        controller: 'HouseController'
+        controller: 'HouseController',
+        resolve: {
+            info: function(Server) {
+                return Server.info().$promise;
+            },
+            house: function(House, $route) {
+                return House.get({id: $route.current.params.id}).$promise;
+            }
+        }
     });
 }]);
 
 // Module Controller(s)
-DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams', '$location',
-    function($scope, House, Player, $routeParams, $location) {
-        $scope.isloggedin = false;
+DevAAC.controller('HouseController', ['$scope', '$routeParams', '$location', 'House', 'Player', 'Server', 'info', 'house',
+    function($scope, $routeParams, $location, House, Player, Server, info, house) {
+        $scope.isLoggedIn = false;
         $scope.statusmsg = {
             type: 'danger',
             msg: ''
+        };
+        $scope.info = info;
+        $scope.house = house;
+        $scope.ends = moment(house.bid_end).fromNow();
+
+        // Fetch house owner
+        if(house.owner) {
+            $scope.owner = {
+                name: 'Loading...'
+            };
+
+            $scope.owner = Player.get({id:house.owner}, function(){}, function(response) {
+                if (response.status === 404)
+                    $scope.player = {
+                        name: '[Deleted Player]'
+                    }
+            });
         }
 
-        $scope.players = Player.my({}, function(players) {
-            $scope.isloggedin = true;
+        if(house.highest_bidder)
+            $scope.highest_bidder = Player.get({id: house.highest_bidder}, function(){}, function(response) {
+                if (response.status === 404)
+                    $scope.highest_bidder = {
+                        name: '[Deleted Player]'
+                    }
+            });
 
-        }, function(response) {
-            
-            if (response.status === 404) {
-                $scope.player = {
-                    name: '[Deleted Player]'
-                }
-            }
-        });
-        House.get({id: $routeParams.id}, function(house) {
-            $scope.getHouseData(house);
-
-        }, function (response) {
-            if (response.status === 404) {
-                $location.path('/houses');
-            }
-        });
-        
         $scope.bidForm = {
             player: false,
-            bid: 1000,
+            bid: $scope.house.bid + $scope.info.houses_bid_raise,
             balance: 0,
-            canbid : false
+            canBid : false
         };
-        $scope.getHouseData = function(house) {
-            $scope.house = house;
-            // Fetch house owner
-            if (house.owner > 0) {
-                $scope.player = {
-                    name: 'Loading...'
-                }
 
-                Player.get({id:house.owner}, function(player) {
-                    $scope.player.name = player.name;
+        $scope.players = Player.my({}, function(players) {
+            $scope.isLoggedIn = true;
+            try {
+                $scope.bidForm.player = _.find($scope.players, function(p) {
+                    return (p.balance >= $scope.bidForm.bid + $scope.house.rent)
+                }).name;
+            } catch(e) {}
+            $scope.checkBalance($scope.bidForm.player);
+        });
 
-                }, function(response) {
-                    if (response.status === 404) {
-                        $scope.player = {
-                            name: '[Deleted Player]'
-                        }
-                    }
-                });
-            }
-            // Fetch higher bidder
-            if (house.highest_bidder > 0) {
-                Player.get({id:house.highest_bidder}, function(player) {
-                    $scope.house.bidder_name = player.name;
-                });
-            }
-        }
         $scope.createBid = function() {
-            //console.log("Create Bid", $scope.bidForm);
             // Find player
             for (var i = 0; i < $scope.players.length; i++) {
                 if ($scope.players[i].name == $scope.bidForm.player) {
@@ -92,20 +89,18 @@ DevAAC.controller('HouseController', ['$scope', 'House', 'Player', '$routeParams
                     });
                 }
             }
-        }
-        $scope.checkbalance = function(playername) {
+        };
+        $scope.checkBalance = function(playername) {
             // Required balance to bid
             var requiredBalance = $scope.house.bid + $scope.house.rent;
             // Find player
             for (var i = 0; i < $scope.players.length; i++) {
                 if ($scope.players[i].name == playername) {
-
                     $scope.bidForm.balance = $scope.players[i].balance;
-                    if (requiredBalance < $scope.players[i].balance) {
-                        $scope.bidForm.canbid = true;
-                        $scope.bidForm.bid = $scope.house.bid + 100;
-                    } else $scope.bidForm.canbid = false;
-                    //console.log($scope.bidForm);
+                    if (requiredBalance < $scope.players[i].balance)
+                        $scope.bidForm.canBid = true;
+                    else
+                        $scope.bidForm.canBid = false;
                     break;
                 }
             }
@@ -131,7 +126,11 @@ DevAAC.controller('HousesController', ['$scope', 'House', 'Player',
                 $scope.players[id] = Player.get({id: id});
 
             return $scope.players[id];
-        }
+        };
+
+        $scope.fromNow = function(time) {
+            return moment(time).fromNow();
+        };
     }
 ]);
 
