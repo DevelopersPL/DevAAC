@@ -545,8 +545,8 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
 $DevAAC->post(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
     $req = $DevAAC->request;
     if( !filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
-        array("options" => array("regexp" => "/^[a-zA-Z]{2,12}$/"))) )
-        throw new InputErrorException('Account name must have 2-12 characters, only letters.', 400);
+        array("options" => array("regexp" => "/^[a-zA-Z0-9]{2,12}$/"))) )
+        throw new InputErrorException('Account name must have 2-12 characters.', 400);
 
     if( !filter_var($req->getAPIParam('password'), FILTER_VALIDATE_REGEXP,
         array("options" => array("regexp" => "/^(.{2,20}|.{40})$/"))) )
