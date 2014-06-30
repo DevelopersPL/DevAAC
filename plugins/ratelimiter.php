@@ -86,8 +86,8 @@ $DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
         $objname = $req->getIp() . '_' . $path;
 
         if(apc_fetch($objname) + $rules[$method][$path] > time()) {
-            $DevAAC->response->headers->set('Content-Type', 'text/plain');
-            $DevAAC->halt(503, 'Too many requests.'); // 429 IS NOT SUPPORTED BY NGINX SO WE USE 503
+            $DevAAC->response->headers->set('Content-Type', 'application/json');
+            $DevAAC->halt(503, json_encode(array('code' => 503, 'message' => 'Too many requests. Please wait a minute and try again.'))); // 429 IS NOT SUPPORTED BY NGINX SO WE USE 503
 
             if(!RATELIMITER_PENALIZE)
                 return;
