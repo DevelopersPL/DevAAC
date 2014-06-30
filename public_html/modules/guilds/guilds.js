@@ -13,7 +13,9 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
 // Module Controller(s)
 DevAAC.controller('GuildsController', ['$scope', 'Guild',
     function($scope, Guild) {
-        $scope.guilds = Guild.query({embed: 'owner'});
+        $scope.guilds = Guild.query({embed: 'owner'}, function() {
+            $scope.loaded = true;
+        });
     }
 ]);
 DevAAC.controller('GuildController', ['$scope', 'Guild', '$routeParams', '$location', 
