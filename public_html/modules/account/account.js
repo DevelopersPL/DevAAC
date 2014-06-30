@@ -137,8 +137,9 @@ DevAAC.factory('Account', ['$http', '$resource', '$cacheFactory',
                 return btoa(username + ':' + p.getHash('SHA-1', 'HEX'));
             },
             register: function(account) {
+                var self = this;
                 return this.factory.save(account, function (data, status) {
-                    Cookie.set('DevAACToken', this.generateToken(account.name, account.password), 7);
+                    Cookie.set('DevAACToken', self.generateToken(account.name, account.password), 7);
                 });
             },
             authenticate: function(account, password) {
