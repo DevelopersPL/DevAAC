@@ -57,8 +57,8 @@ DevAAC.controller('RegisterController', ['$scope', '$location', 'Account',
     }
 ]);
 
-DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Player', 'vocations', 'account', 'info',
-    function($scope, $location, Account, Player, vocations, account, info) {
+DevAAC.controller('AccountController', ['$scope', '$location', '$cacheFactory', 'Account', 'Player', 'vocations', 'account', 'info',
+    function($scope, $location, $cacheFactory, Account, Player, vocations, account, info) {
         $scope.creatingPlayer = false;
         $scope.errorMessage = '';
         $scope.successMessage = '';
@@ -88,6 +88,7 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Playe
                 $scope.successMessage = 'Player has been created!';
                 $scope.errorMessage = '';
                 $scope.creatingPlayer = false;
+                $cacheFactory.get('$http').remove(ApiUrl('accounts/my/players'));
             }, function(error) {
                 $scope.successMessage = '';
                 $scope.errorMessage = 'Failed to created player. ' + error.data.message;
@@ -101,6 +102,7 @@ DevAAC.controller('AccountController', ['$scope', '$location', 'Account', 'Playe
                 $scope.successMessage = 'Player has been deleted!';
                 $scope.errorMessage = '';
                 $scope.creatingPlayer = false;
+                $cacheFactory.get('$http').remove(ApiUrl('accounts/my/players'));
             }, function(error) {
                 $scope.successMessage = '';
                 $scope.errorMessage = 'Failed to delete player. ' + error.data.message;
