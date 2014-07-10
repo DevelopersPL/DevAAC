@@ -17,24 +17,41 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
         resolve: {
             vocations: function(Server) {
                 return Server.vocations().$promise;
+            },
+            player: function(Player, $route) {
+                return Player.get({id: $route.current.params.id}).$promise;
             }
         }
 	});
 }]);
 
 // Module Controller(s)
-DevAAC.controller('PlayerController', ['$scope', '$location', '$routeParams', 'Player', 'Server', 'vocations',
-    function($scope, $location, $routeParams, Player, Server, vocations) {
-        Player.get({id: $routeParams.id}, function(playerInfo) {
-            $scope.player = {
-                name: playerInfo.name,
-                sex: playerInfo.sex ? 'male' : 'female',
-                profession: _.findWhere(vocations, {id: playerInfo.vocation}),
-                level: playerInfo.level,
-                residence: playerInfo.town_id,
-                seen: moment.unix(playerInfo.lastlogin).format('LLLL') + " → " + moment.unix(playerInfo.lastlogout).format('LLLL'),
-                onlineTime: moment.duration(playerInfo.onlinetime, 'seconds').humanize()
+DevAAC.controller('PlayerController', ['$scope', '$location', '$route', 'Account', 'Player', 'Server', 'vocations', 'player',
+    function($scope, $location, $route, Account, Player, Server, vocations, player) {
+        $scope.player = {
+            name: player.name,
+            sex: player.sex ? 'male' : 'female',
+            profession: _.findWhere(vocations, {id: player.vocation}),
+            level: player.level,
+            residence: player.town_id,
+            balance: player.balance,
+            seen: moment.unix(player.lastlogin).format('LLL') + " → " + moment.unix(player.lastlogout).format('LLL'),
+            onlineTime: moment.duration(player.onlinetime, 'seconds').humanize()
+        };
+
+        $scope.account = Account.factory.get({id: player.account_id}, function(account) {
+            $scope.account = {
+                id: account.id,
+                type: account.type,
+                premdays: account.premdays,
+                lastday: account.lastday,
+                creation: moment(account.creation).format('LLL'),
+                status: account.premdays > 0 ? 'Premium account' : 'Free account'
             };
+        });
+
+        $scope.players = Player.query({account_id: player.account_id}, function(players) {
+            $scope.players = players;
         });
     }
 ]);

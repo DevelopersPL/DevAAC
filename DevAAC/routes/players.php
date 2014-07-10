@@ -331,6 +331,11 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players/:id/namelock/resolve', function($id) u
  *                      paramType="query",
  *                      required=false,
  *                      type="string"),
+ *      @SWG\Parameter( name="account_id",
+ *                      description="Account id of players to search for",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="integer"),
  *      @SWG\Parameter( name="sort",
  *                      description="The field or fields (separated by comma) to sort by ascending, specify -field to sort descending, e.g.: ?sort=level,-skill_fist",
  *                      paramType="query",
@@ -367,6 +372,11 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
     if($req->get('q'))
     {
         $players->where('name', 'LIKE', '%'.$req->get('q').'%');
+    }
+
+    if($req->get('account_id'))
+    {
+        $players->where('account_id', $req->get('account_id'));
     }
 
     // support ?sort=level,-skill_club
