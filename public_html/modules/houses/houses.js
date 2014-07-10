@@ -2,7 +2,12 @@
 DevAAC.config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/houses', {
         templateUrl: PageUrl('houses'),
-        controller: 'HousesController'
+        controller: 'HousesController',
+        resolve: {
+            info: function(Server) {
+                return Server.info().$promise;
+            }
+        }
     });
     $routeProvider.when('/houses/:id', {
         templateUrl: PageUrl('houses/house'),
@@ -108,8 +113,9 @@ DevAAC.controller('HouseController', ['$scope', '$routeParams', '$location', 'Ho
     }
 ]);
 
-DevAAC.controller('HousesController', ['$scope', 'House', 'Player',
-    function($scope, House, Player) {
+DevAAC.controller('HousesController', ['$scope', 'House', 'Player', 'Server', 'info',
+    function($scope, House, Player, Server, info) {
+        $scope.info = info;
         $scope.houses = House.query(function(){
             $scope.loaded = true;
         });

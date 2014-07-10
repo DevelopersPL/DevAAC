@@ -39,8 +39,9 @@
                 <td>{{ house.rent | number }} gp</td>
                 <td>
                     <span ng-if="house.owner"><a href="#/players/{{ player(house.owner).name }}">{{ player(house.owner).name }}</a> <span ng-if="player(house.owner)">({{player(house.owner).level}})</span></span>
-                    <span ng-if="!house.owner && !house.highest_bidder"><a class="btn btn-xs btn-success" href="#/houses/{{house.id}}">No Owner - Start bidding</a></span>
-                    <span ng-if="!house.owner && house.highest_bidder"><a class="btn btn-xs btn-warning" href="#/houses/{{house.id}}">Auction ends {{ fromNow(house.bid_end) }}!</a></span>
+                    <span ng-if="!house.owner && info.houses_auctions && !house.highest_bidder"><a class="btn btn-xs btn-success" href="#/houses/{{house.id}}">No Owner - Start bidding</a></span>
+                    <span ng-if="!house.owner && info.houses_auctions && house.highest_bidder"><a class="btn btn-xs btn-warning" href="#/houses/{{house.id}}">Auction ends {{ fromNow(house.bid_end) }}!</a></span>
+                    <span ng-if="!house.owner && !info.houses_auctions"><a class="btn btn-xs btn-success" href="#/houses/{{house.id}}">!buyhouse in game to buy</a></span>
                 </td>
             </tr>
         </tbody>

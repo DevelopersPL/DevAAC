@@ -44,8 +44,9 @@
         <div ng-if="house.owner == 0">
             <div class="panel" ng-class="{'panel-success': house.highest_bidder == 0, 'panel-warning': house.highest_bidder != 0}">
                 <div class="panel-heading">
-                    <h3 ng-if="house.highest_bidder == 0">This house is available for auction</h3>
-                    <h3 ng-if="house.highest_bidder != 0">Auction is in progress! Ends {{ ends }}.</h3>
+                    <h3 ng-if="info.houses_auctions && house.highest_bidder == 0">This house is available for auction</h3>
+                    <h3 ng-if="info.houses_auctions && house.highest_bidder != 0">Auction is in progress! Ends {{ ends }}.</h3>
+                    <h3 ng-if="!info.houses_auctions">This house is available for purchase!</h3>
                 </div>
 
                 <div class="panel-body">
@@ -55,7 +56,7 @@
                         </div>
                     </div>
 
-                    <div ng-show="isLoggedIn">
+                    <div ng-show="isLoggedIn && info.houses_auctions">
                         <form class="form-horizontal" role="form">
                             <div class="form-group">
                                 <label for="player" class="col-sm-2 control-label">Select player</label>
@@ -104,7 +105,9 @@
                         </form>
                     </div>
 
-                    <div ng-hide="isLoggedIn"><p>You need to be logged in to bid on this house.</p></div>
+                    <div ng-hide="isLoggedIn || !info.houses_auctions"><p>You need to be logged in to bid on this house.</p></div>
+
+                    <div ng-show="!info.houses_auctions"><p>Stand in front of the house entrance and type !buyhouse in game to buy the house.</p></div>
                 </div>
             </div>
         </div>
