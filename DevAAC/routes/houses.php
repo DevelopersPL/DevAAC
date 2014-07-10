@@ -163,6 +163,9 @@ $DevAAC->get(ROUTES_API_PREFIX.'/houses/:id/lists', function($id) use($DevAAC) {
  * )
  */
 $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
+    if(!HOUSES_AUCTIONS)
+        throw new InputErrorException('House auctions are disabled.', 400);
+
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 

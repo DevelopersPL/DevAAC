@@ -58,6 +58,7 @@ defined('ALLOWED_VOCATIONS') or define('ALLOWED_VOCATIONS', serialize(array(1, 2
 defined('NEW_PLAYER_LEVEL') or define('NEW_PLAYER_LEVEL', 8);
 defined('NEW_PLAYER_TOWN_ID') or define('NEW_PLAYER_TOWN_ID', 1);
 
+defined('HOUSES_AUCTIONS') or define('HOUSES_AUCTIONS', true); // enable house auction system?
 defined('HOUSES_AUCTION_TIME') or define('HOUSES_AUCTION_TIME', 'P7D'); // DateInterval spec notation: http://www.php.net/manual/en/dateinterval.construct.php
 defined('HOUSES_PER_PLAYER') or define('HOUSES_PER_PLAYER', 1);
 defined('HOUSES_PER_ACCOUNT') or define('HOUSES_PER_ACCOUNT', 1);
