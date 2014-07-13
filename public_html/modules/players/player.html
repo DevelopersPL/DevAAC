@@ -42,7 +42,7 @@
     </table>
 
     <h1>Latest Deaths</h1>
-    <table ng-show="deaths" class="table table-striped table-condensed table-content">
+    <table ng-show="deaths.length" class="table table-striped table-condensed table-content">
         <thead>
             <th>Date</th>
             <th>Report</th>
@@ -53,12 +53,14 @@
             <td>
                 <span ng-show="death.unjustified">Unjustly k</span><span ng-hide="death.unjustified">K</span>illed at level {{death.level}} by
                 <a ng-show="death.is_player" href="#/players/{{death.killed_by}}">{{death.killed_by}}</a><span ng-hide="death.is_player">{{death.killed_by}}</span>
-                (most damage by <a ng-show="death.mostdamage_is_player" href="#/players/{{death.killed_by}}">{{death.most_damage_by}}</a><span ng-hide="death.mostdamage_is_player">{{death.most_damage_by}}</span>{{death.most_damage_by}}).
+                <span ng-show="death.most_damage_by != death.killed_by">
+                    (most damage by <a ng-show="death.mostdamage_is_player" href="#/players/{{death.most_damage_by}}">{{death.most_damage_by}}</a><span ng-hide="death.mostdamage_is_player">{{death.mostdamage_by}}</span>{{death.mostdamage_by}})
+                </span>.
             </td>
         </tr>
         </tbody>
     </table>
-    <div ng-hide="deaths">{{player.name}} has not died recently!</div>
+    <div ng-hide="deaths.length">{{player.name}} has not died recently!</div>
 
     <h1>Account Information</h1>
     <table class="table table-striped table-condensed table-content">
