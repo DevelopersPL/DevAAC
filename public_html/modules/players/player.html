@@ -45,7 +45,7 @@
     <table ng-show="deaths.length" class="table table-striped table-condensed table-content">
         <thead>
             <th>Date</th>
-            <th>Report</th>
+            <th>Description</th>
         </thead>
         <tbody>
         <tr ng-repeat="death in deaths | orderBy: time : true">
@@ -55,7 +55,7 @@
                 <a ng-show="death.is_player" href="#/players/{{death.killed_by}}">{{death.killed_by}}</a><span ng-hide="death.is_player">{{death.killed_by}}</span>
                 <span ng-show="death.mostdamage_by != death.killed_by">
                     (most damage by <a ng-show="death.mostdamage_is_player" href="#/players/{{death.mostsdamage_by}}">{{death.mostdamage_by}}</a><span ng-hide="death.mostdamage_is_player">{{death.mostdamage_by}}</span>)
-                </span>.
+                </span>
             </td>
         </tr>
         </tbody>
