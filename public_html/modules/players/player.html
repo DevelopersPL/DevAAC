@@ -48,7 +48,7 @@
             <th>Description</th>
         </thead>
         <tbody>
-        <tr ng-repeat="death in deaths | orderBy: time : true">
+        <tr ng-repeat="death in deaths | reverse">
             <td>{{death.time | moment:'LLL'}}</td>
             <td>
                 <span ng-show="death.unjustified">Unjustly k</span><span ng-hide="death.unjustified">K</span>illed at level {{death.level}} by

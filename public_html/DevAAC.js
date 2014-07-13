@@ -106,3 +106,9 @@ DevAAC.filter('moment', function () {
         return moment(value).format(format);
     };
 });
+
+DevAAC.filter('reverse', function() {
+    return function(items) {
+        return items.slice().reverse();
+    };
+});
