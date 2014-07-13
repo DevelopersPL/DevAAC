@@ -53,8 +53,8 @@
             <td>
                 <span ng-show="death.unjustified">Unjustly k</span><span ng-hide="death.unjustified">K</span>illed at level {{death.level}} by
                 <a ng-show="death.is_player" href="#/players/{{death.killed_by}}">{{death.killed_by}}</a><span ng-hide="death.is_player">{{death.killed_by}}</span>
-                <span ng-show="death.most_damage_by != death.killed_by">
-                    (most damage by <a ng-show="death.mostdamage_is_player" href="#/players/{{death.most_damage_by}}">{{death.most_damage_by}}</a><span ng-hide="death.mostdamage_is_player">{{death.mostdamage_by}}</span>{{death.mostdamage_by}})
+                <span ng-show="death.mostdamage_by != death.killed_by">
+                    (most damage by <a ng-show="death.mostdamage_is_player" href="#/players/{{death.mostsdamage_by}}">{{death.mostdamage_by}}</a><span ng-hide="death.mostdamage_is_player">{{death.mostdamage_by}}</span>)
                 </span>.
             </td>
         </tr>
