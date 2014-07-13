@@ -41,12 +41,31 @@
         </tbody>
     </table>
 
+    <h1>Latest Deaths</h1>
+    <table ng-show="deaths" class="table table-striped table-condensed table-content">
+        <thead>
+            <th>Date</th>
+            <th>Report</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="death in deaths | orderBy: time : true">
+            <td>{{death.time | moment:'LLL'}}</td>
+            <td>
+                <span ng-show="death.unjustified">Unjustly k</span><span ng-hide="death.unjustified">K</span>illed at level {{death.level}} by
+                <a ng-show="death.is_player" href="#/players/{{death.killed_by}}">{{death.killed_by}}</a><span ng-hide="death.is_player">{{death.killed_by}}</span>
+                (most damage by <a ng-show="death.mostdamage_is_player" href="#/players/{{death.killed_by}}">{{death.most_damage_by}}</a><span ng-hide="death.mostdamage_is_player">{{death.most_damage_by}}</span>{{death.most_damage_by}}).
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div ng-hide="deaths">{{player.name}} has not died recently!</div>
+
     <h1>Account Information</h1>
     <table class="table table-striped table-condensed table-content">
         <tbody>
         <tr ng-if="account && account.type > 1">
             <td style="width: 25%; vertical-align: top">Position:</td>
-            <td>{{account.type}}</td>
+            <td>{{account.position}}</td>
         </tr>
         <tr>
             <td style="width: 25%; vertical-align: top">Created:</td>

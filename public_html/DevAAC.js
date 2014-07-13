@@ -100,3 +100,9 @@ DevAAC.filter('capitalize', function () {
         return input.charAt(0).toUpperCase() + input.slice(1);
     };
 });
+
+DevAAC.filter('moment', function () {
+    return function(value, format) {
+        return moment(value).format(format);
+    };
+});

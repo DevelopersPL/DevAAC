@@ -35,14 +35,26 @@ DevAAC.controller('PlayerController', ['$scope', '$location', '$route', 'Account
             level: player.level,
             residence: player.town_id,
             balance: player.balance,
-            seen: moment.unix(player.lastlogin).format('LLL') + " → " + moment.unix(player.lastlogout).format('LLL'),
+            seen: moment.unix(player.lastlogin).format('LLL') + ' → ' + moment.unix(player.lastlogout).format('LLL'),
             onlineTime: moment.duration(player.onlinetime, 'seconds').humanize()
         };
 
+        $scope.deaths = Player.deaths({id: player.id});
+
         $scope.account = Account.factory.get({id: player.account_id}, function(account) {
+            // these positions are hard-coded in TFS
+            var positions = [
+                'none',
+                'Player',
+                'Tutor',
+                'Senior Tutor',
+                'Gamemaster',
+                'God'
+            ];
             $scope.account = {
                 id: account.id,
                 type: account.type,
+                position: positions[account.type],
                 premdays: account.premdays,
                 lastday: account.lastday,
                 creation: moment(account.creation).format('LLL'),
@@ -74,7 +86,8 @@ DevAAC.factory('Player', ['$resource',
             get: { cache: true },
             queryOnline: { params: {id: 'online', embed: 'player'}, isArray: true, cache: true },
             highExperience: { params: {sort: '-experience', limit: 5}, isArray: true, cache: true },
-            my: { url: ApiUrl('accounts/my/players'), isArray: true, cache: true }
+            my: { url: ApiUrl('accounts/my/players'), isArray: true, cache: true },
+            deaths: { url: ApiUrl('players/:id/deaths'), isArray: true, cache: true }
         });
     }
 ]);
