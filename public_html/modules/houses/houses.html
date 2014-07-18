@@ -3,16 +3,16 @@
 
     <div>
         Sort by
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="name"> Name
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="town"> Town
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="size"> Size
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="rent"> {{ info.houseRentPeriod == 'never' ? 'Price' : 'Rent' }}
         </label>
         <label class="checkbox-inline">

@@ -2,35 +2,35 @@
     <h1 class="page-header">Highscores</h1>
 
     <div>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="level"> Level
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="balance"> Money
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="maglevel"> Magic
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_fishing"> Fishing
+        </label>
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="skill_shielding"> Shielding
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="skill_dist"> Distance
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="skill_sword"> Sword
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="skill_club"> Club
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="skill_axe"> Axe
         </label>
-        <label class="checkbox-inline">
+        <label class="radio-inline">
             <input ng-model="order" type="radio" name="sort" value="skill_fist"> Fist
-        </label>
-        <label class="checkbox-inline">
-            <input ng-model="order" type="radio" name="sort" value="skill_fishing"> Fishing
         </label>
     </div>
 
@@ -50,12 +50,16 @@
                 <td><a href="#/players/{{ player.name }}">{{ player.name }}</a></td>
                 <td>{{ vocation(player.vocation).name }}</td>
                 <td>{{ player.level }}</td>
-                <td>{{ player[order] }}</td>
+                <td>{{ player[order] | number }}</td>
             </tr>
         </tbody>
     </table>
 
-    <p ng-show="!players.length">
+    <p ng-show="!players.length && loaded">
         There are no players on this server.
+    </p>
+
+    <p ng-hide="loaded">
+        Loading...
     </p>
 </div>
