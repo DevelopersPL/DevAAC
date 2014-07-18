@@ -236,7 +236,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/server/info', function() use($DevAAC) {
             'ownerEmail' => $DevAAC->tfsConfigFile['ownerEmail'],
             'url' => $DevAAC->tfsConfigFile['url'],
             'location' => $DevAAC->tfsConfigFile['location'],
-            'motd' => $DevAAC->tfsConfigFile['motd'],
+            'motd' => strip_tags($DevAAC->tfsConfigFile['motd']),
             'houseRentPeriod' => $DevAAC->tfsConfigFile['houseRentPeriod'],
 
             // cache hint
