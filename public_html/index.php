@@ -47,6 +47,7 @@ defined('TFS_ROOT') or define('TFS_ROOT', false); // directory where config.lua 
 defined('ROUTES_PREFIX') or define('ROUTES_PREFIX', '');
 defined('ROUTES_API_PREFIX') or define('ROUTES_API_PREFIX', '/api/v1');
 defined('CORS_ALLOW_ORIGIN') or define('CORS_ALLOW_ORIGIN', 'otls.net'); // origin or false
+defined('ACCOUNT_RECOVERY_INTERVAL') or define('ACCOUNT_RECOVERY_INTERVAL', 10800); // 3 hours (in seconds)
 
 // GAME
 defined('ACCOUNT_TYPE_GOD') or define('ACCOUNT_TYPE_GOD', 5);

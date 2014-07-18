@@ -73,6 +73,65 @@ $DevAAC->get(ROUTES_API_PREFIX.'/accounts/my', function() use($DevAAC) {
  *  basePath="/api/v1",
  *  resourcePath="/accounts",
  *  @SWG\Api(
+ *    path="/accounts/my/lost",
+ *    description="Operations on accounts",
+ *    @SWG\Operation(
+ *      summary="Recover a lost account",
+ *      notes="",
+ *      method="POST",
+ *      type="null",
+ *      nickname="recoverAccountByEmail",
+ *      @SWG\Parameter( name="email",
+ *                      description="Email address of account you want to recover",
+ *                      paramType="body",
+ *                      required=true,
+ *                      type="string"),
+ *      @SWG\ResponseMessage(code=400, message="Parameter missing"),
+ *      @SWG\ResponseMessage(code=404, message="Account not found"),
+ *      @SWG\ResponseMessage(code=500, message="Server failure - cannot send email"),
+ *      @SWG\ResponseMessage(code=503, message="Too many request - you must wait between requests")
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->post(ROUTES_API_PREFIX.'/accounts/my/lost', function() use($DevAAC) {
+    $request = $DevAAC->request;
+    $account = Account::where('email', $request->getAPIParam('email'))->firstOrFail();
+
+    $objname = 'DevAAC_recovery_'.$request->getAPIParam('email');
+    if(HAS_APC && apc_fetch($objname) + ACCOUNT_RECOVERY_INTERVAL > time())
+        throw new InputErrorException('Only one recovery is permitted per '.ACCOUNT_RECOVERY_INTERVAL.' seconds.', 503);
+
+    $password = substr(str_shuffle(strtolower(sha1(rand() . time() . $DevAAC->tfsConfigFile['mysqlPass']))), 0, 8);
+    $account->password = $password;
+
+    $headers = 'From: '.$DevAAC->tfsConfigFile['ownerName'].' <'.$DevAAC->tfsConfigFile['ownerEmail'].'>' . "\r\n" .
+        'Content-type: text; charset=utf-8' . "\r\n" .
+        'X-Mailer: DevAAC+PHP/' . phpversion();
+
+    $message = 'Hello!' . "\r\n\r\n" .
+        'Here is your account name and password for '.$DevAAC->tfsConfigFile['serverName'] . "\r\n\r\n" .
+        'Account name: ' . $account->name . "\r\n" .
+        'Password: ' . $password . "\r\n\r\n" .
+        'See you in game. You can log in at ' . $DevAAC->tfsConfigFile['url'];
+
+    if(!mail($account->email, 'Password Reminder for '.$DevAAC->tfsConfigFile['serverName'], $message, $headers, '-f'.$DevAAC->tfsConfigFile['ownerEmail']))
+        throw new InputErrorException('Server failure - cannot send email!', 500);
+
+    $account->save();
+
+    if(HAS_APC)
+        apc_store($objname, time());
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode(null, JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/accounts",
+ *  @SWG\Api(
  *    path="/accounts/my/players",
  *    description="Operations on accounts",
  *    @SWG\Operation(
