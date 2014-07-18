@@ -1,0 +1,61 @@
+<div>
+    <h1 class="page-header">Highscores</h1>
+
+    <div>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="level"> Level
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="balance"> Money
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="maglevel"> Magic
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_shielding"> Shielding
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_dist"> Distance
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_sword"> Sword
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_club"> Club
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_axe"> Axe
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_fist"> Fist
+        </label>
+        <label class="checkbox-inline">
+            <input ng-model="order" type="radio" name="sort" value="skill_fishing"> Fishing
+        </label>
+    </div>
+
+    <table class="table table-striped" ng-show="players.length">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Vocation</th>
+                <th>Level</th>
+                <th>Selected Skill</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="player in players">
+                <td>{{$index+1}}</td>
+                <td><a href="#/players/{{ player.name }}">{{ player.name }}</a></td>
+                <td>{{ vocation(player.vocation).name }}</td>
+                <td>{{ player.level }}</td>
+                <td>{{ player[order] }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p ng-show="!players.length">
+        There are no players on this server.
+    </p>
+</div>

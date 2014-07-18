@@ -15,7 +15,10 @@
         body {
             margin-top: 70px;
             background-color: #333;
-            /* Alternative lava background (240 KB): //i.imgur.com/4XIP7Ak.jpg */
+            /*
+                Lava background (240 KB): //i.imgur.com/4XIP7Ak.jpg
+                Grass background (230 KB): //i.imgur.com/d9HCIzB.jpg
+            */
             background-image: url(//i.imgur.com/d9HCIzB.jpg);
         }
         .page-header {
@@ -37,6 +40,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-resource.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-sanitize.js"></script>
     <!-- jQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Bootstrap JS -->
@@ -71,12 +75,13 @@
                 <ul class="nav navbar-nav">
                     <li ng-class="{active:isActive('/about')}"><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
                     <li ng-class="{active:isActive('/players/online')}"><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
+                    <li ng-class="{active:isActive('/highscores')}"><a href="#/highscores"><i class="glyphicon glyphicon-stats"></i> Highscores</a></li>
                     <li ng-class="{active:isActive('/guilds')}"><a href="#/guilds"><i class="glyphicon glyphicon-link"></i> Guilds</a></li>
                     <li ng-class="{active:isActive('/houses')}"><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a href="#/account"><i class="glyphicon glyphicon-cog"></i> My account</a></li>
                             <li class="divider"></li>
@@ -196,6 +201,7 @@
 
     <script src="modules/news/news.js"></script>
     <script src="modules/account/account.js"></script>
+    <script src="modules/highscores/highscores.js"></script>
     <script src="modules/guilds/guilds.js"></script>
     <script src="modules/houses/houses.js"></script>
     <script src="modules/players/players.js"></script>
