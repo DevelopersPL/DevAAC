@@ -29,7 +29,7 @@ var Cookie = {
 };
 
 // Initiate DevAAC
-var DevAAC = angular.module('DevAAC', ['ngRoute', 'ngResource', 'ui.bootstrap']);
+var DevAAC = angular.module('DevAAC', ['ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap']);
 
 DevAAC.run(['$rootScope', '$location', 'StatusMessage', function($rootScope, $location, StatusMessage) {
     $rootScope.$on('$routeChangeStart', function(e, curr, prev) {
@@ -110,5 +110,12 @@ DevAAC.filter('moment', function () {
 DevAAC.filter('reverse', function() {
     return function(items) {
         return items.slice().reverse();
+    };
+});
+
+DevAAC.filter('htmlstring', function($sce) {
+    return function(input) {
+        if(input)
+            return $sce.trustAsHtml(input.replace(/\\n/g, "<br />"))
     };
 });

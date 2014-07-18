@@ -1,7 +1,7 @@
 <p ng-if="errorMessage" class="bg-danger">{{errorMessage}}</p>
 
 <blockquote ng-if="info.motd">
-    <p>{{info.motd}}</p>
+    <p ng-bind-html="info.motd | htmlstring"></p>
 </blockquote>
 
 <span class="pull-right">
