@@ -26,7 +26,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="player in guild.members">
-                <td><strong>{{ rank(player.membership.rank_id).name }} ({{ player.membership.nick }}) <span ng-show="player.id == guild.ownerid" class="label label-primary">Leader</span></strong></td>
+                <td><strong>{{ rank(player.membership.rank_id).name }} <span ng-show="player.membership.nick">({{ player.membership.nick }})</span> <span ng-show="player.id == guild.ownerid" class="label label-primary">Leader</span></strong></td>
                 <td> <a href="#/players/{{player.name}}">{{ player.name }}</a> <span ng-show="player.is_online" class="label label-success">Online</span></td>
                 <td>{{ player.level }}</td>
                 <td>{{ vocation(player.vocation).name }}</td>
