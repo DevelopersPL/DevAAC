@@ -163,7 +163,8 @@ DevAAC.factory('Account', ['$http', '$resource', '$cacheFactory',
                 my: { params: {id: 'my'}, cache: true },
                 get: { cache: true },
                 query: { isArray: true, cache: true },
-                update: { method: 'PUT' }
+                update: { method: 'PUT' },
+                recover: { url: ApiUrl('accounts/my/lost'), method: 'POST' }
             })
         }
     }

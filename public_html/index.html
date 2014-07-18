@@ -96,14 +96,49 @@
                     <div class="form-group">
                         <input ng-model="form.password" class="form-control" placeholder="Password" type="password" required>
                     </div>
-                    <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Log in</button>
-                    <a class="btn btn-info" href="#/account/register">Register</a>
+                    <div class="btn-group">
+                        <button type="submit" id="loading-login-btn" data-loading-text="Logging in..." class="btn btn-success">Log in</button>
+                        <button type="button" class="btn btn-success" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#/account/register">Register</a></li>
+                            <li class="divider"></li>
+                            <li><a data-toggle="modal" data-target="#lostModal" href="javascript://">Lost password?</a></li>
+                        </ul>
+                    </div>
                 </form>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
+
+    <!-- Lost password modal -->
+    <div ng-if="!isLoggedIn()" class="modal fade" id="lostModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Lost your account name or password?</h4>
+                </div>
+                <form role="form" ng-submit="lostPassword()">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="inputEmail">Email address</label>
+                            <input type="email" class="form-control" id="inputEmail" placeholder="Enter your email" required>
+                        </div>
+                        <p id="recoverResponse" class="hidden"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" id="loading-lostpw-btn" data-loading-text="Sending..." class="btn btn-success">Send account name and new password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
 
