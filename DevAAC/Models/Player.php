@@ -172,7 +172,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         return $this->visible;
     }
 
-    protected $appends = array('online');
+    protected $appends = array('is_online', 'membership');
 
     public function account()
     {
@@ -196,7 +196,22 @@ class Player extends \Illuminate\Database\Eloquent\Model {
 
     public function online()
     {
-        return $this->hasOne('DevAAC\Models\PlayerOnline', 'player_id');
+        return $this->hasOne('DevAAC\Models\PlayerOnline');
+    }
+
+    public function getIsOnlineAttribute()
+    {
+        return $this->online != null;
+    }
+
+    public function guildMembership()
+    {
+        return $this->hasOne('DevAAC\Models\GuildMembership');
+    }
+
+    public function getMembershipAttribute()
+    {
+        return $this->guildMembership;
     }
 
     public function houses()
@@ -260,11 +275,6 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         else                                                // rookies, knights
             $m = 3;
         $this->attributes['manaspent'] = (1600 * (pow($m, $mlvl) - 1) ) / ( $m - 1 );
-    }
-
-    public function getOnlineAttribute()
-    {
-        return (bool)$this->online();
     }
 
     public function getLastipAttribute($longip)

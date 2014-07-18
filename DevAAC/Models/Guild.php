@@ -56,6 +56,8 @@ class Guild extends \Illuminate\Database\Eloquent\Model {
         'motd' => ''
     );
 
+    protected $appends = array('total_level', 'average_level', 'members_count', 'online_members');
+
     public function getCreationdataAttribute()
     {
         $date = new DateTime();
@@ -97,5 +99,35 @@ class Guild extends \Illuminate\Database\Eloquent\Model {
     public function ranks()
     {
         return $this->hasMany('DevAAC\Models\GuildRank');
+    }
+
+    public function getTotalLevelAttribute()
+    {
+        $sum = 0;
+        foreach($this->members as $member)
+            $sum += $member->level;
+        return $sum;
+    }
+
+    public function getAverageLevelAttribute()
+    {
+        $sum = 0;
+        foreach($this->members as $member)
+            $sum += $member->level;
+        return round($sum/count($this->members));
+    }
+
+    public function getMembersCountAttribute()
+    {
+        return count($this->members);
+    }
+
+    public function getOnlineMembersAttribute()
+    {
+        $count = 0;
+        foreach($this->members as $member)
+            if($member->is_online)
+                $count++;
+        return $count;
     }
 }

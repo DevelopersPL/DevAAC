@@ -1,39 +1,58 @@
 <div ng-if="!guild"><h1 class="page-header">Loading...</h1></div>
 <div ng-if="guild">
-    <h1 class="page-header">{{guild.name}}</h1>
+    <h1 class="page-header">Guild: {{guild.name}}</h1>
 
     <blockquote ng-if="guild.motd">
         <p>{{guild.motd}}</p>
     </blockquote>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">Guild Members</div>
+    <p>
+        Guild was founded on: {{guild.created | moment: 'LLL'}}<br />
+        Total level: {{guild.total_level}}<br />
+        Average level: {{guild.average_level}}
+    </p>
 
-        <table class="table table-striped" ng-show="players.length">
+    <div class="panel panel-default">
+        <div class="panel-heading">Guild Members ({{guild.online_members}} of {{guild.members_count}} online)</div>
+
+        <table class="table table-striped" ng-show="guild.members.length">
             <thead>
             <tr>
                 <th>Rank</th>
                 <th>Name</th>
                 <th>Level</th>
                 <th>Vocation</th>
-                <th>Status</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="player in players">
-                <td>player.Rank</td>
-                <td>player.Name</td>
-                <td>player.Level</td>
-                <td>player.Vocation</td>
-                <td>player.Status</td>
-                <!--
-                <td>{{ guild.name }}</td>
-                <td><a href="#/players/{{ guild.ownerid }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}})</td>
-                <td>{{ guild.creationdata | date: fullDate }}</td>
-                -->
+            <tr ng-repeat="player in guild.members">
+                <td><strong>{{ rank(player.membership.rank_id).name }} ({{ player.membership.nick }}) <span ng-show="player.id == guild.ownerid" class="label label-primary">Leader</span></strong></td>
+                <td> <a href="#/players/{{player.name}}">{{ player.name }}</a> <span ng-show="player.is_online" class="label label-success">Online</span></td>
+                <td>{{ player.level }}</td>
+                <td>{{ vocation(player.vocation).name }}</td>
             </tr>
             </tbody>
         </table>
     </div>
-    <p>Guild was created: {{guild.created}}</p>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Invited Players</div>
+
+        <table class="table table-striped" ng-show="guild.members.length">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Level</th>
+                <th>Vocation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="inv in guild.invitations">
+                <td> <a href="#/players/{{ player(inv.player_id).name }}">{{ player(inv.player_id).name }}</a> <span ng-show="player(inv.player_id).is_online" class="label label-success">Online</span></td>
+                <td>{{ player(inv.player_id).level }}</td>
+                <td>{{ vocation(player(inv.player_id).vocation).name }}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

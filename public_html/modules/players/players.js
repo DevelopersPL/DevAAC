@@ -36,7 +36,8 @@ DevAAC.controller('PlayerController', ['$scope', '$location', '$route', 'Account
             residence: player.town_id,
             balance: player.balance,
             seen: moment.unix(player.lastlogin).format('LLL') + ' → ' + moment.unix(player.lastlogout).format('LLL'),
-            onlineTime: moment.duration(player.onlinetime, 'seconds').humanize()
+            onlineTime: moment.duration(player.onlinetime, 'seconds').humanize(),
+            is_online: player.is_online
         };
 
         $scope.deaths = Player.deaths({id: player.id});

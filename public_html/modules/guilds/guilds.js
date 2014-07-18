@@ -6,7 +6,15 @@ DevAAC.config(['$routeProvider', function($routeProvider) {
     });
     $routeProvider.when('/guilds/:id', {
         templateUrl: PageUrl('guilds/guild'),
-        controller: 'GuildController'
+        controller: 'GuildController',
+        resolve: {
+            vocations: function(Server) {
+                return Server.vocations().$promise;
+            },
+            guild: function(Guild, $route) {
+                return Guild.get({id: $route.current.params.id}).$promise;
+            }
+        }
     });
 }]);
 
@@ -18,28 +26,36 @@ DevAAC.controller('GuildsController', ['$scope', 'Guild',
         });
     }
 ]);
-DevAAC.controller('GuildController', ['$scope', 'Guild', '$routeParams', '$location', 
-    function($scope, Guild, $routeParams, $location) {
-        $scope.guild = false;
-        Guild.get({guildId: $routeParams.id}, function(guildInfo) {
-            $scope.guild = {
-                name: guildInfo.name,
-                created: guildInfo.creationdata,
-                motd: guildInfo.motd
-            };
-        }, function(response) {
-            if (response.status === 404) {
-                $location.path('/guilds');
-            }
-        });
+DevAAC.controller('GuildController', ['$scope', '$route', '$location', 'Server', 'Guild', 'Player', 'vocations', 'guild',
+    function($scope, $route, $location, Server, Guild, Player, vocations, guild) {
+        $scope.guild = guild;
+
+        $scope.vocation = function(id) {
+            return _.findWhere(vocations, {id: id});
+        };
+
+        $scope.rank = function(id) {
+            return _.findWhere(guild.ranks, {id: id});
+        };
+
+        $scope.players = [];
+        $scope.player = function(id) {
+            if(id == 0)
+                return;
+
+            if($scope.players[id] == undefined)
+                $scope.players[id] = Player.get({id: id});
+
+            return $scope.players[id];
+        };
     }
 ]);
 
 // Module Factories(s)
 DevAAC.factory('Guild', ['$resource',
     function($resource){
-        return $resource(ApiUrl('guilds/:guildId'), {}, {
-            get: { cache: true },
+        return $resource(ApiUrl('guilds/:id'), {}, {
+            get: { cache: true, params: { embed: 'owner,members,invitations,ranks' } },
             query: { isArray: true, cache: true }
         });
     }
