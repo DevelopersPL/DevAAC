@@ -145,6 +145,29 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars', function() use($DevAAC) {
  *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
+ *    path="/guilds/wars/:id",
+ *    description="Operations on guilds",
+ *    @SWG\Operation(
+ *      summary="Get guild war based on war ID",
+ *      notes="",
+ *      method="GET",
+ *      type="GuildWar",
+ *      nickname="getGuildWarByID"
+ *   )
+ *  )
+ * )
+ */
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars/:id', function() use($DevAAC) {
+    $guildwars = GuildWar::all();
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody($guildwars->toJson(JSON_PRETTY_PRINT));
+});
+
+/**
+ * @SWG\Resource(
+ *  basePath="/api/v1",
+ *  resourcePath="/guilds",
+ *  @SWG\Api(
  *    path="/guilds/{id/name}",
  *    description="Operations on guilds",
  *    @SWG\Operation(

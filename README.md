@@ -26,6 +26,13 @@ Requirements
 * PHP MySQL NATIVE DRIVER (mysqlnd) extension (or [this](http://forumsarchive.laravel.io/viewtopic.php?pid=58151) will happen)
 * PHP APC or APCu extension (if you want ```plugins/ratelimiter.php``` to work)
 
+Installation (zip-bundle release)
+=====
+* Download zip-bundle release from (GitHub)[https://github.com/DevelopersPL/DevAAC/releases] (green button)
+* Unpack to a directory higher then your web root, so that public_html is the web root (you can rename it if you need)
+* If you use nginx, you can find sample vhost config [in our wiki](https://github.com/DevelopersPL/DevAAC/wiki)
+* Rename ```config.sample.php``` to ```config.php``` and follow instructions in it
+
 Installation (dev release)
 =====
 * [Get composer](https://getcomposer.org/download) ```curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin```
@@ -55,11 +62,6 @@ You can generate Swagger API docs manually:
 php vendor/zircote/swagger-php/swagger.phar DevAAC/ -o api-docs
 ```
 
-TODO
-=====
-* Log admin/GM-like actions
-* Hierarchy of privileges for Tutors/GMs/CMs
-
 Authors
 =====
 * [Daniel Speichert](https://github.com/DSpeichert)
@@ -70,4 +72,4 @@ Contributions are always welcome, please submit pull requests!
 We are looking for back-end plugins and front-end functionality of themes.
 (It is proper to keep non-essential functionality in the form of plugins.)
 
-Check [LICENSE](LICENSE).
+Released under [MIT license](LICENSE).
