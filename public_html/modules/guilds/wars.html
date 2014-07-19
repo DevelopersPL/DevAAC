@@ -1,0 +1,32 @@
+<div>
+    <h1 class="page-header">Wars <small>there are {{ wars.length }} on this server</small></h1>
+
+    <table class="table table-striped" ng-show="wars.length && loaded">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Started</th>
+                <th>Ended</th>
+                <th>Stats</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="war in wars">
+                <td><a href="#/guilds/{{ war.name1 }}">{{ war.name1 }}</a> are at war against <a href="#/guilds/{{ war.name2 }}">{{ war.name2 }}</a></td>
+                <td>{{ war.started | moment: 'LLL' }}</td>
+                <td>{{ war.ended | moment: 'LLL' }}</td>
+                <td><strong>{{ war.guild1_kills }}</strong> - <strong>{{ war.guild2_kills }}</strong></td>
+                <td><a href="#/guilds/wars/{{ war.id }}" class="btn btn-default btn-xs">Show details</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p ng-show="!wars.length && loaded">
+        There are no wars yet!
+    </p>
+
+    <p ng-hide="loaded">
+        Loading...
+    </p>
+</div>

@@ -76,7 +76,13 @@
                     <li ng-class="{active:isActive('/about')}"><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
                     <li ng-class="{active:isActive('/players/online')}"><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
                     <li ng-class="{active:isActive('/highscores')}"><a href="#/highscores"><i class="glyphicon glyphicon-stats"></i> Highscores</a></li>
-                    <li ng-class="{active:isActive('/guilds')}"><a href="#/guilds"><i class="glyphicon glyphicon-link"></i> Guilds</a></li>
+                    <li ng-class="{active:isActive('/guilds')}"><a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-link"></i> Guilds</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#/guilds">Guilds List</a></li>
+                            <li><a href="#/guilds/wars">Guilds Wars</a></li>
+                        </ul>
+                    </li>
                     <li ng-class="{active:isActive('/houses')}"><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
@@ -190,7 +196,7 @@
                                 <tbody>
                                     <tr ng-repeat="player in highExperience">
                                         <td>{{$index+1}}. <a href="#/players/{{player.name}}">{{player.name}}</a></td>
-                                        <td>{{player.level}}</td>
+                                        <td><span class="label label-primary">{{player.level}}</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -237,6 +243,7 @@
     <script src="modules/news/news.js"></script>
     <script src="modules/account/account.js"></script>
     <script src="modules/highscores/highscores.js"></script>
+    <script src="modules/guilds/wars.js"></script>
     <script src="modules/guilds/guilds.js"></script>
     <script src="modules/houses/houses.js"></script>
     <script src="modules/players/players.js"></script>
