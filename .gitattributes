@@ -1,2 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+ansible/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+Vagrantfile export-ignore
