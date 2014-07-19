@@ -12,7 +12,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="guild in guilds | orderBy: online_members : true | orderBy: average_level : true">
+            <tr ng-repeat="guild in guilds | orderBy: ['online_members', 'average_level'] : true">
                 <td><a href="#/guilds/{{ guild.name }}">{{ guild.name }}</a></td>
                 <td><a href="#/players/{{ guild.owner.name }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}}) <span ng-show="guild.owner.is_online" class="label label-success">Online</span></td>
                 <td>{{ guild.online_members }} / {{ guild.members_count }}</td>
