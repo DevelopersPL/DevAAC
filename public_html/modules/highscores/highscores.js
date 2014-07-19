@@ -18,14 +18,14 @@ DevAAC.controller('HighscoresController', ['$scope', 'Player', 'Server', 'vocati
         $scope.order = 'level';
         $scope.$watch('order', function(val) {
             $scope.loaded = false;
-            $scope.players = Player.query({sort: '-'+val+',-level'}, function(val) {
+            $scope.players = Player.query({sort: '-'+val+',-level', limit: 100}, function(val) {
                 $scope.loaded = true;
             });
         });
 
         $scope.players = Player.query(function(val){
             $scope.loaded = true;
-            return {sort: '-'+val+',-level'};
+            return {sort: '-'+val+',-level', limit: 100};
         });
 
         $scope.vocation = function(id) {
