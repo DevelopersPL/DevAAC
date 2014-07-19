@@ -145,22 +145,40 @@ $DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars', function() use($DevAAC) {
  *  basePath="/api/v1",
  *  resourcePath="/guilds",
  *  @SWG\Api(
- *    path="/guilds/wars/:id",
+ *    path="/guilds/wars/{id}",
  *    description="Operations on guilds",
  *    @SWG\Operation(
  *      summary="Get guild war based on war ID",
  *      notes="",
  *      method="GET",
  *      type="GuildWar",
- *      nickname="getGuildWarByID"
+ *      nickname="getGuildWarByID",
+ *      @SWG\Parameter( name="id",
+ *                      description="ID of GuildWar that needs to be fetched",
+ *                      paramType="path",
+ *                      required=true,
+ *                      type="integer"),
+ *      @SWG\Parameter( name="embed",
+ *                      description="Pass kills to embed",
+ *                      paramType="query",
+ *                      required=false,
+ *                      type="string list separated by comma"),
+ *      @SWG\ResponseMessage(code=404, message="GuildWar not found")
  *   )
  *  )
  * )
  */
-$DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars/:id', function() use($DevAAC) {
-    $guildwars = GuildWar::all();
+$DevAAC->get(ROUTES_API_PREFIX.'/guilds/wars/:id', function($id) use($DevAAC) {
+    $req = $DevAAC->request;
+    $war = GuildWar::findOrFail($id);
+
+    $embedded = explode(',', $req->get('embed'));
+
+    if (in_array('kills', $embedded))
+        $war->kills;
+
     $DevAAC->response->headers->set('Content-Type', 'application/json');
-    $DevAAC->response->setBody($guildwars->toJson(JSON_PRETTY_PRINT));
+    $DevAAC->response->setBody($war->toJson(JSON_PRETTY_PRINT));
 });
 
 /**

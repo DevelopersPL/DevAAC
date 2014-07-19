@@ -37,84 +37,48 @@ use DevAAC\Helpers\DateTime;
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
- * @SWG\Model(required="['id','guild1','guild2','name1','name2']")
+ * @SWG\Model(required="['id','killer','target','killerguild','targetguild','warid','time']")
  */
-class GuildWar extends \Illuminate\Database\Eloquent\Model {
+class GuildwarKill extends \Illuminate\Database\Eloquent\Model {
     /**
      * @SWG\Property(name="id", type="integer")
-     * @SWG\Property(name="guild1", type="integer")
-     * @SWG\Property(name="guild2", type="integer")
-     * @SWG\Property(name="name1", type="string")
-     * @SWG\Property(name="name2", type="string")
-     * @SWG\Property(name="status", type="integer")
-     * @SWG\Property(name="started", type="DateTime::ISO8601")
-     * @SWG\Property(name="ended", type="DateTime::ISO8601")
+     * @SWG\Property(name="killer", type="string")
+     * @SWG\Property(name="target", type="string")
+     * @SWG\Property(name="killerguild", type="integer")
+     * @SWG\Property(name="targetguild", type="integer")
+     * @SWG\Property(name="warid", type="integer")
+     * @SWG\Property(name="time", type="DateTime::ISO8601")
      */
 
     public $timestamps = false;
 
     protected $guarded = array('id');
 
-    protected $appends = array('guild1_kills', 'guild2_kills');
-
-    public function getStartedAttribute()
+    public function getTimeAttribute()
     {
         $date = new DateTime();
-        $date->setTimestamp($this->attributes['started']);
+        $date->setTimestamp($this->attributes['time']);
         return $date;
     }
 
-    public function setStartedAttribute($d)
+    public function setTimeAttribute($d)
     {
         if($d instanceof \DateTime)
-            $this->attributes['started'] = $d->getTimestamp();
+            $this->attributes['time'] = $d->getTimestamp();
         elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
             $dt = new DateTime($d);
-            $this->attributes['started'] = $dt->getTimestamp();
+            $this->attributes['time'] = $dt->getTimestamp();
         } else // it is a UNIX timestamp
-            $this->attributes['started'] = $d;
+            $this->attributes['time'] = $d;
     }
 
-    public function getEndedAttribute()
+    public function killerGuild()
     {
-        $date = new DateTime();
-        $date->setTimestamp($this->attributes['ended']);
-        return $date;
+        return $this->belongsTo('DevAAC\Models\Guild', 'killerguild');
     }
 
-    public function setEndedAttribute($d)
+    public function targetGuild()
     {
-        if($d instanceof \DateTime)
-            $this->attributes['ended'] = $d->getTimestamp();
-        elseif((int)$d != (string)$d) { // it's not a UNIX timestamp
-            $dt = new DateTime($d);
-            $this->attributes['ended'] = $dt->getTimestamp();
-        } else // it is a UNIX timestamp
-            $this->attributes['ended'] = $d;
-    }
-
-    public function guild1()
-    {
-        return $this->belongsTo('DevAAC\Models\Guild', 'guild1');
-    }
-
-    public function guild2()
-    {
-        return $this->belongsTo('DevAAC\Models\Guild', 'guild2');
-    }
-
-    public function kills()
-    {
-        return $this->hasMany('DevAAC\Models\GuildwarKill', 'warid');
-    }
-
-    public function getGuild1KillsAttribute()
-    {
-        return GuildwarKill::where('warid', $this->id)->where('killerguild', $this->guild1)->count();
-    }
-
-    public function getGuild2KillsAttribute()
-    {
-        return GuildwarKill::where('warid', $this->id)->where('killerguild', $this->guild2)->count();
+        return $this->belongsTo('DevAAC\Models\Guild', 'targetguild');
     }
 }
