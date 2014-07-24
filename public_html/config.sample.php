@@ -18,11 +18,6 @@
 // define('HOUSES_PER_PLAYER', 1);
 // define('HOUSES_PER_ACCOUNT', 1);
 
-// define('HOUSES_AUCTIONS', true); // enable house auction system?
-// define('HOUSES_AUCTION_TIME', 'P7D'); // DateInterval spec notation: http://www.php.net/manual/en/dateinterval.construct.php
-// define('HOUSES_PER_PLAYER', 1);
-// define('HOUSES_PER_ACCOUNT', 1);
-
 // define('DISABLE_PLUGINS', false);
 // define('ENABLED_PLUGINS', serialize(array('ratelimiter.php', 'simple.php', 'ipban.php')));
 
