@@ -501,7 +501,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
         throw new InputErrorException('Player name must have 5-20 characters, only letters and space.', 400);
 
     if (filter_var($req->getAPIParam('name'), FILTER_VALIDATE_REGEXP,
-          array('options' => array('regexp' => '/(Tutor|GM|God|CM|Admin)/i')))
+          array('options' => array('regexp' => '/\b(Tutor|GM|God|CM|Admin)\b/i')))
           && !$DevAAC->auth_account->isGameMaster())
         throw new InputErrorException('Player name must not include GM/CM/God/Admin words.', 400);
 
