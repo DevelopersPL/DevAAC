@@ -129,10 +129,16 @@ $capsule->addConnection([
     'collation' => 'latin1_swedish_ci',
     'prefix'    => '',
 ]);
-if (strpos($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION), 'mysqlnd') === false)
-    die('PHP PDO is using non-native MySQL extension, php-mysqlnd native extension is required. You most likely have to execute: apt-get install php5-mysqlnd');
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
+
+try {
+    if (strpos($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION), 'mysqlnd') === false)
+        die('PHP PDO is using non-native MySQL extension, php-mysqlnd native extension is required. You most likely have to execute: apt-get install php5-mysqlnd');
+} catch(PDOException $e) {
+    http_response_code(503);
+    die(json_encode(array('code' => 503, 'message' => 'Server is temporarily unavailable due to a MySQL connection problem.'), JSON_PRETTY_PRINT));
+}
 
 ////////////////////// SERVE API DOCS WITH Swagger ///////////////////////////////
 // http://zircote.com/swagger-php/using_swagger.html
