@@ -87,7 +87,6 @@ DevAAC.controller('HouseController', ['$scope', '$routeParams', '$location', 'Ho
                     house.$bid({id: bid.id, player_id: bid.player_id, bid: bid.bid}, function(house) {
                         $scope.statusmsg.type = 'success';
                         $scope.statusmsg.msg = 'You now have the highest pledge on this house!';
-                        $scope.getHouseData(house);
                     }, function(response) {
                         $scope.statusmsg.type = 'danger';
                         $scope.statusmsg.msg = response.data.message;
@@ -95,6 +94,7 @@ DevAAC.controller('HouseController', ['$scope', '$routeParams', '$location', 'Ho
                 }
             }
         };
+
         $scope.checkBalance = function(playername) {
             // Required balance to bid
             var requiredBalance = $scope.house.bid + $scope.house.rent;
@@ -102,14 +102,11 @@ DevAAC.controller('HouseController', ['$scope', '$routeParams', '$location', 'Ho
             for (var i = 0; i < $scope.players.length; i++) {
                 if ($scope.players[i].name == playername) {
                     $scope.bidForm.balance = $scope.players[i].balance;
-                    if (requiredBalance < $scope.players[i].balance)
-                        $scope.bidForm.canBid = true;
-                    else
-                        $scope.bidForm.canBid = false;
+                    $scope.bidForm.canBid = (requiredBalance < $scope.players[i].balance);
                     break;
                 }
             }
-        }
+        };
     }
 ]);
 

@@ -4,7 +4,7 @@ function PageUrl(module) {
     else return 'modules/' + module[0] + '/' + module[1] + '.html';
 }
 function ApiUrl(link) {
-    // window.location.origin is better (includes port) but is not supported in IE
+    // window.location.host typically includes port
     return window.location.protocol + '//' + window.location.host + '/api/v1/' + link;
 }
 
