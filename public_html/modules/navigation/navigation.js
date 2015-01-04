@@ -11,7 +11,7 @@ DevAAC.controller('NavigationController', ['$scope', '$location', 'Account',
 
         $scope.isActive = function(route) {
             return route === $location.path();
-        }
+        };
 
         $scope.isLoggedIn = function() {
             return Cookie.get('DevAACToken');
@@ -26,6 +26,7 @@ DevAAC.controller('NavigationController', ['$scope', '$location', 'Account',
                 .success(function(data, status) {
                     $location.path('/account');
                     $scope.form.password = '';
+                    $scope.account = Account.factory.my();
                 })
                 .error(function(data, status) {
                     $('#loading-login-btn').button('reset');

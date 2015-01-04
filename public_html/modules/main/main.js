@@ -13,7 +13,7 @@ DevAAC.controller('MainController', ['$scope', 'Server', 'Account',
 
             Account.factory.recover({email: $('#inputEmail').val()}, function() {
                 $('#recoverResponse').removeClass('hidden').addClass('text-success')
-                    .text("Your account name and new password has been sent to your e-mail address.");
+                    .text('Your account name and new password has been sent to your e-mail address.');
 
                 $('#loading-lostpw-btn').remove();
             }, function(response) {
