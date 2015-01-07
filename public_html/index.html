@@ -37,10 +37,10 @@
         .nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
     </style>
     <!-- AngularJS -->
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-route.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-resource.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular-sanitize.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular-resource.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular-sanitize.js"></script>
     <!-- jQuery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Bootstrap JS -->
@@ -66,30 +66,30 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a ng-show="name" class="navbar-brand ng-hidden" href="#/">{{ name }}</a>
-                <a ng-hide="name" class="navbar-brand" href="#/">DevAAC</a>
+                <a ng-show="name" class="navbar-brand ng-hidden" ng-href="/">{{ name }}</a>
+                <a ng-hide="name" class="navbar-brand" ng-href="/">DevAAC</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div ng-controller="NavigationController" class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
-                    <li ng-class="{active:isActive('/about')}"><a href="#/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
-                    <li ng-class="{active:isActive('/players/online')}"><a href="#/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
-                    <li ng-class="{active:isActive('/highscores')}"><a href="#/highscores"><i class="glyphicon glyphicon-stats"></i> Highscores</a></li>
+                    <li ng-class="{active:isActive('/about')}"><a href ng-href="/about"><i class="glyphicon glyphicon-question-sign"></i> About</a></li>
+                    <li ng-class="{active:isActive('/players/online')}"><a href ng-href="/players/online"><i class="glyphicon glyphicon-eye-open"></i> Who is online?</a></li>
+                    <li ng-class="{active:isActive('/highscores')}"><a href ng-href="/highscores"><i class="glyphicon glyphicon-stats"></i> Highscores</a></li>
                     <li ng-class="{active:isActive('/guilds')}"><a href="javascript://" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="glyphicon glyphicon-link"></i> Guilds</a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#/guilds">Guilds List</a></li>
-                            <li><a href="#/guilds/wars">Guilds Wars</a></li>
+                            <li><a href ng-href="/guilds">Guilds List</a></li>
+                            <li><a href ng-href="/guilds/wars">Guilds Wars</a></li>
                         </ul>
                     </li>
-                    <li ng-class="{active:isActive('/houses')}"><a href="#/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
+                    <li ng-class="{active:isActive('/houses')}"><a href ng-href="/houses"><i class="glyphicon glyphicon-home"></i> Houses</a></li>
                 </ul>
                 <ul ng-if="isLoggedIn()" class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown">Welcome {{account.name}}!<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#/account"><i class="glyphicon glyphicon-cog"></i> My account</a></li>
+                            <li><a href ng-href="/account"><i class="glyphicon glyphicon-cog"></i> My account</a></li>
                             <li class="divider"></li>
                             <li><a ng-click="Logout()" href="javascript://">Logout</a></li>
                         </ul>
@@ -109,7 +109,7 @@
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#/account/register">Register</a></li>
+                            <li><a href ng-href="/account/register">Register</a></li>
                             <li class="divider"></li>
                             <li><a data-toggle="modal" data-target="#lostModal" href="javascript://">Lost password?</a></li>
                         </ul>
@@ -161,7 +161,7 @@
             
             <div class="col-sm-3" ng-controller="WidgetController">
                 <div class="well well-sm">
-                    <a href="#/players/online"><h3 class="text-center"><i class="glyphicon glyphicon-user"></i> {{info.players_online_count}} / {{info.maxPlayers}} online</h3></a>
+                    <a href ng-href="/players/online"><h3 class="text-center"><i class="glyphicon glyphicon-user"></i> {{info.players_online_count}} / {{info.maxPlayers}} online</h3></a>
                 </div>
 
                 <div ng-show="highExperience.length">
@@ -195,7 +195,7 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="player in highExperience">
-                                        <td>{{$index+1}}. <a href="#/players/{{player.name}}">{{player.name}}</a></td>
+                                        <td>{{$index+1}}. <a href ng-href="/players/{{player.name}}">{{player.name}}</a></td>
                                         <td><span class="label label-primary">{{player.level}}</span></td>
                                     </tr>
                                 </tbody>
@@ -232,18 +232,18 @@
     <!-- /.container -->
 
     <!-- DevAAC core -->
-    <script src="DevAAC.js"></script>
+    <script src="/DevAAC.js"></script>
     <!-- Modules (components) -->
-    <script src="modules/main/main.js"></script>
-    <script src="modules/news/news.js"></script>
-    <script src="modules/account/account.js"></script>
-    <script src="modules/highscores/highscores.js"></script>
-    <script src="modules/guilds/wars.js"></script>
-    <script src="modules/guilds/guilds.js"></script>
-    <script src="modules/houses/houses.js"></script>
-    <script src="modules/players/players.js"></script>
-    <script src="modules/about/about.js"></script>
-    <script src="modules/404/404.js"></script>
-    <script src="modules/server/server.js"></script>
+    <script src="/modules/main/main.js"></script>
+    <script src="/modules/news/news.js"></script>
+    <script src="/modules/account/account.js"></script>
+    <script src="/modules/highscores/highscores.js"></script>
+    <script src="/modules/guilds/wars.js"></script>
+    <script src="/modules/guilds/guilds.js"></script>
+    <script src="/modules/houses/houses.js"></script>
+    <script src="/modules/players/players.js"></script>
+    <script src="/modules/about/about.js"></script>
+    <script src="/modules/404/404.js"></script>
+    <script src="/modules/server/server.js"></script>
 </body>
 </html>

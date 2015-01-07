@@ -33,15 +33,15 @@
         </thead>
         <tbody>
             <tr ng-repeat="house in houses | orderBy: order : orderReverse" ng-class="{success: !house.owner && !house.highest_bidder, warning: !house.owner && house.highest_bidder }">
-                <td><a href="#/houses/{{house.id}}">{{ house.name }}</a></td>
+                <td><a href ng-href="/houses/{{house.id}}">{{ house.name }}</a></td>
                 <td>{{ house.town_id }}</td>
                 <td>{{ house.size }}</td>
                 <td>{{ house.rent | number }} gp</td>
                 <td>
-                    <span ng-if="house.owner"><a href="#/players/{{ player(house.owner).name }}">{{ player(house.owner).name }}</a> <span ng-if="player(house.owner)">({{player(house.owner).level}})</span></span>
-                    <span ng-if="!house.owner && info.houses_auctions && !house.highest_bidder"><a class="btn btn-xs btn-success" href="#/houses/{{house.id}}">No Owner - Start bidding</a></span>
-                    <span ng-if="!house.owner && info.houses_auctions && house.highest_bidder"><a class="btn btn-xs btn-warning" href="#/houses/{{house.id}}">Auction ends {{ fromNow(house.bid_end) }}!</a></span>
-                    <span ng-if="!house.owner && !info.houses_auctions"><a class="btn btn-xs btn-success" href="#/houses/{{house.id}}">!buyhouse in game to buy</a></span>
+                    <span ng-if="house.owner"><a href ng-href="/players/{{ player(house.owner).name }}">{{ player(house.owner).name }}</a> <span ng-if="player(house.owner)">({{player(house.owner).level}})</span></span>
+                    <span ng-if="!house.owner && info.houses_auctions && !house.highest_bidder"><a class="btn btn-xs btn-success" href ng-href="/houses/{{house.id}}">No Owner - Start bidding</a></span>
+                    <span ng-if="!house.owner && info.houses_auctions && house.highest_bidder"><a class="btn btn-xs btn-warning" href ng-href="/houses/{{house.id}}">Auction ends {{ fromNow(house.bid_end) }}!</a></span>
+                    <span ng-if="!house.owner && !info.houses_auctions"><a class="btn btn-xs btn-success" href ng-href="/houses/{{house.id}}">!buyhouse in game to buy</a></span>
                 </td>
             </tr>
         </tbody>

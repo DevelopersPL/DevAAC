@@ -26,19 +26,20 @@ Requirements
 * PHP MySQL NATIVE DRIVER (mysqlnd) extension (or [this](http://forumsarchive.laravel.io/viewtopic.php?pid=58151) will happen)
 * PHP APC or APCu extension (if you want ```plugins/ratelimiter.php``` to work)
 
-Installation (zip-bundle release)
+Installation (zip-bundle release) - stable
 =====
 * Download zip-bundle release from [GitHub](https://github.com/DevelopersPL/DevAAC/releases) (green button)
 * Unpack to a directory higher then your web root, so that public_html is the web root (you can rename it if you need)
 * If you use nginx, you can find sample vhost config [in our wiki](https://github.com/DevelopersPL/DevAAC/wiki)
+* Web server MUST be configured to serve public_html as Document Root, DevAAC won't work in a subdirectory!
 * Rename ```config.sample.php``` to ```config.php``` and follow instructions in it
 
-Installation (dev release)
+Installation (development)
 =====
 * [Get composer](https://getcomposer.org/download) ```curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin```
 * Clone this repo: ```git clone https://github.com/DevelopersPL/DevAAC.git```
 * Install dependencies: ```composer.phar install```
-* Set up your web server to serve DevAAC/public_html as document root and [required rewrites](https://github.com/DevelopersPL/DevAAC/wiki)
+* Set up your web server to serve DevAAC/public_html as document root and add [required rewrites](https://github.com/DevelopersPL/DevAAC/wiki)
 * Rename ```config.sample.php``` to ```config.php``` and follow instructions
 
 REST API

@@ -38,7 +38,7 @@
         </div>
 
         <div ng-if="house.owner != 0">
-            <h3>This house is owned by <a href="#/players/{{owner.name}}">{{owner.name}}</a></h3>
+            <h3>This house is owned by <a href ng-href="/players/{{owner.name}}">{{owner.name}}</a></h3>
         </div>
 
         <div ng-if="house.owner == 0">
@@ -52,7 +52,7 @@
                 <div class="panel-body">
                     <div ng-if="house.highest_bidder != 0">
                         <div class="alert alert-warning">
-                            <b>Highest bid: {{house.bid | number}} gp by by: <a href="#/players/{{highest_bidder.name}}">{{highest_bidder.name}}</a></b>
+                            <b>Highest bid: {{house.bid | number}} gp by by: <a href ng-href="/players/{{highest_bidder.name}}">{{highest_bidder.name}}</a></b>
                         </div>
                     </div>
 

@@ -3,7 +3,7 @@
 </div>
 
 <div ng-if="war">
-    <h1 class="page-header">Guild War: <a href="#/guilds/{{ war.name1 }}"><strong>{{ war.name1 }}</strong></a> vs. <a href="#/guilds/{{ war.name2 }}"><strong>{{ war.name2 }}</strong></a> <small>{{ war.guild1_kills }} - {{ war.guild2_kills }}</small></h1>
+    <h1 class="page-header">Guild War: <a href ng-href="/guilds/{{ war.name1 }}"><strong>{{ war.name1 }}</strong></a> vs. <a href ng-href="/guilds/{{ war.name2 }}"><strong>{{ war.name2 }}</strong></a> <small>{{ war.guild1_kills }} - {{ war.guild2_kills }}</small></h1>
 
     <p>This guild war began at {{ war.started | moment: 'LLL' }} and ended at {{ war.ended | moment: 'LLL' }}</p>
 
@@ -25,8 +25,8 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="kill in war.kills | orderBy:'time' | filter:{killerguild: war.guild1}">
-                    <td><a href="#/players/{{ kill.killer }}">{{ kill.killer }}</a> <span class="label label-primary">{{ player(kill.killer).level }}</span></td>
-                    <td><a href="#/players/{{ kill.target }}">{{ kill.target }}</a> <span class="label label-primary">{{ player(kill.target).level }}</span></td>
+                    <td><a href ng-href="/players/{{ kill.killer }}">{{ kill.killer }}</a> <span class="label label-primary">{{ player(kill.killer).level }}</span></td>
+                    <td><a href ng-href="/players/{{ kill.target }}">{{ kill.target }}</a> <span class="label label-primary">{{ player(kill.target).level }}</span></td>
                     <td>{{ kill.time | moment: 'LLL' }}</td>
                 </tr>
                 </tbody>
@@ -45,8 +45,8 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="kill in war.kills | orderBy:'time' | filter:{killerguild: war.guild2}">
-                    <td><a href="#/players/{{ kill.killer }}">{{ kill.killer }}</a> <span class="label label-primary">{{ player(kill.killer).level }}</span></td>
-                    <td><a href="#/players/{{ kill.target }}">{{ kill.target }}</a> <span class="label label-primary">{{ player(kill.target).level }}</span></td>
+                    <td><a href ng-href="/players/{{ kill.killer }}">{{ kill.killer }}</a> <span class="label label-primary">{{ player(kill.killer).level }}</span></td>
+                    <td><a href ng-href="/players/{{ kill.target }}">{{ kill.target }}</a> <span class="label label-primary">{{ player(kill.target).level }}</span></td>
                     <td>{{ kill.time | moment: 'LLL' }}</td>
                 </tr>
                 </tbody>

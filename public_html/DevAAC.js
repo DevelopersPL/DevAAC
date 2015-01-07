@@ -1,7 +1,7 @@
 function PageUrl(module) {
     module = module.split('/');
-    if (module.length == 1) return 'modules/' + module[0] + '/' + module[0] + '.html';
-    else return 'modules/' + module[0] + '/' + module[1] + '.html';
+    if (module.length == 1) return '/modules/' + module[0] + '/' + module[0] + '.html';
+    else return '/modules/' + module[0] + '/' + module[1] + '.html';
 }
 function ApiUrl(link) {
     // window.location.host typically includes port
@@ -30,6 +30,13 @@ var Cookie = {
 
 // Initiate DevAAC
 var DevAAC = angular.module('DevAAC', ['ngRoute', 'ngResource', 'ngSanitize', 'ui.bootstrap']);
+
+DevAAC.config(['$locationProvider', function ($locationProvider) {
+    $locationProvider.html5Mode({
+        enabled: true,
+        rewriteLinks: true
+    });
+}]);
 
 DevAAC.run(['$rootScope', '$location', 'StatusMessage', function($rootScope, $location, StatusMessage) {
     $rootScope.$on('$routeChangeStart', function(e, curr, prev) {

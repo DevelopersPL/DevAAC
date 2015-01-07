@@ -47,7 +47,7 @@
         <tbody>
             <tr ng-repeat="player in players">
                 <td>{{$index+1}}</td>
-                <td><a href="#/players/{{ player.name }}">{{ player.name }}</a></td>
+                <td><a href ng-href="/players/{{ player.name }}">{{ player.name }}</a></td>
                 <td>{{ vocation(player.vocation).name }}</td>
                 <td>{{ player.level }}</td>
                 <td>{{ player[order] | number }}</td>

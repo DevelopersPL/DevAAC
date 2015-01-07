@@ -13,8 +13,8 @@
         </thead>
         <tbody>
             <tr ng-repeat="guild in guilds | orderBy: ['online_members', 'average_level'] : true">
-                <td><a href="#/guilds/{{ guild.name }}">{{ guild.name }}</a></td>
-                <td><a href="#/players/{{ guild.owner.name }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}}) <span ng-show="guild.owner.is_online" class="label label-success">Online</span></td>
+                <td><a href ng-href="/guilds/{{ guild.name }}">{{ guild.name }}</a></td>
+                <td><a href ng-href="/players/{{ guild.owner.name }}">{{ guild.owner.name }}</a> ({{ guild.owner.level}}) <span ng-show="guild.owner.is_online" class="label label-success">Online</span></td>
                 <td>{{ guild.online_members }} / {{ guild.members_count }}</td>
                 <td>{{ guild.average_level }}</td>
                 <td>{{ guild.creationdata | date: fullDate }}</td>
