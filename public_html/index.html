@@ -56,7 +56,7 @@
     <!-- jsSHA -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jsSHA/1.5.0/sha1.js"></script>
 </head>
-<body ng-controller="MainController">
+<body ng-controller="MainController" ng-cloak>
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div ng-controller="HeaderController" class="navbar-header">
@@ -235,11 +235,6 @@
     <script src="DevAAC.js"></script>
     <!-- Modules (components) -->
     <script src="modules/main/main.js"></script>
-    <script src="modules/header/header.js"></script>
-    <script src="modules/navigation/navigation.js"></script>
-    <script src="modules/widget/widget.js"></script>
-    <script src="modules/footer/footer.js"></script>
-
     <script src="modules/news/news.js"></script>
     <script src="modules/account/account.js"></script>
     <script src="modules/highscores/highscores.js"></script>
@@ -249,8 +244,6 @@
     <script src="modules/players/players.js"></script>
     <script src="modules/about/about.js"></script>
     <script src="modules/404/404.js"></script>
-
-    <script src="modules/status/status.js"></script>
     <script src="modules/server/server.js"></script>
 </body>
 </html>
