@@ -29,7 +29,7 @@ Requirements
 Installation (zip-bundle release) - stable
 =====
 * Download zip-bundle release from [GitHub](https://github.com/DevelopersPL/DevAAC/releases) (green button)
-* Unpack to a directory higher then your web root, so that public_html is the web root (you can rename it if you need)
+* Unpack to a directory higher than your web root, so that public_html is the web root (you can rename it if you need)
 * If you use nginx, you can find sample vhost config [in our wiki](https://github.com/DevelopersPL/DevAAC/wiki)
 * Web server MUST be configured to serve public_html as Document Root, DevAAC won't work in a subdirectory!
 * Rename ```config.sample.php``` to ```config.php``` and follow instructions in it
