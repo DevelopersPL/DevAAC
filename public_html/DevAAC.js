@@ -127,6 +127,23 @@ DevAAC.directive('markdown', function ($compile, $http) {
     };
 });
 
+// To use: <button ng-click="action()" ng-confirm-click="Are you sure?"/>
+DevAAC.directive('ngConfirmClick', [function () {
+    return {
+        priority: -1,
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.bind('click', function (e) {
+                var message = attrs.ngConfirmClick;
+                if (message && !confirm(message)) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                }
+            });
+        }
+    }
+}]);
+
 DevAAC.filter('markdown', function($sce) {
     var converter = new Showdown.converter();
     return function(input) {
