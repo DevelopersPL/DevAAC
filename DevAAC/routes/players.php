@@ -520,7 +520,8 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
             'name' => ucwords(strtolower($req->getAPIParam('name'))),
             'vocation' => $req->getAPIParam('vocation'),
             'sex' => $req->getAPIParam('sex'),
-            'level' => NEW_PLAYER_LEVEL
+            'level' => NEW_PLAYER_LEVEL,
+            'looktype' => $req->getAPIParam('sex') ? 128 : 136
         )
     );
 
