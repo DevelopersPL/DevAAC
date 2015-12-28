@@ -1,6 +1,6 @@
 {
     "require": {
-        "slim/slim": "*",
+        "slim/slim": "^2.6",
         "illuminate/database": "*",
         "zircote/swagger-php": "*"
     }
