@@ -332,7 +332,7 @@ function parse_tfs_config($filename)
     $array = explode("\n", $contents);
     $output = [];
     foreach ($array as $arr) {
-        if (! strpos($arr, '--') !== 0) {
+        if (strpos($arr, '--') !== 0) {
             $output[] = $arr;
         }
     }
