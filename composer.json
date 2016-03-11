@@ -1,6 +1,6 @@
 {
-    "name": "DevAAC",
-    "Description": "Automatic Account Creator for TFS 1.X",
+    "name": "DevelopersPL/DevAAC",
+    "description": "Automatic Account Creator for TFS 1.X",
     "license": "MIT",
     "require": {
         "slim/slim": "^2.6",

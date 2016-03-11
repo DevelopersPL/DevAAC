@@ -221,8 +221,7 @@ if (ENABLE_DEBUG) {
         echo PHP_EOL . PHP_EOL . PHP_EOL;
         */
         $a = (array)$DevAAC->vocations;
-        var_dump(xml2array($DevAAC->vocations)['vocation']);
-        json_encode($a['vocation'], JSON_PRETTY_PRINT);
+        echo json_encode($a['vocation'], JSON_PRETTY_PRINT);
     });
 
     $DevAAC->get(ROUTES_PREFIX . '/phpinfo', function () {
