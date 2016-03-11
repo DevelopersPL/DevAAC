@@ -32,10 +32,10 @@
 namespace DevAAC\Helpers;
 
 use Illuminate\Support\Contracts\JsonableInterface;
-use Illuminate\Support\Contracts\ArrayableInterface;
+use JsonSerializable;
 
 
-class DateTime extends \DateTime implements \JsonSerializable, JsonableInterface {
+class DateTime extends \DateTime implements JsonSerializable, JsonableInterface {
 
     public function __toString()
     {
@@ -51,4 +51,4 @@ class DateTime extends \DateTime implements \JsonSerializable, JsonableInterface
     {
         return json_encode($this->format(DateTime::ISO8601, $options));
     }
-} 
+}

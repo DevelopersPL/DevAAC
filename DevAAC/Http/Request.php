@@ -31,6 +31,8 @@
 
 namespace DevAAC\Http;
 
+use InputErrorException;
+
 class Request extends \Slim\Http\Request
 {
     /**
@@ -40,6 +42,7 @@ class Request extends \Slim\Http\Request
      * @param  string           $key
      * @param  mixed            $default Default return value when key does not exist
      * @return array|mixed|null
+     * @throws InputErrorException
      */
     public function getAPIParam($key = null, $default = null)
     {
@@ -64,6 +67,6 @@ class Request extends \Slim\Http\Request
             return $default;
 
         else
-            throw new \InputErrorException('API parameter "' . $key . '" is missing.', 400);
+            throw new InputErrorException('API parameter "' . $key . '" is missing.', 400);
     }
 }

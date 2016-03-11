@@ -30,7 +30,6 @@
  */
 
 use DevAAC\Models\Player;
-use DevAAC\Models\PlayerPublic;
 use DevAAC\Models\PlayerOnline;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
