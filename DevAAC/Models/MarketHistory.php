@@ -31,13 +31,16 @@
 
 namespace DevAAC\Models;
 
+use \Illuminate\Database\Eloquent\Model;
+use DevAAC\Helpers\DateTime;
+
 // https://github.com/illuminate/database/blob/master/Eloquent/Model.php
 // https://github.com/otland/forgottenserver/blob/master/schema.sql
 
 /**
  * @SWG\Model(required="['id','player_id','sale','itemtype','amount','price','expires_at','inserted','state']")
  */
-class MarketHistory extends \Illuminate\Database\Eloquent\Model {
+class MarketHistory extends Model {
     /**
      * @SWG\Property(name="id", type="integer")
      * @SWG\Property(name="player_id", type="integer")

@@ -208,18 +208,6 @@ $DevAAC->get(ROUTES_API_PREFIX . '/news', function () use ($DevAAC) {
 if (ENABLE_DEBUG) {
     $DevAAC->get(ROUTES_PREFIX . '/debug', function () use ($DevAAC) {
         $DevAAC->response->headers->set('Content-Type', 'text');
-        /*
-        var_dump($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION));
-        $date = new \DevAAC\Helpers\DateTime();
-        $tmp = \DevAAC\Models\Player::find(2);
-        foreach($tmp->toArray() as $key => $value)
-            echo "'".$key."' => 0,". PHP_EOL;
-            //echo '* @SWG\Property(name="'.$key.'", type="string")'. PHP_EOL;
-        echo $date . PHP_EOL;
-        echo json_encode($date) . PHP_EOL;
-        echo serialize($date) . PHP_EOL;
-        echo PHP_EOL . PHP_EOL . PHP_EOL;
-        */
         $a = (array)$DevAAC->vocations;
         echo json_encode($a['vocation'], JSON_PRETTY_PRINT);
     });
