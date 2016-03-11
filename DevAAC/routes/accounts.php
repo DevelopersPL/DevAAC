@@ -466,7 +466,7 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
     if( ! $DevAAC->auth_account )
         throw new InputErrorException('You are not logged in.', 401);
 
-    if($account->id != $DevAAC->auth_account->id or !$DevAAC->auth_account->isGod())
+    if($account->id != $DevAAC->auth_account->id || !$DevAAC->auth_account->isGod())
         throw new InputErrorException('You do not have permission to change this account.', 403);
 
     if( !$DevAAC->auth_account->isGod() )
@@ -500,7 +500,7 @@ $DevAAC->put(ROUTES_API_PREFIX.'/accounts/:id', function($id) use($DevAAC) {
 
     if($req->getAPIParam('email', false))
     {
-        if( !filter_var($req->getAPIParam('email'), FILTER_VALIDATE_EMAIL) or !getmxrr(explode('@', $req->getAPIParam('email'))[1], $trash_) )
+        if( !filter_var($req->getAPIParam('email'), FILTER_VALIDATE_EMAIL) || !getmxrr(explode('@', $req->getAPIParam('email'))[1], $trash_) )
             throw new InputErrorException('Email address is not valid.', 400);
 
         $account->email = $req->getAPIParam('email');
@@ -611,7 +611,7 @@ $DevAAC->post(ROUTES_API_PREFIX.'/accounts', function() use($DevAAC) {
         array("options" => array("regexp" => "/^(.{2,20}|.{40})$/"))) )
         throw new InputErrorException('Password must have 2-20 characters or be an SHA-1 hash (40 hexadecimal characters).', 400);
 
-    if( !filter_var($req->getAPIParam('email'), FILTER_VALIDATE_EMAIL) or !getmxrr(explode('@', $req->getAPIParam('email'))[1], $trash_) )
+    if( !filter_var($req->getAPIParam('email'), FILTER_VALIDATE_EMAIL) || !getmxrr(explode('@', $req->getAPIParam('email'))[1], $trash_) )
         throw new InputErrorException('Email address is not valid.', 400);
 
     $account = Account::where('name', $req->getAPIParam('name'))->first();

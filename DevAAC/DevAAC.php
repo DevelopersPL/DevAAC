@@ -37,7 +37,7 @@ $loader->setPsr4('DevAAC\\', APP_ROOT);
 //////////////////////// CREATE Slim APPLICATION //////////////////////////////////
 $DevAAC = new \Slim\Slim(
     [
-        'debug' => ENABLE_DEBUG
+        'debug' => ENABLE_DEBUG,
     ]
 );
 
@@ -57,12 +57,9 @@ if (CORS_ALLOW_ORIGIN) {
     ); // Send blank 200 to every OPTIONS request
 }
 
-$DevAAC->container->singleton(
-    'request',
-    function ($c) {
-        return new DevAAC\Http\Request($c['environment']);
-    }
-);
+$DevAAC->container->singleton('request', function ($c) {
+    return new DevAAC\Http\Request($c['environment']);
+});
 
 //////////////////// DEFINE AUTHENTICATION MIDDLEWARE ////////////////////////////
 // http://docs.slimframework.com/#Middleware-Overview
@@ -81,8 +78,7 @@ class AuthMiddleware extends \Slim\Middleware
         if (!$this->app->auth_account) {
             $this->app->auth_account = DevAAC\Models\Account::where('name', $auth_user)->where('password', sha1($auth_pass))->first();
         }
-        //else
-        //    $res->header('WWW-Authenticate', sprintf('Basic realm="%s"', 'AAC'));
+
         $this->next->call();
     }
 }
@@ -112,7 +108,7 @@ $DevAAC->error(
                 json_encode(
                     [
                         'code'    => $e->getCode(),
-                        'message' => 'Fatal error occured: ' . $e->getMessage() . ' at line ' . $e->getLine() . ' in file ' . $e->getFile()
+                        'message' => 'Fatal error occured: ' . $e->getMessage() . ' at line ' . $e->getLine() . ' in file ' . $e->getFile(),
                     ],
                     JSON_PRETTY_PRINT
                 )
@@ -123,20 +119,19 @@ $DevAAC->error(
 
 //////////////////////////// LOAD TFS CONFIG ////////////////////////////////////
 // you need to define TFS_CONFIG to be an array with config.lua options or a path to config.lua
-$DevAAC->tfsConfigFile = is_file(TFS_CONFIG) ? parse_tfs_config(TFS_CONFIG) : unserialize(TFS_CONFIG) or die('TFS_CONFIG is not defined properly.');
+$DevAAC->tfsConfigFile = is_file(TFS_CONFIG) ? parse_tfs_config(TFS_CONFIG) : unserialize(TFS_CONFIG) || die('TFS_CONFIG is not defined properly.');
 
 /////////////////////////// VOCATION PROVIDER///////////////////////////////////
-$DevAAC->container->singleton(
-    'vocations',
-    function ($c) {
-        if (file_exists(TFS_ROOT . '/data/XML/vocations.xml')) {
-            $xml = simplexml_load_file(TFS_ROOT . '/data/XML/vocations.xml');
-            if (property_exists($xml, 'vocation')) {
-                return $xml;
-            }
+$DevAAC->container->singleton('vocations', function ($c) {
+    if (file_exists(TFS_ROOT . '/data/XML/vocations.xml')) {
+        $xml = simplexml_load_file(TFS_ROOT . '/data/XML/vocations.xml');
+        if (property_exists($xml, 'vocation')) {
+            return $xml;
         }
     }
-);
+
+    return null;
+});
 
 ////////////////////////// CONNECT TO DATABASE /////////////////////////////////
 // Bootstrap Eloquent ORM
@@ -173,19 +168,16 @@ try {
 // https://github.com/zircote/swagger-php/blob/master/library/Swagger/Swagger.php
 use Swagger\Swagger;
 
-$DevAAC->get(
-    ROUTES_API_PREFIX . '/docs(/:path)',
-    function ($path = '/') use ($DevAAC) {
-        $swagger = new Swagger('../', '../vendor');
-        $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*');
-        $DevAAC->response->headers->set('Content-Type', 'application/json');
-        if ($path != '/') {
-            $DevAAC->response->setBody($swagger->getResource('/' . $path, ['output' => 'json']));
-        } else {
-            $DevAAC->response->setBody($swagger->getResourceList(['output' => 'json']));
-        }
+$DevAAC->get(ROUTES_API_PREFIX . '/docs(/:path)', function ($path = '/') use ($DevAAC) {
+    $swagger = new Swagger('../', '../vendor');
+    $DevAAC->response->headers->set('Access-Control-Allow-Origin', '*');
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    if ($path != '/') {
+        $DevAAC->response->setBody($swagger->getResource('/' . $path, ['output' => 'json']));
+    } else {
+        $DevAAC->response->setBody($swagger->getResourceList(['output' => 'json']));
     }
-);
+});
 
 //////////////////////////// DEFINE API ROUTES //////////////////////////////////
 require('routes/accounts.php');
@@ -195,56 +187,47 @@ require('routes/market.php');
 require('routes/players.php');
 require('routes/server.php');
 
-$DevAAC->get(
-    ROUTES_API_PREFIX . '/news',
-    function () use ($DevAAC) {
-        $news = [];
-        if (is_dir(PUBLIC_HTML_PATH . '/news')) {
-            foreach (glob(PUBLIC_HTML_PATH . '/news/*.md') as $filename) {
-                $date = new \DevAAC\Helpers\DateTime;
-                $date->setTimestamp(filectime($filename));
-                $news[] = [
-                    'title'   => basename($filename, '.md'),
-                    'date'    => $date,
-                    'content' => file_get_contents($filename)
-                ];
-            }
+$DevAAC->get(ROUTES_API_PREFIX . '/news', function () use ($DevAAC) {
+    $news = [];
+    if (is_dir(PUBLIC_HTML_PATH . '/news')) {
+        foreach (glob(PUBLIC_HTML_PATH . '/news/*.md') as $filename) {
+            $date = new \DevAAC\Helpers\DateTime;
+            $date->setTimestamp(filectime($filename));
+            $news[] = [
+                'title'   => basename($filename, '.md'),
+                'date'    => $date,
+                'content' => file_get_contents($filename),
+            ];
         }
-
-        $DevAAC->response->headers->set('Content-Type', 'application/json');
-        $DevAAC->response->setBody(json_encode($news, JSON_PRETTY_PRINT));
     }
-);
+
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+    $DevAAC->response->setBody(json_encode($news, JSON_PRETTY_PRINT));
+});
 
 if (ENABLE_DEBUG) {
-    $DevAAC->get(
-        ROUTES_PREFIX . '/debug',
-        function () use ($DevAAC, $capsule) {
-            $DevAAC->response->headers->set('Content-Type', 'text');
-            /*
-            var_dump($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION));
-            $date = new \DevAAC\Helpers\DateTime();
-            $tmp = \DevAAC\Models\Player::find(2);
-            foreach($tmp->toArray() as $key => $value)
-                echo "'".$key."' => 0,". PHP_EOL;
-                //echo '* @SWG\Property(name="'.$key.'", type="string")'. PHP_EOL;
-            echo $date . PHP_EOL;
-            echo json_encode($date) . PHP_EOL;
-            echo serialize($date) . PHP_EOL;
-            echo PHP_EOL . PHP_EOL . PHP_EOL;
-            */
-            $a = (array)$DevAAC->vocations;
-            var_dump(xml2array($DevAAC->vocations)['vocation']);
-            json_encode($a['vocation'], JSON_PRETTY_PRINT);
-        }
-    );
+    $DevAAC->get(ROUTES_PREFIX . '/debug', function () use ($DevAAC) {
+        $DevAAC->response->headers->set('Content-Type', 'text');
+        /*
+        var_dump($capsule->getConnection()->getPdo()->getAttribute(PDO::ATTR_CLIENT_VERSION));
+        $date = new \DevAAC\Helpers\DateTime();
+        $tmp = \DevAAC\Models\Player::find(2);
+        foreach($tmp->toArray() as $key => $value)
+            echo "'".$key."' => 0,". PHP_EOL;
+            //echo '* @SWG\Property(name="'.$key.'", type="string")'. PHP_EOL;
+        echo $date . PHP_EOL;
+        echo json_encode($date) . PHP_EOL;
+        echo serialize($date) . PHP_EOL;
+        echo PHP_EOL . PHP_EOL . PHP_EOL;
+        */
+        $a = (array)$DevAAC->vocations;
+        var_dump(xml2array($DevAAC->vocations)['vocation']);
+        json_encode($a['vocation'], JSON_PRETTY_PRINT);
+    });
 
-    $DevAAC->get(
-        ROUTES_PREFIX . '/phpinfo',
-        function () use ($DevAAC) {
-            phpinfo();
-        }
-    );
+    $DevAAC->get(ROUTES_PREFIX . '/phpinfo', function () {
+        phpinfo();
+    });
 }
 
 ////////////////////// PLUGINS SUPPORT ///////////////////////////////
@@ -283,13 +266,10 @@ if (is_dir('../plugins') && !DISABLE_PLUGINS) {
  *  )
  * )
  */
-$DevAAC->get(
-    ROUTES_API_PREFIX . '/plugins',
-    function () use ($DevAAC) {
-        $DevAAC->response->setBody(json_encode($DevAAC->plugins), JSON_PRETTY_PRINT);
-        $DevAAC->response->headers->set('Content-Type', 'application/json');
-    }
-);
+$DevAAC->get(ROUTES_API_PREFIX . '/plugins', function () use ($DevAAC) {
+    $DevAAC->response->setBody(json_encode($DevAAC->plugins), JSON_PRETTY_PRINT);
+    $DevAAC->response->headers->set('Content-Type', 'application/json');
+});
 
 //////////////////////////////////////////////////////////////////////
 // all done, any code after this call will not matter to the request
@@ -337,5 +317,6 @@ function parse_tfs_config($filename)
         }
     }
     $ini = implode("\n", $output);
+
     return parse_ini_string($ini);
 }

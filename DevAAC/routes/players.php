@@ -416,7 +416,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
         $players->skip($req->get('offset'));
 
     $limit = intval($req->get('limit'));
-    if($limit && ($limit <= 100 or ( $DevAAC->auth_account && $DevAAC->auth_account->isGod() ) ) )
+    if($limit && ($limit <= 100 || ($DevAAC->auth_account && $DevAAC->auth_account->isGod()) ))
         $players->take($limit);
     else
         $players->take(100);

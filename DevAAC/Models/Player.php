@@ -201,7 +201,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
 
     public function getIsOnlineAttribute()
     {
-        return $this->online != null;
+        return $this->online !== null;
     }
 
     public function guildMembership()

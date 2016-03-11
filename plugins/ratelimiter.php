@@ -40,11 +40,11 @@ if( !in_array(basename(__FILE__), $DevAAC->enabled_plugins) )
     return array_merge($meta, array('enabled' => false));
 
 // THIS PLUGIN CURRENTLY SUPPORTS APC ONLY
-if(!extension_loaded('apc') or !ini_get('apc.enabled'))
+if(!extension_loaded('apc') || !ini_get('apc.enabled'))
     return array_merge($meta, array('enabled' => false));
 
 // DEFAULT CONFIG
-defined('RATELIMITER_RULES') or define('RATELIMITER_RULES', serialize(array(
+defined('RATELIMITER_RULES') || define('RATELIMITER_RULES', serialize(array(
     // DEFINE RULES WITHOUT ROUTES_PREFIX OR ROUTES_API_PREFIX
     // PATH -> NUMBER OF SECONDS TO WAIT BETWEEN REQUESTS
     'GET' => array(
@@ -57,7 +57,7 @@ defined('RATELIMITER_RULES') or define('RATELIMITER_RULES', serialize(array(
     )
 )));
 // SHOULD WE RESET THE TIMER ON EVERY ATTEMPT?
-defined('RATELIMITER_PENALIZE') or define('RATELIMITER_PENALIZE', false);
+defined('RATELIMITER_PENALIZE') || define('RATELIMITER_PENALIZE', false);
 
 // http://docs.slimframework.com/#How-to-Use-Hooks
 $DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
@@ -81,7 +81,7 @@ $DevAAC->hook('slim.before.dispatch', function () use ($DevAAC) {
         $path = substr($path, strlen(ROUTES_PREFIX));
 
     // DO WE HAVE A RULE?
-    if( array_key_exists($method, $rules) && array_key_exists($path, $rules[$method]) ) {
+    if (array_key_exists($method, $rules) && array_key_exists($path, $rules[$method])) {
         // every path for every IP is a separate object to be thread safe
         $objname = $req->getIp() . '_' . $path;
 
