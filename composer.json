@@ -3,7 +3,7 @@
     "description": "Automatic Account Creator for TFS 1.X",
     "license": "MIT",
     "require": {
-        "slim/slim": "^2.6",
+        "slim/slim": "2.*",
         "illuminate/database": "*",
         "zircote/swagger-php": "*"
     }
