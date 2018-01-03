@@ -156,23 +156,23 @@ class Player extends \Illuminate\Database\Eloquent\Model {
 
     // this is redundant
     protected $hidden = array(
-        'health', 'mana', 'manaspent', 'conditions', 'lastip', 'save', 'offlinetraining_time', 'offlinetraining_skill',
+        'health', 'mana', 'manaspent', 'town_id', 'conditions', 'lastip', 'save', 'offlinetraining_time', 'offlinetraining_skill',
         'skill_fist_tries', 'skill_club_tries', 'skill_sword_tries', 'skill_axe_tries','skill_dist_tries',
         'skill_shielding_tries', 'skill_fishing_tries'
     );
 
     protected $visible = array(
         'id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'healthmax', 'experience', 'lookbody', 'lookfeet',
-        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'town_id', 'posx', 'posy', 'posz',
+        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'posx', 'posy', 'posz',
         'cap', 'sex', 'lastlogin', 'skull', 'skulltime', 'lastlogout', 'blessings', 'onlinetime', 'deletion', 'balance',
-        'stamina', 'skill_fist', 'skill_club', 'skill_sword', 'skill_axe', 'skill_dist', 'skill_shielding', 'skill_fishing'
+        'stamina', 'skill_fist', 'skill_club', 'skill_sword', 'skill_axe', 'skill_dist', 'skill_shielding', 'skill_fishing', 'town'
     );
 
     public function getVisibleFields() {
         return $this->visible;
     }
 
-    protected $appends = array('is_online', 'membership');
+    protected $appends = array('is_online', 'membership', 'town');
 
     public function account()
     {
@@ -285,5 +285,16 @@ class Player extends \Illuminate\Database\Eloquent\Model {
     public function setLastipAttribute($longip)
     {
         $this->attributes['lastip'] = chbo(ip2long($longip));
+    }
+
+    public function getTownAttribute()
+    {
+        if(defined('TOWNS'))
+        {
+            $towns = unserialize(TOWNS);
+            return (is_array($towns) && isset($towns[$this->attributes['town_id']])) ? $towns[$this->attributes['town_id']] : $this->attributes['town_id'];
+        }
+        else
+            return $this->attributes['town_id'];
     }
 }
