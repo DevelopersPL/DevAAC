@@ -21,6 +21,4 @@
 // define('DISABLE_PLUGINS', false);
 // define('ENABLED_PLUGINS', serialize(array('ratelimiter.php', 'simple.php', 'ipban.php')));
 
-// define('TOWNS', serialize(array(1 => 'Town A', 2 => 'Town B', 3 => 'Town C')));
-
 // IF YOU WANT TO CHANGE SOMETHING ELSE, BE SMART AND FOLLOW THE PATTERN, CHECK index.php!

@@ -33,7 +33,7 @@ DevAAC.controller('PlayerController', ['$scope', '$location', '$route', 'Account
             sex: player.sex ? 'male' : 'female',
             profession: _.findWhere(vocations, {id: player.vocation}),
             level: player.level,
-            residence: player.town,
+            residence: player.town_name || player.town_id,
             balance: player.balance,
             seen: moment.unix(player.lastlogin).format('LLL') + ' → ' + moment.unix(player.lastlogout).format('LLL'),
             onlineTime: moment.duration(player.onlinetime, 'seconds').humanize(),
