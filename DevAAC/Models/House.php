@@ -75,8 +75,7 @@ class House extends \Illuminate\Database\Eloquent\Model {
 
     public function getTownNameAttribute()
     {
-        if(!is_null($this->town))
-            return $this->town->name;
+        return $this->town ? $this->town->name : null;
     }
 
     public function getPaidAttribute()
