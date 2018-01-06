@@ -59,11 +59,23 @@ class House extends \Illuminate\Database\Eloquent\Model {
 
     protected $guarded = array('id');
 
-    protected $hidden = array('last_bid');
+    protected $hidden = array('last_bid', 'town');
+
+    protected $appends = array('town_name');
 
     public function owner()
     {
         return $this->belongsTo('DevAAC\Models\Player', 'owner');
+    }
+
+    public function town()
+    {
+        return $this->belongsTo('DevAAC\Models\Town');
+    }
+
+    public function getTownNameAttribute()
+    {
+        return $this->town ? $this->town->name : null;
     }
 
     public function getPaidAttribute()

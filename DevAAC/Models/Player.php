@@ -163,7 +163,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
 
     protected $visible = array(
         'id', 'name', 'group_id', 'account_id', 'level', 'vocation', 'healthmax', 'experience', 'lookbody', 'lookfeet',
-        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'town_id', 'posx', 'posy', 'posz',
+        'lookhead', 'looklegs', 'looktype', 'lookaddons', 'maglevel', 'manamax', 'soul', 'town_id', 'town_name', 'posx', 'posy', 'posz',
         'cap', 'sex', 'lastlogin', 'skull', 'skulltime', 'lastlogout', 'blessings', 'onlinetime', 'deletion', 'balance',
         'stamina', 'skill_fist', 'skill_club', 'skill_sword', 'skill_axe', 'skill_dist', 'skill_shielding', 'skill_fishing'
     );
@@ -172,7 +172,7 @@ class Player extends \Illuminate\Database\Eloquent\Model {
         return $this->visible;
     }
 
-    protected $appends = array('is_online', 'membership');
+    protected $appends = array('is_online', 'membership', 'town_name');
 
     public function account()
     {
@@ -222,6 +222,16 @@ class Player extends \Illuminate\Database\Eloquent\Model {
     public function houseBids()
     {
         return $this->hasMany('DevAAC\Models\House', 'highest_bidder');
+    }
+
+    public function town()
+    {
+        return $this->belongsTo('DevAAC\Models\Town');
+    }
+
+    public function getTownNameAttribute()
+    {
+        return $this->town ? $this->town->name : null;
     }
 
     public function setLevelAttribute($level)
