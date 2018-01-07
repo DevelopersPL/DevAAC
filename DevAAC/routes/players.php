@@ -514,6 +514,30 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
     if($player)
         throw new InputErrorException('Player with this name already exists.', 400);
 
+    if (file_exists(TFS_ROOT . '/data/monster/monsters.xml')) {
+        $xml = simplexml_load_file(TFS_ROOT . '/data/monster/monsters.xml');
+        if (property_exists($xml, 'monster'))
+            $forbiddenPlayerNames = array_map('strtolower', array_column(xml2array($xml)['monster'], 'name'));
+    }
+
+    if ($npcDir = opendir(TFS_ROOT . '/data/npc')) {
+        $forbiddenPlayerNames = $forbiddenPlayerNames ? $forbiddenPlayerNames : array();
+
+        while (false !== ($entry = readdir($npcDir))) {
+            if(is_dir(TFS_ROOT . '/data/npc/' . $entry))
+                continue;
+
+            $xml = simplexml_load_file(TFS_ROOT . '/data/npc/' . $entry);
+            if (property_exists($xml->attributes(), 'name'))
+                array_push($forbiddenPlayerNames, strtolower(xml2array($xml->attributes()->name)[0]));
+        }
+
+        closedir($npcDir);
+    }
+
+    if( in_array(strtolower($req->getAPIParam('name')), $forbiddenPlayerNames) )
+        throw new InputErrorException('This player name is forbidden.', 400);
+
     $player = new Player(
         array(
             'name' => ucwords(strtolower($req->getAPIParam('name'))),
