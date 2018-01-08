@@ -520,19 +520,12 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
             $forbiddenPlayerNames = array_map('strtolower', array_column(xml2array($xml)['monster'], 'name'));
     }
 
-    if ($npcDir = opendir(TFS_ROOT . '/data/npc')) {
-        $forbiddenPlayerNames = $forbiddenPlayerNames ? $forbiddenPlayerNames : array();
+    $forbiddenPlayerNames = $forbiddenPlayerNames ? $forbiddenPlayerNames : array();
 
-        while (false !== ($entry = readdir($npcDir))) {
-            if(is_dir(TFS_ROOT . '/data/npc/' . $entry))
-                continue;
-
-            $xml = simplexml_load_file(TFS_ROOT . '/data/npc/' . $entry);
-            if (property_exists($xml->attributes(), 'name'))
-                array_push($forbiddenPlayerNames, strtolower(xml2array($xml->attributes()->name)[0]));
-        }
-
-        closedir($npcDir);
+    foreach (glob(TFS_ROOT . '/data/npc/*.xml') as $npcFile) {
+        $xml = simplexml_load_file($npcFile);
+        if (property_exists($xml->attributes(), 'name'))
+            array_push($forbiddenPlayerNames, strtolower(xml2array($xml->attributes()->name)[0]));
     }
 
     if( in_array(strtolower($req->getAPIParam('name')), $forbiddenPlayerNames) )
