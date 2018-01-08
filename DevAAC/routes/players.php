@@ -514,14 +514,14 @@ $DevAAC->post(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
     if($player)
         throw new InputErrorException('Player with this name already exists.', 400);
 
+    $forbiddenPlayerNames = [];
+
     if (file_exists(TFS_ROOT . '/data/monster/monsters.xml')) {
         $xml = simplexml_load_file(TFS_ROOT . '/data/monster/monsters.xml');
         if (property_exists($xml, 'monster'))
             $forbiddenPlayerNames = array_map('strtolower', array_column(xml2array($xml)['monster'], 'name'));
     }
-
-    $forbiddenPlayerNames = $forbiddenPlayerNames ? $forbiddenPlayerNames : array();
-
+    
     foreach (glob(TFS_ROOT . '/data/npc/*.xml') as $npcFile) {
         $xml = simplexml_load_file($npcFile);
         if (property_exists($xml->attributes(), 'name'))
