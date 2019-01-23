@@ -409,7 +409,7 @@ $DevAAC->get(ROUTES_API_PREFIX.'/players', function() use($DevAAC) {
         }
         $players->select($fields);
     }
-    elseif(!$DevAAC->auth_account || !$DevAAC->auth_account->isGod())
+    else
         $players->select($visible);
 
     if(intval($req->get('offset')))
