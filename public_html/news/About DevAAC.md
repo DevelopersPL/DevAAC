@@ -19,6 +19,3 @@ If you like it, please join [stargazers](https://github.com/DevelopersPL/DevAAC/
 
 ### Updates
 If you cloned this DevAAC from git (or if it came pre-installed with your server), the only thing you need to do is ```git pull``` in DevAAC directory to update to newest version.
-
-### I heard you have a server list?
-We are working on a server list project, which is live at [otls.net](http://otls.net). It is an early preview, we promise it will get better!
