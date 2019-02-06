@@ -205,6 +205,9 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     } elseif ($request->getAPIParam('bid') < $house->last_bid)
     { // this raises previous bid
         $house->bid = $request->getAPIParam('bid') + 1;
+    } else
+    {
+        $house->bid = $house->last_bid;
     }
 
     if($house->bid_end === 0)
