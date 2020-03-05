@@ -19,11 +19,11 @@
   <script type="text/javascript">
     $(function () {
       window.swaggerUi = new SwaggerUi({
-      url: "http://devots.dondaniello.com/api/v1/docs",
+      url: "https://developerspl.github.io/DevAAC/api-docs/",
       dom_id: "swagger-ui-container",
       supportedSubmitMethods: ['get', 'post', 'put', 'delete'],
       onComplete: function(swaggerApi, swaggerUi){
-        log("Loaded SwaggerUI")
+        log("Loaded SwaggerUI");
         $('pre code').each(function(i, e) {hljs.highlightBlock(e)});
       },
       onFailure: function(data) {
@@ -52,7 +52,7 @@
 
     $('#reset-url').click(function() {
         window.swaggerUi.headerView.trigger('update-swagger-ui', {
-            url: "http://devots.dondaniello.com/api/v1/docs"
+            url: "https://developerspl.github.io/DevAAC/api-docs/"
         });
     });
 

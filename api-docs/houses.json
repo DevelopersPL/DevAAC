@@ -1,0 +1,215 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/houses",
+    "apis": [
+        {
+            "path": "/houses",
+            "description": "Operations on houses",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get all houses",
+                    "nickname": "getHouses",
+                    "type": "House",
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/houses/{id}",
+            "description": "Operations on houses",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get house based on ID or name",
+                    "nickname": "getHouseByID",
+                    "type": "House",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of House that needs to be fetched"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass lists to embed an array of list objects"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "House not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/houses/{id}/bid",
+            "description": "Operations on houses",
+            "operations": [
+                {
+                    "method": "POST",
+                    "summary": "Bid on house by ID",
+                    "nickname": "bidHouseByID",
+                    "type": "House",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of House to bid on"
+                        },
+                        {
+                            "paramType": "form",
+                            "name": "player_id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of player which bids"
+                        },
+                        {
+                            "paramType": "form",
+                            "name": "bid",
+                            "type": "integer",
+                            "required": true,
+                            "description": "the amount of bid"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Bad request"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Not logged in"
+                        },
+                        {
+                            "code": 402,
+                            "message": "Not enough money in player's bank"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Player not on authenticated account"
+                        },
+                        {
+                            "code": 404,
+                            "message": "House not found / player not found"
+                        },
+                        {
+                            "code": 405,
+                            "message": "Exceeded limit of houses per player/account"
+                        },
+                        {
+                            "code": 409,
+                            "message": "The bid is too low"
+                        },
+                        {
+                            "code": 410,
+                            "message": "Auction has ended"
+                        },
+                        {
+                            "code": 412,
+                            "message": "House not on auction"
+                        }
+                    ],
+                    "notes": "Admins can bid with any player"
+                }
+            ]
+        },
+        {
+            "path": "/houses/{id}/lists",
+            "description": "Operations on houses",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get house lists based on ID or name",
+                    "nickname": "getHouseListsByID",
+                    "type": "array[HouseList]",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of House that lists needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "House not found"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "House": {
+            "id": "House",
+            "required": [
+                "beds",
+                "bid",
+                "bid_end",
+                "highest_bidder",
+                "id",
+                "name",
+                "owner",
+                "paid",
+                "rent",
+                "size",
+                "town_id",
+                "warnings"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "owner": {
+                    "type": "integer"
+                },
+                "paid": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "warnings": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "rent": {
+                    "type": "integer"
+                },
+                "town_id": {
+                    "type": "integer"
+                },
+                "bid": {
+                    "type": "integer"
+                },
+                "bid_end": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "last_bid": {
+                    "type": "integer"
+                },
+                "highest_bidder": {
+                    "type": "integer"
+                },
+                "size": {
+                    "type": "integer"
+                },
+                "beds": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

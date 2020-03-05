@@ -1,0 +1,601 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/players",
+    "apis": [
+        {
+            "path": "/players",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get all players",
+                    "nickname": "getPlayers",
+                    "type": "array[Player]",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "q",
+                            "type": "string",
+                            "required": false,
+                            "description": "Part of the name of players to search for"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "account_id",
+                            "type": "integer",
+                            "required": false,
+                            "description": "Account id of players to search for"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "sort",
+                            "type": "string",
+                            "required": false,
+                            "description": "The field or fields (separated by comma) to sort by ascending, specify -field to sort descending, e.g.: ?sort=level,-skill_fist"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "fields",
+                            "type": "string",
+                            "required": false,
+                            "description": "The field to return (Non-admin: only public fields)"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "offset",
+                            "type": "string",
+                            "required": false,
+                            "description": "The number of records to skip"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "limit",
+                            "type": "string",
+                            "required": false,
+                            "description": "The number of records to return at maximum (Non-admin: max 100)"
+                        }
+                    ],
+                    "notes": "Non-admins get only public fields"
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create new player",
+                    "nickname": "createPlayer",
+                    "type": "Player",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "name": "player",
+                            "type": "Player",
+                            "required": true,
+                            "description": "Player object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        }
+                    ],
+                    "notes": "You can also pass player object's attributes as form input, do not specify fields marked as optional"
+                }
+            ]
+        },
+        {
+            "path": "/players/online",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get online players",
+                    "nickname": "getOnlinePlayers",
+                    "type": "array[Player]",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass player to embed player object instead of showing just ID"
+                        }
+                    ],
+                    "notes": "Non-admins get only public fields"
+                }
+            ]
+        },
+        {
+            "path": "/players/{id/name}",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get player based on ID or name",
+                    "nickname": "getPlayerByID",
+                    "type": "Player",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Player that needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/players/{id/name}/deaths",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get player's deaths based on ID or name",
+                    "nickname": "getPlayerDeathsByID",
+                    "type": "PlayerDeath",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Player whose deaths need to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/players/{id/name}/namelock",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get player's namelock by ID or name",
+                    "nickname": "getPlayerNamelockByID",
+                    "type": "PlayerNamelock",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Player whose namelock needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/players/{id/name}/namelock/resolve",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "POST",
+                    "summary": "Resolve player's namelock by ID or name",
+                    "nickname": "resolvePlayerNamelockByID",
+                    "type": "null",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Player whose namelock needs to be resolved"
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "name",
+                            "type": "string",
+                            "required": true,
+                            "description": "New name to change player's name to"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        },
+                        {
+                            "code": 412,
+                            "message": "No namelock on the player"
+                        }
+                    ],
+                    "notes": "Only authenticated account - owner of the player or God"
+                }
+            ]
+        },
+        {
+            "path": "/players/{id/name}/spells",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get player's spells based on ID or name",
+                    "nickname": "getPlayerSpellsByID",
+                    "type": "PlayerSpell",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Player whose spells need to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/players/{id}",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "DELETE",
+                    "summary": "Delete player by ID",
+                    "nickname": "deletePlayerByID",
+                    "type": "Player",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Player that needs to be deleted"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        }
+                    ],
+                    "notes": "Owner and admin only"
+                }
+            ]
+        },
+        {
+            "path": "/players/{id}/namelock",
+            "description": "Operations on players",
+            "operations": [
+                {
+                    "method": "DELETE",
+                    "summary": "Delete player's namelock by ID",
+                    "nickname": "deletePlayerByID",
+                    "type": "null",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Player that needs to have namelock deleted"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Player not found"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 412,
+                            "message": "No namelock on the player"
+                        }
+                    ],
+                    "notes": "GameMaster or higher only"
+                }
+            ]
+        }
+    ],
+    "models": {
+        "Player": {
+            "id": "Player",
+            "required": [
+                "name",
+                "sex",
+                "vocation"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "account_id": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "vocation": {
+                    "type": "integer"
+                },
+                "health": {
+                    "type": "integer"
+                },
+                "healthmax": {
+                    "type": "integer"
+                },
+                "experience": {
+                    "type": "integer"
+                },
+                "lookbody": {
+                    "type": "integer"
+                },
+                "lookfeet": {
+                    "type": "integer"
+                },
+                "lookhead": {
+                    "type": "integer"
+                },
+                "looklegs": {
+                    "type": "integer"
+                },
+                "looktype": {
+                    "type": "integer"
+                },
+                "lookaddons": {
+                    "type": "integer"
+                },
+                "maglevel": {
+                    "type": "integer"
+                },
+                "mana": {
+                    "type": "integer"
+                },
+                "manamax": {
+                    "type": "integer"
+                },
+                "manaspent": {
+                    "type": "integer"
+                },
+                "soul": {
+                    "type": "integer"
+                },
+                "town_id": {
+                    "type": "integer"
+                },
+                "posx": {
+                    "type": "integer"
+                },
+                "posy": {
+                    "type": "integer"
+                },
+                "posz": {
+                    "type": "integer"
+                },
+                "conditions": {
+                    "type": "integer"
+                },
+                "cap": {
+                    "type": "integer"
+                },
+                "sex": {
+                    "type": "integer"
+                },
+                "lastlogin": {
+                    "type": "integer"
+                },
+                "lastip": {
+                    "type": "integer"
+                },
+                "save": {
+                    "type": "integer"
+                },
+                "skull": {
+                    "type": "integer"
+                },
+                "skulltime": {
+                    "type": "integer"
+                },
+                "lastlogout": {
+                    "type": "integer"
+                },
+                "blessings": {
+                    "type": "integer"
+                },
+                "onlinetime": {
+                    "type": "integer"
+                },
+                "deletion": {
+                    "type": "integer"
+                },
+                "balance": {
+                    "type": "integer"
+                },
+                "offlinetraining_time": {
+                    "type": "integer"
+                },
+                "offlinetraining_skill": {
+                    "type": "integer"
+                },
+                "stamina": {
+                    "type": "integer"
+                },
+                "skill_fist": {
+                    "type": "integer"
+                },
+                "skill_fist_tries": {
+                    "type": "integer"
+                },
+                "skill_club": {
+                    "type": "integer"
+                },
+                "skill_club_tries": {
+                    "type": "integer"
+                },
+                "skill_sword": {
+                    "type": "integer"
+                },
+                "skill_sword_tries": {
+                    "type": "integer"
+                },
+                "skill_axe": {
+                    "type": "integer"
+                },
+                "skill_axe_tries": {
+                    "type": "integer"
+                },
+                "skill_dist": {
+                    "type": "integer"
+                },
+                "skill_dist_tries": {
+                    "type": "integer"
+                },
+                "skill_shielding": {
+                    "type": "integer"
+                },
+                "skill_shielding_tries": {
+                    "type": "integer"
+                },
+                "skill_fishing": {
+                    "type": "integer"
+                },
+                "skill_fishing_tries": {
+                    "type": "integer"
+                },
+                "online": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "PlayerSpell": {
+            "id": "PlayerSpell",
+            "required": [
+                "name",
+                "player_id"
+            ],
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "PlayerDeath": {
+            "id": "PlayerDeath",
+            "required": [
+                "is_player",
+                "killed_by",
+                "level",
+                "mostdamage_by",
+                "mostdamage_is_player",
+                "mostdamage_unjustified",
+                "player_id",
+                "time",
+                "unjustified"
+            ],
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "time": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "killed_by": {
+                    "type": "string"
+                },
+                "is_player": {
+                    "type": "boolean"
+                },
+                "mostdamage_by": {
+                    "type": "string"
+                },
+                "mostdamage_is_player": {
+                    "type": "boolean"
+                },
+                "unjustified": {
+                    "type": "boolean"
+                },
+                "mostdamage_unjustified": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "PlayerNamelock": {
+            "id": "PlayerNamelock",
+            "required": [
+                "namelocked_by",
+                "namelocked_by",
+                "player_id",
+                "reason"
+            ],
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "namelocked_at": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "namelocked_by": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,135 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/market",
+    "apis": [
+        {
+            "path": "/market/history",
+            "description": "Operations on market",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get market history",
+                    "nickname": "getMarketHistory",
+                    "type": "MarketHistory",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass player to embed player object"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/market/offers",
+            "description": "Operations on market",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get market offers",
+                    "nickname": "getMarketHistory",
+                    "type": "MarketOffer",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass player to embed player object"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        }
+    ],
+    "models": {
+        "MarketHistory": {
+            "id": "MarketHistory",
+            "required": [
+                "amount",
+                "expires_at",
+                "id",
+                "inserted",
+                "itemtype",
+                "player_id",
+                "price",
+                "sale",
+                "state"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "player_id": {
+                    "type": "integer"
+                },
+                "sale": {
+                    "type": "boolean"
+                },
+                "itemtype": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "expires_at": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "inserted": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "state": {
+                    "type": "integer"
+                }
+            }
+        },
+        "MarketOffer": {
+            "id": "MarketOffer",
+            "required": [
+                "amount",
+                "anonymous",
+                "created",
+                "id",
+                "itemtype",
+                "player_id",
+                "price",
+                "sale"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "player_id": {
+                    "type": "integer"
+                },
+                "sale": {
+                    "type": "boolean"
+                },
+                "itemtype": {
+                    "type": "integer"
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "created": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "anonymous": {
+                    "type": "boolean"
+                },
+                "price": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

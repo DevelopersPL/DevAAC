@@ -1,0 +1,632 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/accounts",
+    "apis": [
+        {
+            "path": "/accounts",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get all accounts",
+                    "nickname": "getAccounts",
+                    "type": "Account",
+                    "notes": "name, password and email are returned only to authenticated user and admin"
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create new account",
+                    "nickname": "createAccount",
+                    "type": "Account",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "name": "account",
+                            "type": "Account",
+                            "required": true,
+                            "description": "Account object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        }
+                    ],
+                    "notes": "You can also pass account object's attributes as form input, do not specify fields marked as optional"
+                }
+            ]
+        },
+        {
+            "path": "/accounts/my",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get authenticated account",
+                    "nickname": "getAccountByID",
+                    "type": "Account",
+                    "parameters": [
+                        {
+                            "paramType": "header",
+                            "name": "Authorization",
+                            "type": "string",
+                            "required": false,
+                            "description": "HTTP Basic Authorization: Basic base64(name:password)"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "No or bad authentication provided"
+                        }
+                    ],
+                    "notes": "The parameter presented here applies to all API requests"
+                }
+            ]
+        },
+        {
+            "path": "/accounts/my/lost",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "POST",
+                    "summary": "Recover a lost account",
+                    "nickname": "recoverAccountByEmail",
+                    "type": "null",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "name": "email",
+                            "type": "string",
+                            "required": true,
+                            "description": "Email address of account you want to recover"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Parameter missing"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        },
+                        {
+                            "code": 500,
+                            "message": "Server failure - cannot send email"
+                        },
+                        {
+                            "code": 503,
+                            "message": "Too many request - you must wait between requests"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/accounts/my/players",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get players on authenticated account",
+                    "nickname": "getAccountByID",
+                    "type": "Player",
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "No or bad authentication provided"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/accounts/{id}",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get account by ID",
+                    "nickname": "getAccountByID",
+                    "type": "Account",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account that needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        }
+                    ],
+                    "notes": "name, password and email are returned only to authenticated user and admin"
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Update account by ID",
+                    "nickname": "updateAccountByID",
+                    "type": "Account",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account that needs to be updated"
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "account",
+                            "type": "Account",
+                            "required": true,
+                            "description": "Account object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        },
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        }
+                    ],
+                    "notes": "Owner can update password and email, admin can update everything except id and creation"
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete account by ID",
+                    "nickname": "deleteAccountByID",
+                    "type": "Account",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account that needs to be deleted"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        }
+                    ],
+                    "notes": "Owner and admin only"
+                }
+            ]
+        },
+        {
+            "path": "/accounts/{id}/ban",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get account's ban by ID",
+                    "nickname": "getAccountBanByID",
+                    "type": "AccountBan",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account that ban to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        }
+                    ],
+                    "notes": "Each account can only have one ban at a time"
+                },
+                {
+                    "method": "POST",
+                    "summary": "Ban account by ID",
+                    "nickname": "banAccountByID",
+                    "type": "AccountBan",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account to ban"
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "ban",
+                            "type": "AccountBan",
+                            "required": true,
+                            "description": "AccountBan object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Account not found / player not found"
+                        },
+                        {
+                            "code": 406,
+                            "message": "banned_by player group_id < 2 / banned_by player not on account"
+                        },
+                        {
+                            "code": 409,
+                            "message": "Account is already banned"
+                        }
+                    ],
+                    "notes": "Need to have admin rights<br />\n     Do not provide account_id or banned_at in AccountBan object - they will be ignored<br />\n     The ID of player in banned_by must be of group_id > 1<br />\n     expires_at defaults to 0 which means the ban does not expire"
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Ban account by ID",
+                    "nickname": "updateAccountBanByID",
+                    "type": "AccountBan",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account to update ban"
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "ban",
+                            "type": "AccountBan",
+                            "required": true,
+                            "description": "AccountBan object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Missing parameters"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        },
+                        {
+                            "code": 406,
+                            "message": "Account is not banned"
+                        }
+                    ],
+                    "notes": "Need to have admin rights and be the one who created the ban, you can only change reason and expiration date, other parameters are ignored"
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete account's ban by ID",
+                    "nickname": "deleteAccountBanByID",
+                    "type": "null",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account to lift ban"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        },
+                        {
+                            "code": 406,
+                            "message": "Account is not banned"
+                        }
+                    ],
+                    "notes": "Need to have admin rights, once removed, the ban will NOT appear in ban history!"
+                }
+            ]
+        },
+        {
+            "path": "/accounts/{id}/banHistory",
+            "description": "Operations on accounts",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get account's ban history by ID",
+                    "nickname": "getAccountBanHistoryByID",
+                    "type": "array[AccountBanHistory]",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Account that ban history to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Account not found"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        }
+    ],
+    "models": {
+        "Account": {
+            "id": "Account",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "$ref": "SHA1 hash"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "premdays": {
+                    "type": "integer"
+                },
+                "lastday": {
+                    "type": "integer"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "creation": {
+                    "$ref": "DateTime::ISO8601"
+                }
+            }
+        },
+        "Player": {
+            "id": "Player",
+            "required": [
+                "name",
+                "sex",
+                "vocation"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "account_id": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "vocation": {
+                    "type": "integer"
+                },
+                "health": {
+                    "type": "integer"
+                },
+                "healthmax": {
+                    "type": "integer"
+                },
+                "experience": {
+                    "type": "integer"
+                },
+                "lookbody": {
+                    "type": "integer"
+                },
+                "lookfeet": {
+                    "type": "integer"
+                },
+                "lookhead": {
+                    "type": "integer"
+                },
+                "looklegs": {
+                    "type": "integer"
+                },
+                "looktype": {
+                    "type": "integer"
+                },
+                "lookaddons": {
+                    "type": "integer"
+                },
+                "maglevel": {
+                    "type": "integer"
+                },
+                "mana": {
+                    "type": "integer"
+                },
+                "manamax": {
+                    "type": "integer"
+                },
+                "manaspent": {
+                    "type": "integer"
+                },
+                "soul": {
+                    "type": "integer"
+                },
+                "town_id": {
+                    "type": "integer"
+                },
+                "posx": {
+                    "type": "integer"
+                },
+                "posy": {
+                    "type": "integer"
+                },
+                "posz": {
+                    "type": "integer"
+                },
+                "conditions": {
+                    "type": "integer"
+                },
+                "cap": {
+                    "type": "integer"
+                },
+                "sex": {
+                    "type": "integer"
+                },
+                "lastlogin": {
+                    "type": "integer"
+                },
+                "lastip": {
+                    "type": "integer"
+                },
+                "save": {
+                    "type": "integer"
+                },
+                "skull": {
+                    "type": "integer"
+                },
+                "skulltime": {
+                    "type": "integer"
+                },
+                "lastlogout": {
+                    "type": "integer"
+                },
+                "blessings": {
+                    "type": "integer"
+                },
+                "onlinetime": {
+                    "type": "integer"
+                },
+                "deletion": {
+                    "type": "integer"
+                },
+                "balance": {
+                    "type": "integer"
+                },
+                "offlinetraining_time": {
+                    "type": "integer"
+                },
+                "offlinetraining_skill": {
+                    "type": "integer"
+                },
+                "stamina": {
+                    "type": "integer"
+                },
+                "skill_fist": {
+                    "type": "integer"
+                },
+                "skill_fist_tries": {
+                    "type": "integer"
+                },
+                "skill_club": {
+                    "type": "integer"
+                },
+                "skill_club_tries": {
+                    "type": "integer"
+                },
+                "skill_sword": {
+                    "type": "integer"
+                },
+                "skill_sword_tries": {
+                    "type": "integer"
+                },
+                "skill_axe": {
+                    "type": "integer"
+                },
+                "skill_axe_tries": {
+                    "type": "integer"
+                },
+                "skill_dist": {
+                    "type": "integer"
+                },
+                "skill_dist_tries": {
+                    "type": "integer"
+                },
+                "skill_shielding": {
+                    "type": "integer"
+                },
+                "skill_shielding_tries": {
+                    "type": "integer"
+                },
+                "skill_fishing": {
+                    "type": "integer"
+                },
+                "skill_fishing_tries": {
+                    "type": "integer"
+                },
+                "online": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "AccountBan": {
+            "id": "AccountBan",
+            "required": [
+                "banned_by",
+                "expires_at",
+                "reason"
+            ],
+            "properties": {
+                "account_id": {
+                    "type": "integer"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "banned_at": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "expires_at": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "banned_by": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

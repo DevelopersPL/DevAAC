@@ -1,0 +1,34 @@
+{
+    "apiVersion": null,
+    "swaggerVersion": "1.2",
+    "apis": [
+        {
+            "path": "/accounts.{format}",
+            "description": "Operations on accounts"
+        },
+        {
+            "path": "/guilds.{format}",
+            "description": "Operations on guilds"
+        },
+        {
+            "path": "/houses.{format}",
+            "description": "Operations on houses"
+        },
+        {
+            "path": "/market.{format}",
+            "description": "Operations on market"
+        },
+        {
+            "path": "/players.{format}",
+            "description": "Operations on players"
+        },
+        {
+            "path": "/plugins.{format}",
+            "description": "Operations on DevAAC"
+        },
+        {
+            "path": "/server.{format}",
+            "description": "Operations on server"
+        }
+    ]
+}

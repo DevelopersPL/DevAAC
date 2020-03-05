@@ -1,0 +1,172 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/server",
+    "apis": [
+        {
+            "path": "/server/config",
+            "description": "Operations on server",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get server config values",
+                    "nickname": "getServerConfig",
+                    "type": "ServerConfig",
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/server/info",
+            "description": "Operations on server",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get some information",
+                    "nickname": "getServerInfo",
+                    "type": "array",
+                    "notes": "The result of this call is cached, last refresh time is given as 'timestamp'"
+                }
+            ]
+        },
+        {
+            "path": "/server/ipBans",
+            "description": "Operations on server",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get IP bans",
+                    "nickname": "getIPBans",
+                    "type": "array[IpBan]",
+                    "notes": ""
+                },
+                {
+                    "method": "POST",
+                    "summary": "Ban IP",
+                    "nickname": "banIP",
+                    "type": "IpBan",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "name": "ban",
+                            "type": "IpBan",
+                            "required": true,
+                            "description": "IpBan object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 403,
+                            "message": "IP address is not valid"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 404,
+                            "message": "banned_by player not found"
+                        },
+                        {
+                            "code": 406,
+                            "message": "banned_by player group_id < 2 / banned_by player not on account"
+                        },
+                        {
+                            "code": 409,
+                            "message": "IP is already banned"
+                        }
+                    ],
+                    "notes": "Need to have admin rights<br />\n     Do not provide banned_at in IpBan object - it will be ignored<br />\n     The ID of player in banned_by must be of group_id > 1<br />\n     expires_at defaults to 0 which means the ban does not expire"
+                }
+            ]
+        },
+        {
+            "path": "/server/ipBans/{ip}",
+            "description": "Operations on server",
+            "operations": [
+                {
+                    "method": "DELETE",
+                    "summary": "Delete IP ban",
+                    "nickname": "deleteIPBan",
+                    "type": "null",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "ip",
+                            "type": "string",
+                            "required": true,
+                            "description": "IP to lift ban"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        },
+                        {
+                            "code": 404,
+                            "message": "IP is not banned"
+                        }
+                    ],
+                    "notes": "Need to have admin rights"
+                }
+            ]
+        },
+        {
+            "path": "/server/vocations",
+            "description": "Operations on server",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get vocations",
+                    "nickname": "getVocations",
+                    "type": "array",
+                    "notes": ""
+                }
+            ]
+        }
+    ],
+    "models": {
+        "ServerConfig": {
+            "id": "ServerConfig",
+            "required": [
+                "config",
+                "value"
+            ],
+            "properties": {
+                "config": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "IpBan": {
+            "id": "IpBan",
+            "required": [
+                "banned_by",
+                "expires_at",
+                "ip",
+                "reason"
+            ],
+            "properties": {
+                "ip": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "banned_at": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "expires_at": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "banned_by": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

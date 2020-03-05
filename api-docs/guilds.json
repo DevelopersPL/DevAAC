@@ -1,0 +1,684 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/guilds",
+    "apis": [
+        {
+            "path": "/guilds",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get all guilds",
+                    "nickname": "getGuilds",
+                    "type": "Guild",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass owner to embed player object"
+                        }
+                    ],
+                    "notes": ""
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create a guild",
+                    "nickname": "createGuilds",
+                    "type": "Guild",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "name": "guild",
+                            "type": "Guild",
+                            "required": true,
+                            "description": "Guild object"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 409,
+                            "message": "Guild with this name already exists"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/guilds/wars",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get all guild wars",
+                    "nickname": "getGuildWars",
+                    "type": "GuildWar",
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/guilds/wars/{id}",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get guild war based on war ID",
+                    "nickname": "getGuildWarByID",
+                    "type": "GuildWar",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of GuildWar that needs to be fetched"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass kills to embed"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "GuildWar not found"
+                        }
+                    ],
+                    "notes": ""
+                }
+            ]
+        },
+        {
+            "path": "/guilds/{id/name}",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get guild based on ID or name",
+                    "nickname": "getGuildByID",
+                    "type": "Guild",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Guild that needs to be fetched"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass a combination of owner, members, invitations and/or ranks to embed"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Guild not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/guilds/{id/name}/invitations",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get guild invitations based on ID or name",
+                    "nickname": "getGuildInvitationsByID",
+                    "type": "array[GuildInvite]",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Guild that invitations needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Guild not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/guilds/{id/name}/members",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get guild members by guild ID or name",
+                    "nickname": "getGuildMembersByID",
+                    "type": "Player",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Guild which members needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Guild not found"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/guilds/{id/name}/ranks",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get guild ranks by guild ID or name",
+                    "nickname": "getGuildRanksByID",
+                    "type": "GuildRank",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id/name",
+                            "type": "integer/string",
+                            "required": true,
+                            "description": "ID or name of Guild which ranks needs to be fetched"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Guild not found"
+                        }
+                    ]
+                },
+                {
+                    "method": "POST",
+                    "summary": "Create guild rank by guild ID",
+                    "nickname": "createGuildRankByID",
+                    "type": "GuildRank",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Guild to create rank for"
+                        },
+                        {
+                            "paramType": "form",
+                            "name": "name",
+                            "type": "string",
+                            "required": true,
+                            "description": "Name of rank to create"
+                        },
+                        {
+                            "paramType": "form",
+                            "name": "level",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Level of rank to create"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Guild not found"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/guilds/{id/name}/ranks/{rid}",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "PUT",
+                    "summary": "Update guild rank by guild ID, rank ID",
+                    "nickname": "updateGuildRankByID",
+                    "type": "GuildRank",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Guild"
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "rid",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Guild Rank to edit"
+                        },
+                        {
+                            "paramType": "form",
+                            "name": "name",
+                            "type": "string",
+                            "required": false,
+                            "description": "Name of rank to set"
+                        },
+                        {
+                            "paramType": "form",
+                            "name": "level",
+                            "type": "integer",
+                            "required": false,
+                            "description": "Level of rank to set"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 400,
+                            "message": "Input parameter error"
+                        },
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Guild/Rank not found"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        }
+                    ]
+                },
+                {
+                    "method": "DELETE",
+                    "summary": "Delete guild rank by guild ID, rank ID",
+                    "nickname": "deleteGuildRankByID",
+                    "type": "GuildRank",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Guild"
+                        },
+                        {
+                            "paramType": "path",
+                            "name": "rid",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Guild Rank to delete"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 401,
+                            "message": "Authentication required"
+                        },
+                        {
+                            "code": 404,
+                            "message": "Guild/Rank not found"
+                        },
+                        {
+                            "code": 403,
+                            "message": "Permission denied"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/guilds/{id}/memberships",
+            "description": "Operations on guilds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get guild memberships by guild ID",
+                    "nickname": "getGuildMembershipsByID",
+                    "type": "GuildMembership",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "ID of Guild which memberships needs to be fetched"
+                        },
+                        {
+                            "paramType": "query",
+                            "name": "embed",
+                            "type": "string list separated by comma",
+                            "required": false,
+                            "description": "Pass a combination of player, rank and/or guild to embed"
+                        }
+                    ],
+                    "responseMessages": [
+                        {
+                            "code": 404,
+                            "message": "Guild not found"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "Guild": {
+            "id": "Guild",
+            "required": [
+                "creationdata",
+                "motd",
+                "name",
+                "ownerid"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ownerid": {
+                    "type": "integer"
+                },
+                "creationdata": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "motd": {
+                    "type": "string"
+                }
+            }
+        },
+        "GuildWar": {
+            "id": "GuildWar",
+            "required": [
+                "guild1",
+                "guild2",
+                "id",
+                "name1",
+                "name2"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "guild1": {
+                    "type": "integer"
+                },
+                "guild2": {
+                    "type": "integer"
+                },
+                "name1": {
+                    "type": "string"
+                },
+                "name2": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "integer"
+                },
+                "started": {
+                    "$ref": "DateTime::ISO8601"
+                },
+                "ended": {
+                    "$ref": "DateTime::ISO8601"
+                }
+            }
+        },
+        "Player": {
+            "id": "Player",
+            "required": [
+                "name",
+                "sex",
+                "vocation"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "group_id": {
+                    "type": "integer"
+                },
+                "account_id": {
+                    "type": "integer"
+                },
+                "level": {
+                    "type": "integer"
+                },
+                "vocation": {
+                    "type": "integer"
+                },
+                "health": {
+                    "type": "integer"
+                },
+                "healthmax": {
+                    "type": "integer"
+                },
+                "experience": {
+                    "type": "integer"
+                },
+                "lookbody": {
+                    "type": "integer"
+                },
+                "lookfeet": {
+                    "type": "integer"
+                },
+                "lookhead": {
+                    "type": "integer"
+                },
+                "looklegs": {
+                    "type": "integer"
+                },
+                "looktype": {
+                    "type": "integer"
+                },
+                "lookaddons": {
+                    "type": "integer"
+                },
+                "maglevel": {
+                    "type": "integer"
+                },
+                "mana": {
+                    "type": "integer"
+                },
+                "manamax": {
+                    "type": "integer"
+                },
+                "manaspent": {
+                    "type": "integer"
+                },
+                "soul": {
+                    "type": "integer"
+                },
+                "town_id": {
+                    "type": "integer"
+                },
+                "posx": {
+                    "type": "integer"
+                },
+                "posy": {
+                    "type": "integer"
+                },
+                "posz": {
+                    "type": "integer"
+                },
+                "conditions": {
+                    "type": "integer"
+                },
+                "cap": {
+                    "type": "integer"
+                },
+                "sex": {
+                    "type": "integer"
+                },
+                "lastlogin": {
+                    "type": "integer"
+                },
+                "lastip": {
+                    "type": "integer"
+                },
+                "save": {
+                    "type": "integer"
+                },
+                "skull": {
+                    "type": "integer"
+                },
+                "skulltime": {
+                    "type": "integer"
+                },
+                "lastlogout": {
+                    "type": "integer"
+                },
+                "blessings": {
+                    "type": "integer"
+                },
+                "onlinetime": {
+                    "type": "integer"
+                },
+                "deletion": {
+                    "type": "integer"
+                },
+                "balance": {
+                    "type": "integer"
+                },
+                "offlinetraining_time": {
+                    "type": "integer"
+                },
+                "offlinetraining_skill": {
+                    "type": "integer"
+                },
+                "stamina": {
+                    "type": "integer"
+                },
+                "skill_fist": {
+                    "type": "integer"
+                },
+                "skill_fist_tries": {
+                    "type": "integer"
+                },
+                "skill_club": {
+                    "type": "integer"
+                },
+                "skill_club_tries": {
+                    "type": "integer"
+                },
+                "skill_sword": {
+                    "type": "integer"
+                },
+                "skill_sword_tries": {
+                    "type": "integer"
+                },
+                "skill_axe": {
+                    "type": "integer"
+                },
+                "skill_axe_tries": {
+                    "type": "integer"
+                },
+                "skill_dist": {
+                    "type": "integer"
+                },
+                "skill_dist_tries": {
+                    "type": "integer"
+                },
+                "skill_shielding": {
+                    "type": "integer"
+                },
+                "skill_shielding_tries": {
+                    "type": "integer"
+                },
+                "skill_fishing": {
+                    "type": "integer"
+                },
+                "skill_fishing_tries": {
+                    "type": "integer"
+                },
+                "online": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "GuildMembership": {
+            "id": "GuildMembership",
+            "required": [
+                "guild_id",
+                "nick",
+                "player_id",
+                "rank_id"
+            ],
+            "properties": {
+                "player_id": {
+                    "type": "integer"
+                },
+                "guild_id": {
+                    "type": "integer"
+                },
+                "rank_id": {
+                    "type": "integer"
+                },
+                "nick": {
+                    "type": "string"
+                }
+            }
+        },
+        "GuildRank": {
+            "id": "GuildRank",
+            "required": [
+                "guild_id",
+                "id",
+                "level",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "guild_id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "level": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

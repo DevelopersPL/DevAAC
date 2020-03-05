@@ -1,0 +1,20 @@
+{
+    "basePath": "/api/v1",
+    "swaggerVersion": "1.2",
+    "resourcePath": "/plugins",
+    "apis": [
+        {
+            "path": "/plugins",
+            "description": "Operations on DevAAC",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Get information about used plugins",
+                    "nickname": "getDevAACPlugins",
+                    "type": "array",
+                    "notes": ""
+                }
+            ]
+        }
+    ]
+}
