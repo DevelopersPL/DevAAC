@@ -200,11 +200,11 @@ $DevAAC->post(ROUTES_API_PREFIX.'/houses/:id/bid', function($id) use($DevAAC) {
     if ($request->getAPIParam('bid') > $house->last_bid)
     { // this is a winning bid, it is over previous winner's limit
         $house->highest_bidder = $player->id; // this would break JSON output: $house->highestBidder()->associate($player);
-        $house->bid = $house->last_bid + 1;
+        $house->bid = $house->last_bid > 0 ? $house->last_bid + 1 : 0;
         $house->last_bid = $request->getAPIParam('bid');
-    } elseif ($request->getAPIParam('bid') < $house->last_bid)
+    } else
     { // this raises previous bid
-        $house->bid = $request->getAPIParam('bid') + 1;
+        $house->bid = $request->getAPIParam('bid');
     }
 
     if($house->bid_end === 0)
