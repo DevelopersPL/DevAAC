@@ -4,7 +4,7 @@
     "license": "MIT",
     "require": {
         "slim/slim": "2.*",
-        "illuminate/database": "^4.2",
+        "illuminate/database": "^6.20",
         "zircote/swagger-php": "^1.0"
     }
 }
